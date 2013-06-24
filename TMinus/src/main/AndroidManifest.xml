@@ -14,15 +14,24 @@
             android:label="@string/app_name"
             android:theme="@style/AppTheme">
         <activity
-                android:name="com.darkrockstudios.apps.tminus.HomeActivity"
-                android:label="@string/app_name">
+                android:name="com.darkrockstudios.apps.tminus.LaunchListActivity"
+                android:label="@string/title_launch_list">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+        <activity
+                android:name="com.darkrockstudios.apps.tminus.LaunchDetailActivity"
+                android:label="@string/title_launch_detail"
+                android:parentActivityName=".LaunchListActivity">
+            <meta-data
+                    android:name="android.support.PARENT_ACTIVITY"
+                    android:value=".LaunchListActivity"/>
+        </activity>
     </application>
-    <uses-permission android:name="android.permission.INTERNET"></uses-permission>
+
+    <uses-permission android:name="android.permission.INTERNET"/>
 
 </manifest>
