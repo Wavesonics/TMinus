@@ -23,7 +23,6 @@ public class LaunchDetailActivity extends DatabaseActivity
 		final Intent intent = getIntent();
 		if( intent != null )
 		{
-			final Bundle extras = intent.getExtras();
 			final int launchId = intent.getIntExtra( LaunchDetailFragment.ARG_ITEM_ID, -1 );
 			if( launchId > 0 )
 			{
@@ -53,7 +52,7 @@ public class LaunchDetailActivity extends DatabaseActivity
 	@Override
 	public boolean onOptionsItemSelected( MenuItem item )
 	{
-		boolean handled = false;
+		boolean handled;
 
 		switch( item.getItemId() )
 		{

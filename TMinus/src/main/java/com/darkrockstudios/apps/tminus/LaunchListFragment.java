@@ -19,6 +19,7 @@ import com.darkrockstudios.apps.tminus.launchlibrary.Location;
 import com.darkrockstudios.apps.tminus.launchlibrary.Mission;
 import com.darkrockstudios.apps.tminus.launchlibrary.Rocket;
 import com.google.gson.Gson;
+import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.Dao;
 
 import org.json.JSONArray;
@@ -38,8 +39,7 @@ import java.sql.SQLException;
  */
 public class LaunchListFragment extends ListFragment
 {
-	private static final String TAG = LaunchListFragment.class.getSimpleName();
-
+	private static final String    TAG                      = LaunchListFragment.class.getSimpleName();
 	/**
 	 * The serialization (saved instance state) Bundle key representing the
 	 * activated item position. Only used on tablets.
@@ -56,12 +56,9 @@ public class LaunchListFragment extends ListFragment
 		{
 		}
 	};
-
 	private ArrayAdapter<Launch> m_adapter;
-
 	private Callbacks m_callbacks         = s_dummyCallbacks;
 	private int       m_activatedPosition = ListView.INVALID_POSITION;
-	private DatabaseHelper m_databaseHelper;
 
 	/**
 	 * Mandatory empty constructor for the fragment manager to instantiate the
@@ -116,15 +113,6 @@ public class LaunchListFragment extends ListFragment
 		{
 			m_callbacks = (Callbacks)activity;
 		}
-
-		if( activity instanceof DatabaseActivity )
-		{
-			m_databaseHelper = ((DatabaseActivity)activity).getHelper();
-		}
-		else
-		{
-			m_databaseHelper = null;
-		}
 	}
 
 	@Override
@@ -134,8 +122,14 @@ public class LaunchListFragment extends ListFragment
 
 		// Reset the active callbacks interface to the dummy implementation.
 		m_callbacks = s_dummyCallbacks;
+	}
 
-		m_databaseHelper = null;
+	@Override
+	public void onStop()
+	{
+		super.onStop();
+
+		TMinusApplication.getRequestQueue().cancelAll( this );
 	}
 
 	@Override
@@ -191,27 +185,34 @@ public class LaunchListFragment extends ListFragment
 	{
 		boolean dataLoaded = false;
 
-		if( m_databaseHelper != null )
+		final Activity activity = getActivity();
+		if( activity != null )
 		{
-			m_adapter.clear();
-
-			try
+			final DatabaseHelper databaseHelper = OpenHelperManager.getHelper( activity, DatabaseHelper.class );
+			if( databaseHelper != null )
 			{
-				Dao<Launch, Integer> launchDao = m_databaseHelper.getLaunchDao();
+				m_adapter.clear();
 
-				if( launchDao.countOf() > 0 )
+				try
 				{
-					for( Launch launch : launchDao )
-					{
-						m_adapter.add( launch );
-					}
+					Dao<Launch, Integer> launchDao = databaseHelper.getLaunchDao();
 
-					dataLoaded = true;
+					if( launchDao.countOf() > 0 )
+					{
+						for( Launch launch : launchDao )
+						{
+							m_adapter.add( launch );
+						}
+
+						dataLoaded = true;
+					}
 				}
-			}
-			catch( SQLException e )
-			{
-				e.printStackTrace();
+				catch( SQLException e )
+				{
+					e.printStackTrace();
+				}
+
+				OpenHelperManager.releaseHelper();
 			}
 		}
 
@@ -231,12 +232,26 @@ public class LaunchListFragment extends ListFragment
 
 		LaunchListResponseListener listener = new LaunchListResponseListener();
 		JsonObjectRequest request = new JsonObjectRequest( url, null, listener, listener );
+		request.setTag( this );
 		TMinusApplication.getRequestQueue().add( request );
 	}
 
 	public void refresh()
 	{
 		requestLaunches();
+	}
+
+	/**
+	 * A callback interface that all activities containing this fragment must
+	 * implement. This mechanism allows activities to be notified of item
+	 * selections.
+	 */
+	public interface Callbacks
+	{
+		/**
+		 * Callback for when an item has been selected.
+		 */
+		public void onItemSelected( Launch launch );
 	}
 
 	private class LaunchListResponseListener implements Response.Listener<JSONObject>, Response.ErrorListener
@@ -255,19 +270,6 @@ public class LaunchListFragment extends ListFragment
 		}
 	}
 
-	/**
-	 * A callback interface that all activities containing this fragment must
-	 * implement. This mechanism allows activities to be notified of item
-	 * selections.
-	 */
-	public interface Callbacks
-	{
-		/**
-		 * Callback for when an item has been selected.
-		 */
-		public void onItemSelected( Launch launch );
-	}
-
 	private class LaunchListLoader extends AsyncTask<JSONObject, Void, Integer>
 	{
 		@Override
@@ -279,41 +281,48 @@ public class LaunchListFragment extends ListFragment
 
 			final JSONObject launchListObj = response[ 0 ];
 
-			if( m_databaseHelper != null )
+			final Activity activity = getActivity();
+			if( activity != null )
 			{
-				try
+				final DatabaseHelper databaseHelper = OpenHelperManager.getHelper( activity, DatabaseHelper.class );
+				if( databaseHelper != null )
 				{
-					final Dao<Launch, Integer> launchDao = m_databaseHelper.getLaunchDao();
-					final Dao<Location, Integer> locationDao = m_databaseHelper.getLocationDao();
-					final Dao<Mission, Integer> missionDao = m_databaseHelper.getMissionDao();
-					final Dao<Rocket, Integer> rocketDao = m_databaseHelper.getRocketDao();
-
-					final JSONArray launchListArray = launchListObj.getJSONArray( "launch" );
-					for( int ii = 0; ii < launchListArray.length(); ++ii )
+					try
 					{
-						final JSONObject launchObj = launchListArray.getJSONObject( ii );
-						if( launchObj != null && m_adapter != null )
+						final Dao<Launch, Integer> launchDao = databaseHelper.getLaunchDao();
+						final Dao<Location, Integer> locationDao = databaseHelper.getLocationDao();
+						final Dao<Mission, Integer> missionDao = databaseHelper.getMissionDao();
+						final Dao<Rocket, Integer> rocketDao = databaseHelper.getRocketDao();
+
+						final JSONArray launchListArray = launchListObj.getJSONArray( "launch" );
+						for( int ii = 0; ii < launchListArray.length(); ++ii )
 						{
-							Launch launch = gson.fromJson( launchObj.toString(), Launch.class );
+							final JSONObject launchObj = launchListArray.getJSONObject( ii );
+							if( launchObj != null && m_adapter != null )
+							{
+								Launch launch = gson.fromJson( launchObj.toString(), Launch.class );
 
-							locationDao.createOrUpdate( launch.location );
-							missionDao.createOrUpdate( launch.mission );
-							rocketDao.createOrUpdate( launch.rocket );
+								locationDao.createOrUpdate( launch.location );
+								missionDao.createOrUpdate( launch.mission );
+								rocketDao.createOrUpdate( launch.rocket );
 
-							// This must be run after all the others are created so the IDs of the child objects can be set
-							launchDao.createOrUpdate( launch );
+								// This must be run after all the others are created so the IDs of the child objects can be set
+								launchDao.createOrUpdate( launch );
+							}
 						}
+
+						Log.d( TAG, "Refresh successful: " + launchDao.countOf() + " Launches in database." );
+					}
+					catch( SQLException e )
+					{
+						e.printStackTrace();
+					}
+					catch( JSONException e )
+					{
+						e.printStackTrace();
 					}
 
-					Log.d( TAG, "Refresh successful: " + launchDao.countOf() + " Launches in database." );
-				}
-				catch( SQLException e )
-				{
-					e.printStackTrace();
-				}
-				catch( JSONException e )
-				{
-					e.printStackTrace();
+					OpenHelperManager.releaseHelper();
 				}
 			}
 

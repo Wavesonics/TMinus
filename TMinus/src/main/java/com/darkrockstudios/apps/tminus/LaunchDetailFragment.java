@@ -18,6 +18,7 @@ import android.widget.TextView;
 import com.darkrockstudios.apps.tminus.R.id;
 import com.darkrockstudios.apps.tminus.database.DatabaseHelper;
 import com.darkrockstudios.apps.tminus.launchlibrary.Launch;
+import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.Dao;
 
 import java.sql.SQLException;
@@ -33,7 +34,6 @@ public class LaunchDetailFragment extends Fragment
 	public static final String TAG = LaunchDetailFragment.class.getSimpleName();
 	public static final String ARG_ITEM_ID = "item_id";
 	private ShareActionProvider m_shareActionProvider;
-	private DatabaseHelper      m_databaseHelper;
 	private Launch              m_launchItem;
 
 	/**
@@ -58,32 +58,19 @@ public class LaunchDetailFragment extends Fragment
 	public void onAttach( Activity activity )
 	{
 		super.onAttach( activity );
-
-		if( activity instanceof DatabaseActivity )
-		{
-			m_databaseHelper = ((DatabaseActivity)activity).getHelper();
-		}
-		else
-		{
-			m_databaseHelper = null;
-		}
 	}
 
 	@Override
 	public void onDetach()
 	{
 		super.onDetach();
-
-		m_databaseHelper = null;
 	}
 
 	@Override
 	public View onCreateView( LayoutInflater inflater, ViewGroup container,
 	                          Bundle savedInstanceState )
 	{
-		View rootView = inflater.inflate( R.layout.fragment_launch_detail, container, false );
-
-		return rootView;
+		return inflater.inflate( R.layout.fragment_launch_detail, container, false );
 	}
 
 	@Override
@@ -92,7 +79,10 @@ public class LaunchDetailFragment extends Fragment
 		inflater.inflate( R.menu.launch_detail, menu );
 
 		MenuItem item = menu.findItem( R.id.menu_item_share );
-		m_shareActionProvider = (ShareActionProvider)item.getActionProvider();
+		if( item != null )
+		{
+			m_shareActionProvider = (ShareActionProvider)item.getActionProvider();
+		}
 		updateShareIntent();
 
 		super.onCreateOptionsMenu( menu, inflater );
@@ -152,14 +142,24 @@ public class LaunchDetailFragment extends Fragment
 		{
 			Launch launch = null;
 
-			try
+			final Activity activity = getActivity();
+			if( activity != null )
 			{
-				Dao<Launch, Integer> launchDao = m_databaseHelper.getLaunchDao();
-				launch = launchDao.queryForId( ids[ 0 ] );
-			}
-			catch( SQLException e )
-			{
-				e.printStackTrace();
+				final DatabaseHelper databaseHelper = OpenHelperManager.getHelper( activity, DatabaseHelper.class );
+				if( databaseHelper != null )
+				{
+					try
+					{
+						Dao<Launch, Integer> launchDao = databaseHelper.getLaunchDao();
+						launch = launchDao.queryForId( ids[ 0 ] );
+					}
+					catch( SQLException e )
+					{
+						e.printStackTrace();
+					}
+
+					OpenHelperManager.releaseHelper();
+				}
 			}
 
 			return launch;

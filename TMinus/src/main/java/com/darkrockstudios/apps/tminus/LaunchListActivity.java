@@ -3,6 +3,7 @@ package com.darkrockstudios.apps.tminus;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.Window;
 
@@ -64,9 +65,9 @@ public class LaunchListActivity extends DatabaseActivity
 	@Override
 	public boolean onCreateOptionsMenu( Menu menu )
 	{
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate( R.menu.settings, menu );
-		getMenuInflater().inflate( R.menu.refresh, menu );
+		final MenuInflater inflater = getMenuInflater();
+		inflater.inflate( R.menu.settings, menu );
+		inflater.inflate( R.menu.refresh, menu );
 
 		return true;
 	}
