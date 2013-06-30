@@ -19,6 +19,7 @@ import com.darkrockstudios.apps.tminus.launchlibrary.Location;
 import com.darkrockstudios.apps.tminus.launchlibrary.Mission;
 import com.darkrockstudios.apps.tminus.launchlibrary.Rocket;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.Dao;
 
@@ -277,7 +278,7 @@ public class LaunchListFragment extends ListFragment
 		{
 			int numLaunches = 0;
 
-			final Gson gson = new Gson();
+			final Gson gson = new GsonBuilder().setDateFormat( Launch.DATE_FORMAT ).create();
 
 			final JSONObject launchListObj = response[ 0 ];
 

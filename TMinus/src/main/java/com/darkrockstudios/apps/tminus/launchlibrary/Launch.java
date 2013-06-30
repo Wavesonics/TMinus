@@ -4,6 +4,7 @@ import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * Created by Adam on 6/23/13.
@@ -14,19 +15,20 @@ import java.io.Serializable;
 @DatabaseTable(tableName = Launch.TABLE_NAME)
 public class Launch implements Serializable
 {
-	public transient static final String TABLE_NAME = "Launch";
+	public transient static final String TABLE_NAME  = "Launch";
+	public transient static final String DATE_FORMAT = "MMM dd, yyyy HH:mm:ss zzz";
 
-	@DatabaseField(id = true)
+	@DatabaseField( id = true )
 	public int id;
 
 	@DatabaseField
 	public int status;
 
 	@DatabaseField
-	public String windowstart;
+	public Date windowstart;
 
 	@DatabaseField
-	public String windowend;
+	public Date windowend;
 
 	@DatabaseField
 	public String name;
@@ -35,7 +37,7 @@ public class Launch implements Serializable
 	public boolean inhold;
 
 	@DatabaseField
-	public String net;
+	public Date net;
 
 	@DatabaseField(canBeNull = false, foreign = true, foreignAutoCreate = true, foreignAutoRefresh = true)
 	public Mission mission;

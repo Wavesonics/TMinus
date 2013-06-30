@@ -101,7 +101,7 @@ public class LaunchDetailFragment extends Fragment
 			description.setText( m_launchItem.mission.description );
 
 			final TextView launchWindow = (TextView)rootView.findViewById( id.LAUNCHDETAIL_launch_window );
-			launchWindow.setText( m_launchItem.windowstart );
+			launchWindow.setText( m_launchItem.windowstart.toString() );
 
 			final TextView location = (TextView)rootView.findViewById( id.LAUNCHDETAIL_location );
 			location.setText( m_launchItem.location.name );
