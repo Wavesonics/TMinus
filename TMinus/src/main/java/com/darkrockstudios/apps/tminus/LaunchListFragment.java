@@ -221,6 +221,11 @@ public class LaunchListFragment extends ListFragment
 	private void requestLaunches()
 	{
 		Log.d( TAG, "Requesting launches..." );
+		Activity activity = getActivity();
+		if( activity != null && isAdded() )
+		{
+			activity.setProgressBarIndeterminateVisibility( true );
+		}
 
 		final String url = "http://launchlibrary.net/ll/json/next/10";
 
@@ -319,9 +324,11 @@ public class LaunchListFragment extends ListFragment
 		protected void onPostExecute( Integer result )
 		{
 			final Activity activity = getActivity();
-			if( isAdded() )
+			if( activity != null && isAdded() )
 			{
 				reloadData();
+
+				activity.setProgressBarIndeterminateVisibility( false );
 				Toast.makeText( activity, R.string.TOAST_launch_list_refresh_complete, Toast.LENGTH_SHORT ).show();
 			}
 		}
