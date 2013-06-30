@@ -11,13 +11,13 @@ import java.io.Serializable;
  * darkrockstudios.com
  */
 
-@DatabaseTable( tableName = Rocket.TABLE_NAME )
+@DatabaseTable(tableName = Rocket.TABLE_NAME)
 public class Rocket implements Serializable
 {
 	public transient static final String TABLE_NAME = "Rocket";
 
-	@DatabaseField( id = true )
-	public int    id;
+	@DatabaseField(id = true)
+	public int id;
 
 	@DatabaseField
 	public int familyID;

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.Window;
 
 import com.darkrockstudios.apps.tminus.LaunchListFragment.Callbacks;
 import com.darkrockstudios.apps.tminus.R.id;
@@ -39,6 +40,7 @@ public class LaunchListActivity extends DatabaseActivity
 	protected void onCreate( Bundle savedInstanceState )
 	{
 		super.onCreate( savedInstanceState );
+		requestWindowFeature( Window.FEATURE_INDETERMINATE_PROGRESS );
 		setContentView( R.layout.activity_launch_list );
 
 		if( findViewById( R.id.launch_detail_container ) != null )
@@ -57,26 +59,15 @@ public class LaunchListActivity extends DatabaseActivity
 		}
 
 		// TODO: If exposing deep links into your app, handle intents here.
-
-		/*
-		// here we try inserting database in the on-create as a test
-		RuntimeExceptionDao<Launch, Integer> dao = getSimpleDataDao();
-		long millis = System.currentTimeMillis();
-
-		// create some entries in the onCreate
-		Launch simple = new Launch();
-		dao.create( simple );
-		simple = new SimpleData( millis + 1 );
-		dao.create( simple );
-		Log.i( DatabaseHelper.class.getName(), "created new entries in onCreate: " + millis );
-		 */
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu( Menu menu )
 	{
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate( R.menu.home, menu );
+		getMenuInflater().inflate( R.menu.settings, menu );
+		getMenuInflater().inflate( R.menu.refresh, menu );
+
 		return true;
 	}
 
@@ -121,7 +112,7 @@ public class LaunchListActivity extends DatabaseActivity
 			// adding or replacing the detail fragment using a
 			// fragment transaction.
 			Bundle arguments = new Bundle();
-			arguments.putSerializable( LaunchDetailFragment.ARG_ITEM_ID, launch );
+			arguments.putSerializable( LaunchDetailFragment.ARG_ITEM_ID, launch.id );
 			LaunchDetailFragment fragment = new LaunchDetailFragment();
 			fragment.setArguments( arguments );
 			getSupportFragmentManager().beginTransaction()
@@ -133,7 +124,7 @@ public class LaunchListActivity extends DatabaseActivity
 			// In single-pane mode, simply start the detail activity
 			// for the selected item ID.
 			Intent detailIntent = new Intent( this, LaunchDetailActivity.class );
-			detailIntent.putExtra( LaunchDetailFragment.ARG_ITEM_ID, launch );
+			detailIntent.putExtra( LaunchDetailFragment.ARG_ITEM_ID, launch.id );
 			startActivity( detailIntent );
 		}
 	}

@@ -11,39 +11,39 @@ import java.io.Serializable;
  * darkrockstudios.com
  */
 
-@DatabaseTable( tableName = Launch.TABLE_NAME )
+@DatabaseTable(tableName = Launch.TABLE_NAME)
 public class Launch implements Serializable
 {
 	public transient static final String TABLE_NAME = "Launch";
 
-	@DatabaseField( id = true )
-	public int      id;
+	@DatabaseField(id = true)
+	public int id;
 
 	@DatabaseField
-	public int      status;
+	public int status;
 
 	@DatabaseField
-	public String   windowstart;
+	public String windowstart;
 
 	@DatabaseField
-	public String   windowend;
+	public String windowend;
 
 	@DatabaseField
-	public String   name;
+	public String name;
 
 	@DatabaseField
-	public boolean  inhold;
+	public boolean inhold;
 
 	@DatabaseField
-	public String   net;
+	public String net;
 
-	@DatabaseField( canBeNull = false, foreign = true, foreignAutoCreate = true, foreignAutoRefresh = true )
-	public Mission  mission;
+	@DatabaseField(canBeNull = false, foreign = true, foreignAutoCreate = true, foreignAutoRefresh = true)
+	public Mission mission;
 
-	@DatabaseField( canBeNull = false, foreign = true, foreignAutoCreate = true, foreignAutoRefresh = true )
-	public Rocket   rocket;
+	@DatabaseField(canBeNull = false, foreign = true, foreignAutoCreate = true, foreignAutoRefresh = true)
+	public Rocket rocket;
 
-	@DatabaseField( canBeNull = false, foreign = true, foreignAutoCreate = true, foreignAutoRefresh = true )
+	@DatabaseField(canBeNull = false, foreign = true, foreignAutoCreate = true, foreignAutoRefresh = true)
 	public Location location;
 
 	public String toString()

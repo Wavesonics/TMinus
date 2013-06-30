@@ -17,13 +17,13 @@ public class Mission implements Serializable
 	public transient static final String TABLE_NAME = "Mission";
 
 	@DatabaseField( id = true )
-	public int    id;
+	public int id;
 
 	@DatabaseField
-	public int    launchID;
+	public int launchID;
 
 	@DatabaseField
-	public int    type;
+	public int type;
 
 	@DatabaseField
 	public String description;

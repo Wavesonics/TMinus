@@ -1,18 +1,18 @@
 package com.darkrockstudios.apps.tminus;
 
 import android.app.Activity;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
 import com.darkrockstudios.apps.tminus.database.DatabaseHelper;
 import com.darkrockstudios.apps.tminus.launchlibrary.Launch;
 import com.darkrockstudios.apps.tminus.launchlibrary.Location;
@@ -57,7 +57,6 @@ public class LaunchListFragment extends ListFragment
 		}
 	};
 
-	private RequestQueue         m_requestQueue;
 	private ArrayAdapter<Launch> m_adapter;
 
 	private Callbacks m_callbacks         = s_dummyCallbacks;
@@ -76,8 +75,6 @@ public class LaunchListFragment extends ListFragment
 	public void onCreate( Bundle savedInstanceState )
 	{
 		super.onCreate( savedInstanceState );
-
-		m_requestQueue = Volley.newRequestQueue( getActivity() );
 
 		m_adapter = new ArrayAdapter<Launch>(
 				                                    getActivity(),
@@ -208,7 +205,6 @@ public class LaunchListFragment extends ListFragment
 					{
 						m_adapter.add( launch );
 					}
-					launchDao.closeLastIterator();
 
 					dataLoaded = true;
 				}
@@ -224,16 +220,13 @@ public class LaunchListFragment extends ListFragment
 
 	private void requestLaunches()
 	{
-		if( m_requestQueue != null )
-		{
-			Log.d( TAG, "Requesting launches..." );
+		Log.d( TAG, "Requesting launches..." );
 
-			final String url = "http://launchlibrary.net/ll/json/next/10";
+		final String url = "http://launchlibrary.net/ll/json/next/10";
 
-			LaunchListResponseListener listener = new LaunchListResponseListener();
-			JsonObjectRequest request = new JsonObjectRequest( url, null, listener, listener );
-			m_requestQueue.add( request );
-		}
+		LaunchListResponseListener listener = new LaunchListResponseListener();
+		JsonObjectRequest request = new JsonObjectRequest( url, null, listener, listener );
+		TMinusApplication.getRequestQueue().add( request );
 	}
 
 	public void refresh()
@@ -246,7 +239,8 @@ public class LaunchListFragment extends ListFragment
 		@Override
 		public void onResponse( JSONObject response )
 		{
-			parseLaunchList( response );
+			LaunchListLoader loader = new LaunchListLoader();
+			loader.execute( response );
 		}
 
 		@Override
@@ -254,10 +248,31 @@ public class LaunchListFragment extends ListFragment
 		{
 			Log.i( TAG, error.getMessage() );
 		}
+	}
 
-		private void parseLaunchList( JSONObject launchListObj )
+	/**
+	 * A callback interface that all activities containing this fragment must
+	 * implement. This mechanism allows activities to be notified of item
+	 * selections.
+	 */
+	public interface Callbacks
+	{
+		/**
+		 * Callback for when an item has been selected.
+		 */
+		public void onItemSelected( Launch launch );
+	}
+
+	private class LaunchListLoader extends AsyncTask<JSONObject, Void, Integer>
+	{
+		@Override
+		protected Integer doInBackground( JSONObject... response )
 		{
+			int numLaunches = 0;
+
 			final Gson gson = new Gson();
+
+			final JSONObject launchListObj = response[ 0 ];
 
 			if( m_databaseHelper != null )
 			{
@@ -286,8 +301,6 @@ public class LaunchListFragment extends ListFragment
 					}
 
 					Log.d( TAG, "Refresh successful: " + launchDao.countOf() + " Launches in database." );
-
-					reloadData();
 				}
 				catch( SQLException e )
 				{
@@ -298,19 +311,19 @@ public class LaunchListFragment extends ListFragment
 					e.printStackTrace();
 				}
 			}
-		}
-	}
 
-	/**
-	 * A callback interface that all activities containing this fragment must
-	 * implement. This mechanism allows activities to be notified of item
-	 * selections.
-	 */
-	public interface Callbacks
-	{
-		/**
-		 * Callback for when an item has been selected.
-		 */
-		public void onItemSelected( Launch launch );
+			return numLaunches;
+		}
+
+		@Override
+		protected void onPostExecute( Integer result )
+		{
+			final Activity activity = getActivity();
+			if( isAdded() )
+			{
+				reloadData();
+				Toast.makeText( activity, R.string.TOAST_launch_list_refresh_complete, Toast.LENGTH_SHORT ).show();
+			}
+		}
 	}
 }

@@ -11,12 +11,12 @@ import java.io.Serializable;
  * darkrockstudios.com
  */
 
-@DatabaseTable( tableName = Location.TABLE_NAME )
+@DatabaseTable(tableName = Location.TABLE_NAME)
 public class Location implements Serializable
 {
 	public transient static final String TABLE_NAME = "Location";
 
-	@DatabaseField( id = true )
+	@DatabaseField(id = true)
 	public int id;
 
 	@DatabaseField

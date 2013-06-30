@@ -1,14 +1,26 @@
 package com.darkrockstudios.apps.tminus;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ShareActionProvider;
 import android.widget.TextView;
 
 import com.darkrockstudios.apps.tminus.R.id;
+import com.darkrockstudios.apps.tminus.database.DatabaseHelper;
 import com.darkrockstudios.apps.tminus.launchlibrary.Launch;
+import com.j256.ormlite.dao.Dao;
+
+import java.sql.SQLException;
 
 /**
  * A fragment representing a single Launch detail screen.
@@ -18,13 +30,11 @@ import com.darkrockstudios.apps.tminus.launchlibrary.Launch;
  */
 public class LaunchDetailFragment extends Fragment
 {
-	/**
-	 * The fragment argument representing the item ID that this fragment
-	 * represents.
-	 */
+	public static final String TAG = LaunchDetailFragment.class.getSimpleName();
 	public static final String ARG_ITEM_ID = "item_id";
-
-	private Launch m_launchItem;
+	private ShareActionProvider m_shareActionProvider;
+	private DatabaseHelper      m_databaseHelper;
+	private Launch              m_launchItem;
 
 	/**
 	 * Mandatory empty constructor for the fragment manager to instantiate the
@@ -39,10 +49,32 @@ public class LaunchDetailFragment extends Fragment
 	{
 		super.onCreate( savedInstanceState );
 
-		if( getArguments().containsKey( ARG_ITEM_ID ) )
+		setHasOptionsMenu( true );
+
+		loadLaunch();
+	}
+
+	@Override
+	public void onAttach( Activity activity )
+	{
+		super.onAttach( activity );
+
+		if( activity instanceof DatabaseActivity )
 		{
-			m_launchItem = (Launch)getArguments().getSerializable( ARG_ITEM_ID );
+			m_databaseHelper = ((DatabaseActivity)activity).getHelper();
 		}
+		else
+		{
+			m_databaseHelper = null;
+		}
+	}
+
+	@Override
+	public void onDetach()
+	{
+		super.onDetach();
+
+		m_databaseHelper = null;
 	}
 
 	@Override
@@ -51,8 +83,27 @@ public class LaunchDetailFragment extends Fragment
 	{
 		View rootView = inflater.inflate( R.layout.fragment_launch_detail, container, false );
 
+		return rootView;
+	}
+
+	@Override
+	public void onCreateOptionsMenu( Menu menu, MenuInflater inflater )
+	{
+		inflater.inflate( R.menu.launch_detail, menu );
+
+		MenuItem item = menu.findItem( R.id.menu_item_share );
+		m_shareActionProvider = (ShareActionProvider)item.getActionProvider();
+		updateShareIntent();
+
+		super.onCreateOptionsMenu( menu, inflater );
+	}
+
+	private void updateViews()
+	{
 		if( m_launchItem != null )
 		{
+			final View rootView = getView();
+
 			final TextView name = (TextView)rootView.findViewById( id.LAUNCHDETAIL_mission_name );
 			name.setText( m_launchItem.name );
 
@@ -65,7 +116,63 @@ public class LaunchDetailFragment extends Fragment
 			final TextView location = (TextView)rootView.findViewById( id.LAUNCHDETAIL_location );
 			location.setText( m_launchItem.location.name );
 		}
+	}
 
-		return rootView;
+	public void loadLaunch()
+	{
+		if( getArguments().containsKey( ARG_ITEM_ID ) )
+		{
+			int launchId = getArguments().getInt( ARG_ITEM_ID );
+
+			LaunchLoader loader = new LaunchLoader();
+			loader.execute( launchId );
+		}
+	}
+
+	private void updateShareIntent()
+	{
+		if( m_launchItem != null && m_shareActionProvider != null )
+		{
+			Intent intent = new Intent( android.content.Intent.ACTION_SEND );
+			intent.setType( "text/plain" );
+			intent.addFlags( Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET );
+
+			// Add data to the intent, the receiving app will decide what to do with it.
+			intent.putExtra( Intent.EXTRA_SUBJECT, m_launchItem.name );
+			intent.putExtra( Intent.EXTRA_TEXT, m_launchItem.mission.description );
+
+			m_shareActionProvider.setShareIntent( intent );
+		}
+	}
+
+	private class LaunchLoader extends AsyncTask<Integer, Void, Launch>
+	{
+		@Override
+		protected Launch doInBackground( Integer... ids )
+		{
+			Launch launch = null;
+
+			try
+			{
+				Dao<Launch, Integer> launchDao = m_databaseHelper.getLaunchDao();
+				launch = launchDao.queryForId( ids[ 0 ] );
+			}
+			catch( SQLException e )
+			{
+				e.printStackTrace();
+			}
+
+			return launch;
+		}
+
+		@Override
+		protected void onPostExecute( Launch result )
+		{
+			m_launchItem = result;
+			updateViews();
+			updateShareIntent();
+
+			Log.d( TAG, "Launch details loaded." );
+		}
 	}
 }
