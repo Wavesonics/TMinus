@@ -1,7 +1,10 @@
 package com.darkrockstudios.apps.tminus;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -22,6 +25,8 @@ import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.Dao;
 
 import java.sql.SQLException;
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 /**
  * A fragment representing a single Launch detail screen.
@@ -35,6 +40,7 @@ public class LaunchDetailFragment extends Fragment
 	public static final String ARG_ITEM_ID = "item_id";
 	private ShareActionProvider m_shareActionProvider;
 	private Launch              m_launchItem;
+	private TimeReceiver m_timeReceiver;
 
 	/**
 	 * Mandatory empty constructor for the fragment manager to instantiate the
@@ -52,6 +58,29 @@ public class LaunchDetailFragment extends Fragment
 		setHasOptionsMenu( true );
 
 		loadLaunch();
+	}
+
+	@Override
+	public void onStart()
+	{
+		super.onStart();
+
+		m_timeReceiver = new TimeReceiver();
+		IntentFilter intentFilter = new IntentFilter( Intent.ACTION_TIME_TICK );
+
+		Activity activity = getActivity();
+		activity.registerReceiver( m_timeReceiver, intentFilter );
+	}
+
+	@Override
+	public void onStop()
+	{
+		super.onStop();
+
+		Activity activity = getActivity();
+		activity.unregisterReceiver( m_timeReceiver );
+
+		m_timeReceiver = null;
 	}
 
 	@Override
@@ -105,6 +134,29 @@ public class LaunchDetailFragment extends Fragment
 
 			final TextView location = (TextView)rootView.findViewById( id.LAUNCHDETAIL_location );
 			location.setText( m_launchItem.location.name );
+
+			updateTimeViews();
+		}
+	}
+
+	public void updateTimeViews()
+	{
+		if( m_launchItem != null )
+		{
+			final View rootView = getView();
+
+			final TextView timeRemaining = (TextView)rootView.findViewById( id.LAUNCHDETAIL_time_remaining );
+			final Date now = new Date();
+
+			final long totalMsLeft = m_launchItem.windowstart.getTime() - now.getTime();
+
+			final long day = TimeUnit.MILLISECONDS.toDays( totalMsLeft );
+			final long hr = TimeUnit.MILLISECONDS.toHours( totalMsLeft - TimeUnit.DAYS.toMillis( day ) );
+			final long min = TimeUnit.MILLISECONDS.toMinutes( totalMsLeft - TimeUnit.DAYS
+			                                                                        .toMillis( day ) - TimeUnit.HOURS
+			                                                                                                   .toMillis( hr ) );
+
+			timeRemaining.setText( day + "d " + hr + "h " + min + "m" );
 		}
 	}
 
@@ -132,6 +184,15 @@ public class LaunchDetailFragment extends Fragment
 			intent.putExtra( Intent.EXTRA_TEXT, m_launchItem.mission.description );
 
 			m_shareActionProvider.setShareIntent( intent );
+		}
+	}
+
+	private class TimeReceiver extends BroadcastReceiver
+	{
+		@Override
+		public void onReceive( Context context, Intent intent )
+		{
+			updateTimeViews();
 		}
 	}
 

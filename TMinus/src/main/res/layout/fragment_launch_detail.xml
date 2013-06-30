@@ -1,4 +1,5 @@
 <RelativeLayout
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         xmlns:android="http://schemas.android.com/apk/res/android"
@@ -47,12 +48,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Medium Text"
+            android:text="MMM dd, yyyy HH:mm:ss zzz"
             android:id="@+id/LAUNCHDETAIL_launch_window"
             android:textColor="@color/secondary_text"
             android:layout_alignTop="@+id/textView"
             android:layout_toRightOf="@+id/textView"
-            android:layout_marginLeft="10sp"/>
+            android:layout_marginLeft="10sp"
+            tools:ignore="HardcodedText"/>
 
     <TextView
             android:layout_width="wrap_content"
@@ -69,10 +71,34 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Medium Text"
+            android:text="Your Moms House"
             android:id="@+id/LAUNCHDETAIL_location"
             android:textColor="@color/secondary_text"
             android:layout_alignTop="@+id/textView2"
             android:layout_toRightOf="@+id/textView2"
-            android:layout_marginLeft="10sp"/>
+            android:layout_marginLeft="10sp"
+            tools:ignore="HardcodedText"/>
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/LAUNCHDETAIL_count_down"
+            android:id="@+id/textView3"
+            android:textStyle="bold"
+            android:layout_below="@+id/LAUNCHDETAIL_location"
+            android:layout_alignLeft="@+id/textView2"
+            android:layout_marginTop="10dp"/>
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="5d 12h 24m"
+            android:id="@+id/LAUNCHDETAIL_time_remaining"
+            android:textColor="@color/secondary_text"
+            android:layout_alignTop="@+id/textView3"
+            android:layout_toRightOf="@+id/textView3"
+            android:layout_marginLeft="10dp"
+            tools:ignore="HardcodedText"/>
 </RelativeLayout>

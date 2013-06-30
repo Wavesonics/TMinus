@@ -1,6 +1,8 @@
 package com.darkrockstudios.apps.tminus;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
@@ -28,6 +30,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.sql.SQLException;
+import java.util.Date;
 
 /**
  * A list fragment representing a list of Launches. This fragment
@@ -57,6 +60,7 @@ public class LaunchListFragment extends ListFragment
 		{
 		}
 	};
+	private static final long UPDATE_THRESHOLD_MS = 1 * 60 * 1000;
 	private ArrayAdapter<Launch> m_adapter;
 	private Callbacks m_callbacks         = s_dummyCallbacks;
 	private int       m_activatedPosition = ListView.INVALID_POSITION;
@@ -81,7 +85,7 @@ public class LaunchListFragment extends ListFragment
 
 		setListAdapter( m_adapter );
 
-		if( !reloadData() )
+		if( !reloadData() || shouldRefresh() )
 		{
 			refresh();
 		}
@@ -237,6 +241,32 @@ public class LaunchListFragment extends ListFragment
 		TMinusApplication.getRequestQueue().add( request );
 	}
 
+	private boolean shouldRefresh()
+	{
+		boolean refresh = false;
+
+		final Activity activity = getActivity();
+		if( activity != null )
+		{
+			final SharedPreferences preferences = activity.getPreferences( Context.MODE_PRIVATE );
+			final long lastUpdatedMs = preferences.getLong( Preferences.KEY_LAST_UPDATED, 0 );
+			final long nowMs = new Date().getTime();
+			final long deltaMs = nowMs - lastUpdatedMs;
+
+			if( deltaMs > UPDATE_THRESHOLD_MS )
+			{
+				refresh = true;
+				Log.i( TAG, "Data is a bit old, we should refresh it." );
+			}
+			else
+			{
+				Log.d( TAG, "It's been " + deltaMs / 1000 + " seconds since our last update, no need to refresh." );
+			}
+		}
+
+		return refresh;
+	}
+
 	public void refresh()
 	{
 		requestLaunches();
@@ -312,6 +342,8 @@ public class LaunchListFragment extends ListFragment
 							}
 						}
 
+						final SharedPreferences preferences = activity.getPreferences( Context.MODE_PRIVATE );
+						preferences.edit().putLong( Preferences.KEY_LAST_UPDATED, new Date().getTime() ).commit();
 						Log.d( TAG, "Refresh successful: " + launchDao.countOf() + " Launches in database." );
 					}
 					catch( SQLException e )

@@ -9,4 +9,5 @@
     <string name="LAUNCHDETAIL_launch_window">Launch Window:</string>
     <string name="LAUNCHDETAIL_location">Location:</string>
     <string name="TOAST_launch_list_refresh_complete">Launch List Updated</string>
+    <string name="LAUNCHDETAIL_count_down">Time Until Launch:</string>
 </resources>
