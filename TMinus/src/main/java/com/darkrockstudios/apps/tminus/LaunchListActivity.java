@@ -2,7 +2,6 @@ package com.darkrockstudios.apps.tminus;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -27,15 +26,14 @@ import com.darkrockstudios.apps.tminus.launchlibrary.Launch;
  * {@link LaunchListFragment.Callbacks} interface
  * to listen for item selections.
  */
-public class LaunchListActivity extends FragmentActivity
+public class LaunchListActivity extends DatabaseActivity
 		implements Callbacks
 {
-
 	/**
 	 * Whether or not the activity is in two-pane mode, i.e. running on a tablet
 	 * device.
 	 */
-	private boolean mTwoPane;
+	private boolean m_twoPane;
 
 	@Override
 	protected void onCreate( Bundle savedInstanceState )
@@ -49,7 +47,7 @@ public class LaunchListActivity extends FragmentActivity
 			// large-screen layouts (res/values-large and
 			// res/values-sw600dp). If this view is present, then the
 			// activity should be in two-pane mode.
-			mTwoPane = true;
+			m_twoPane = true;
 
 			// In two-pane mode, list items should be given the
 			// 'activated' state when touched.
@@ -59,6 +57,19 @@ public class LaunchListActivity extends FragmentActivity
 		}
 
 		// TODO: If exposing deep links into your app, handle intents here.
+
+		/*
+		// here we try inserting database in the on-create as a test
+		RuntimeExceptionDao<Launch, Integer> dao = getSimpleDataDao();
+		long millis = System.currentTimeMillis();
+
+		// create some entries in the onCreate
+		Launch simple = new Launch();
+		dao.create( simple );
+		simple = new SimpleData( millis + 1 );
+		dao.create( simple );
+		Log.i( DatabaseHelper.class.getName(), "created new entries in onCreate: " + millis );
+		 */
 	}
 
 	@Override
@@ -104,7 +115,7 @@ public class LaunchListActivity extends FragmentActivity
 	@Override
 	public void onItemSelected( Launch launch )
 	{
-		if( mTwoPane )
+		if( m_twoPane )
 		{
 			// In two-pane mode, show the detail view in this activity by
 			// adding or replacing the detail fragment using a
@@ -116,7 +127,6 @@ public class LaunchListActivity extends FragmentActivity
 			getSupportFragmentManager().beginTransaction()
 					.replace( R.id.launch_detail_container, fragment )
 					.commit();
-
 		}
 		else
 		{

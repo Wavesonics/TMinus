@@ -13,12 +13,19 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.darkrockstudios.apps.tminus.database.DatabaseHelper;
 import com.darkrockstudios.apps.tminus.launchlibrary.Launch;
+import com.darkrockstudios.apps.tminus.launchlibrary.Location;
+import com.darkrockstudios.apps.tminus.launchlibrary.Mission;
+import com.darkrockstudios.apps.tminus.launchlibrary.Rocket;
 import com.google.gson.Gson;
+import com.j256.ormlite.dao.Dao;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.sql.SQLException;
 
 /**
  * A list fragment representing a list of Launches. This fragment
@@ -55,6 +62,7 @@ public class LaunchListFragment extends ListFragment
 
 	private Callbacks m_callbacks         = s_dummyCallbacks;
 	private int       m_activatedPosition = ListView.INVALID_POSITION;
+	private DatabaseHelper m_databaseHelper;
 
 	/**
 	 * Mandatory empty constructor for the fragment manager to instantiate the
@@ -78,7 +86,10 @@ public class LaunchListFragment extends ListFragment
 
 		setListAdapter( m_adapter );
 
-		refresh();
+		if( !reloadData() )
+		{
+			refresh();
+		}
 	}
 
 	@Override
@@ -104,8 +115,19 @@ public class LaunchListFragment extends ListFragment
 		{
 			throw new IllegalStateException( "Activity must implement fragment's callbacks." );
 		}
+		else
+		{
+			m_callbacks = (Callbacks)activity;
+		}
 
-		m_callbacks = (Callbacks)activity;
+		if( activity instanceof DatabaseActivity )
+		{
+			m_databaseHelper = ((DatabaseActivity)activity).getHelper();
+		}
+		else
+		{
+			m_databaseHelper = null;
+		}
 	}
 
 	@Override
@@ -115,6 +137,8 @@ public class LaunchListFragment extends ListFragment
 
 		// Reset the active callbacks interface to the dummy implementation.
 		m_callbacks = s_dummyCallbacks;
+
+		m_databaseHelper = null;
 	}
 
 	@Override
@@ -166,10 +190,44 @@ public class LaunchListFragment extends ListFragment
 		m_activatedPosition = position;
 	}
 
-	private void testRequest()
+	private boolean reloadData()
+	{
+		boolean dataLoaded = false;
+
+		if( m_databaseHelper != null )
+		{
+			m_adapter.clear();
+
+			try
+			{
+				Dao<Launch, Integer> launchDao = m_databaseHelper.getLaunchDao();
+
+				if( launchDao.countOf() > 0 )
+				{
+					for( Launch launch : launchDao )
+					{
+						m_adapter.add( launch );
+					}
+					launchDao.closeLastIterator();
+
+					dataLoaded = true;
+				}
+			}
+			catch( SQLException e )
+			{
+				e.printStackTrace();
+			}
+		}
+
+		return dataLoaded;
+	}
+
+	private void requestLaunches()
 	{
 		if( m_requestQueue != null )
 		{
+			Log.d( TAG, "Requesting launches..." );
+
 			final String url = "http://launchlibrary.net/ll/json/next/10";
 
 			LaunchListResponseListener listener = new LaunchListResponseListener();
@@ -180,7 +238,7 @@ public class LaunchListFragment extends ListFragment
 
 	public void refresh()
 	{
-		testRequest();
+		requestLaunches();
 	}
 
 	private class LaunchListResponseListener implements Response.Listener<JSONObject>, Response.ErrorListener
@@ -188,8 +246,6 @@ public class LaunchListFragment extends ListFragment
 		@Override
 		public void onResponse( JSONObject response )
 		{
-			Log.i( TAG, response.toString() );
-
 			parseLaunchList( response );
 		}
 
@@ -201,27 +257,46 @@ public class LaunchListFragment extends ListFragment
 
 		private void parseLaunchList( JSONObject launchListObj )
 		{
-			m_adapter.clear();
-
 			final Gson gson = new Gson();
 
-			try
+			if( m_databaseHelper != null )
 			{
-				JSONArray launchListArray = launchListObj.getJSONArray( "launch" );
-				for( int ii = 0; ii < launchListArray.length(); ++ii )
+				try
 				{
-					JSONObject launchObj = launchListArray.getJSONObject( ii );
-					if( launchObj != null && m_adapter != null )
+					final Dao<Launch, Integer> launchDao = m_databaseHelper.getLaunchDao();
+					final Dao<Location, Integer> locationDao = m_databaseHelper.getLocationDao();
+					final Dao<Mission, Integer> missionDao = m_databaseHelper.getMissionDao();
+					final Dao<Rocket, Integer> rocketDao = m_databaseHelper.getRocketDao();
+
+					final JSONArray launchListArray = launchListObj.getJSONArray( "launch" );
+					for( int ii = 0; ii < launchListArray.length(); ++ii )
 					{
-						Launch launch = gson.fromJson( launchObj.toString(), Launch.class );
-						Log.d( TAG, "name: " + launch.name );
-						m_adapter.add( launch );
+						final JSONObject launchObj = launchListArray.getJSONObject( ii );
+						if( launchObj != null && m_adapter != null )
+						{
+							Launch launch = gson.fromJson( launchObj.toString(), Launch.class );
+
+							locationDao.createOrUpdate( launch.location );
+							missionDao.createOrUpdate( launch.mission );
+							rocketDao.createOrUpdate( launch.rocket );
+
+							// This must be run after all the others are created so the IDs of the child objects can be set
+							launchDao.createOrUpdate( launch );
+						}
 					}
+
+					Log.d( TAG, "Refresh successful: " + launchDao.countOf() + " Launches in database." );
+
+					reloadData();
 				}
-			}
-			catch( JSONException e )
-			{
-				e.printStackTrace();
+				catch( SQLException e )
+				{
+					e.printStackTrace();
+				}
+				catch( JSONException e )
+				{
+					e.printStackTrace();
+				}
 			}
 		}
 	}
