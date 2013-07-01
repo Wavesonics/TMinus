@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.Window;
 
 import com.darkrockstudios.apps.tminus.LaunchListFragment.Callbacks;
@@ -129,4 +130,10 @@ public class LaunchListActivity extends DatabaseActivity
 			startActivity( detailIntent );
 		}
 	}
+
+    public void countDownClicked( View v )
+    {
+        Intent intent = new Intent( this, CountDownActivity.class );
+        startActivity(intent);
+    }
 }

@@ -2,18 +2,16 @@
 <resources>
 
     <string name="app_name">TMinus</string>
-
     <string name="action_settings">Settings</string>
     <string name="action_refresh">Refresh</string>
-
     <string name="title_launch_list">Launches</string>
     <string name="title_launch_detail">Launch Detail</string>
-
+    <string name="title_activity_count_down">Count Down</string>
     <string name="LAUNCHDETAIL_launch_window">Launch:</string>
     <string name="LAUNCHDETAIL_launch_window_length">Window:</string>
     <string name="LAUNCHDETAIL_location">Location:</string>
     <string name="LAUNCHDETAIL_count_down">T Minus:</string>
-
+    <string name="LAUNCHDETAIL_count_down_button">Count Down</string>
     <string name="TOAST_launch_list_refresh_complete">Launch List updated</string>
     <string name="TOAST_launch_list_refresh_failed">Launch List update failed</string>
 

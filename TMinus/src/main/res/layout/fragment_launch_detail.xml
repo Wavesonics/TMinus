@@ -37,10 +37,11 @@
 
     <TableLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_below="@+id/LAUNCHDETAIL_mission_image"
             android:layout_alignLeft="@+id/LAUNCHDETAIL_mission_image"
-            android:layout_marginTop="@dimen/launch_detail_padding">
+            android:layout_marginTop="@dimen/launch_detail_padding"
+            android:id="@+id/tableLayout">
 
         <TableRow
                 android:layout_width="match_parent"
@@ -150,5 +151,15 @@
         </TableRow>
 
     </TableLayout>
+
+    <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/LAUNCHDETAIL_count_down_button"
+            android:id="@+id/button"
+            android:layout_column="1"
+            android:layout_below="@+id/tableLayout"
+            android:layout_alignRight="@+id/tableLayout"
+            android:onClick="countDownClicked"/>
 
 </RelativeLayout>

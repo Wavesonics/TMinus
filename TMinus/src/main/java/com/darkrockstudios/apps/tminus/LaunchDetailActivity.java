@@ -5,9 +5,8 @@ import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.Window;
-
-import com.darkrockstudios.apps.tminus.R.id;
 
 public class LaunchDetailActivity extends DatabaseActivity
 {
@@ -60,7 +59,7 @@ public class LaunchDetailActivity extends DatabaseActivity
 				NavUtils.navigateUpTo( this, new Intent( this, LaunchListActivity.class ) );
 				handled = true;
 				break;
-			case id.action_settings:
+			case R.id.action_settings:
 				handled = true;
 				break;
 			default:
@@ -69,4 +68,10 @@ public class LaunchDetailActivity extends DatabaseActivity
 
 		return handled;
 	}
+
+    public void countDownClicked( View v )
+    {
+        Intent intent = new Intent( this, CountDownActivity.class );
+        startActivity(intent);
+    }
 }
