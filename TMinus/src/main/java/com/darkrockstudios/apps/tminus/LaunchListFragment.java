@@ -348,6 +348,8 @@ public class LaunchListFragment extends ListFragment
 
 								// This must be run after all the others are created so the IDs of the child objects can be set
 								launchDao.createOrUpdate( launch );
+
+                                ++numLaunches;
 							}
 						}
 
