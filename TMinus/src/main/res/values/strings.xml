@@ -14,6 +14,7 @@
     <string name="LAUNCHDETAIL_location">Location:</string>
     <string name="LAUNCHDETAIL_count_down">T Minus:</string>
 
-    <string name="TOAST_launch_list_refresh_complete">Launch List Updated</string>
+    <string name="TOAST_launch_list_refresh_complete">Launch List updated</string>
+    <string name="TOAST_launch_list_refresh_failed">Launch List update failed</string>
 
 </resources>

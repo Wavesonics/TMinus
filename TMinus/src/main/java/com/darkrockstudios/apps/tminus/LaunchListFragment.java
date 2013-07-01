@@ -298,6 +298,15 @@ public class LaunchListFragment extends ListFragment
 		public void onErrorResponse( VolleyError error )
 		{
 			Log.i( TAG, error.getMessage() );
+
+            final Activity activity = getActivity();
+            if( activity != null && isAdded() )
+            {
+                reloadData();
+
+                Toast.makeText(activity, R.string.TOAST_launch_list_refresh_failed, Toast.LENGTH_LONG).show();
+                activity.setProgressBarIndeterminateVisibility( false );
+            }
 		}
 	}
 
