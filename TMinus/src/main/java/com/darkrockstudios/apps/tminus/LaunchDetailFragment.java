@@ -18,7 +18,6 @@ import android.view.ViewGroup;
 import android.widget.ShareActionProvider;
 import android.widget.TextView;
 
-import com.darkrockstudios.apps.tminus.R.id;
 import com.darkrockstudios.apps.tminus.database.DatabaseHelper;
 import com.darkrockstudios.apps.tminus.launchlibrary.Launch;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
@@ -41,6 +40,9 @@ public class LaunchDetailFragment extends Fragment
 	private Launch              m_launchItem;
 	private TimeReceiver m_timeReceiver;
 
+    private View m_contentView;
+    private View m_progressBar;
+
 	/**
 	 * Mandatory empty constructor for the fragment manager to instantiate the
 	 * fragment (e.g. upon screen orientation changes).
@@ -55,8 +57,6 @@ public class LaunchDetailFragment extends Fragment
 		super.onCreate( savedInstanceState );
 
 		setHasOptionsMenu( true );
-
-		loadLaunch();
 	}
 
 	@Override
@@ -98,7 +98,17 @@ public class LaunchDetailFragment extends Fragment
 	public View onCreateView( LayoutInflater inflater, ViewGroup container,
 	                          Bundle savedInstanceState )
 	{
-		return inflater.inflate( R.layout.fragment_launch_detail, container, false );
+        View rootView = inflater.inflate( R.layout.fragment_launch_detail, container, false );
+
+        if (rootView != null)
+        {
+            m_contentView = rootView.findViewById(R.id.content_view);
+            m_progressBar = rootView.findViewById(R.id.progressBar);
+
+            loadLaunch();
+        }
+
+        return rootView;
 	}
 
 	@Override
@@ -116,25 +126,43 @@ public class LaunchDetailFragment extends Fragment
 		super.onCreateOptionsMenu( menu, inflater );
 	}
 
+    private void showContent()
+    {
+        if( m_contentView != null && m_progressBar != null )
+        {
+            m_contentView.setVisibility(View.VISIBLE);
+            m_progressBar.setVisibility(View.GONE);
+        }
+    }
+
+    private void showLoading()
+    {
+        if( m_contentView != null && m_progressBar != null )
+        {
+            m_contentView.setVisibility(View.GONE);
+            m_progressBar.setVisibility(View.VISIBLE);
+        }
+    }
+
 	private void updateViews()
 	{
 		if( m_launchItem != null )
 		{
 			final View rootView = getView();
 
-			final TextView name = (TextView)rootView.findViewById( id.LAUNCHDETAIL_mission_name );
+			final TextView name = (TextView)rootView.findViewById( R.id.LAUNCHDETAIL_mission_name );
 			name.setText( m_launchItem.name );
 
 			final TextView description = (TextView)rootView.findViewById( R.id.LAUNCHDETAIL_mission_description );
 			description.setText( m_launchItem.mission.description );
 
-			final TextView launchWindow = (TextView)rootView.findViewById( id.LAUNCHDETAIL_launch_window );
+			final TextView launchWindow = (TextView)rootView.findViewById( R.id.LAUNCHDETAIL_launch_window );
 			launchWindow.setText( m_launchItem.windowstart.toString() );
 
-			final TextView location = (TextView)rootView.findViewById( id.LAUNCHDETAIL_location );
+			final TextView location = (TextView)rootView.findViewById( R.id.LAUNCHDETAIL_location );
 			location.setText( m_launchItem.location.name );
 
-			final TextView windowLength = (TextView)rootView.findViewById( id.LAUNCHDETAIL_window_length );
+			final TextView windowLength = (TextView)rootView.findViewById( R.id.LAUNCHDETAIL_window_length );
 			final long windowLengthMs = m_launchItem.windowend.getTime() - m_launchItem.windowstart.getTime();
 			windowLength.setText( Utilities.getFormattedTime( windowLengthMs ) );
 
@@ -148,7 +176,7 @@ public class LaunchDetailFragment extends Fragment
 		{
 			final View rootView = getView();
 
-			final TextView timeRemaining = (TextView)rootView.findViewById( id.LAUNCHDETAIL_time_remaining );
+			final TextView timeRemaining = (TextView)rootView.findViewById( R.id.LAUNCHDETAIL_time_remaining );
 			final Date now = new Date();
 
 			final long totalMsLeft = m_launchItem.windowstart.getTime() - now.getTime();
@@ -161,6 +189,8 @@ public class LaunchDetailFragment extends Fragment
 		if( getArguments().containsKey( ARG_ITEM_ID ) )
 		{
 			int launchId = getArguments().getInt( ARG_ITEM_ID );
+
+            showLoading();
 
 			LaunchLoader loader = new LaunchLoader();
 			loader.execute( launchId );
@@ -228,6 +258,7 @@ public class LaunchDetailFragment extends Fragment
 			m_launchItem = result;
 			updateViews();
 			updateShareIntent();
+            showContent();
 
 			Log.d( TAG, "Launch details loaded." );
 		}
