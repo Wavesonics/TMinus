@@ -1,9 +1,9 @@
 <RelativeLayout
         xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         xmlns:android="http://schemas.android.com/apk/res/android"
-        android:padding="10dp">
+        android:padding="@dimen/launch_detail_padding">
 
     <ImageView
             android:layout_width="128dp"
@@ -21,7 +21,8 @@
             android:id="@+id/LAUNCHDETAIL_mission_name"
             android:layout_alignParentTop="true"
             android:layout_toRightOf="@+id/LAUNCHDETAIL_mission_image"
-            android:textStyle="bold"/>
+            android:textStyle="bold"
+            tools:ignore="HardcodedText"/>
 
     <TextView
             android:layout_width="wrap_content"
@@ -31,74 +32,123 @@
             android:id="@+id/LAUNCHDETAIL_mission_description"
             android:layout_below="@+id/LAUNCHDETAIL_mission_name"
             android:layout_toRightOf="@+id/LAUNCHDETAIL_mission_image"
-            android:textColor="@color/secondary_text"/>
+            android:textColor="@color/secondary_text"
+            tools:ignore="HardcodedText"/>
 
-    <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="@string/LAUNCHDETAIL_launch_window"
-            android:id="@+id/textView"
+    <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_below="@+id/LAUNCHDETAIL_mission_image"
             android:layout_alignLeft="@+id/LAUNCHDETAIL_mission_image"
-            android:layout_marginTop="48dp"
-            android:textStyle="bold"/>
+            android:layout_marginTop="@dimen/launch_detail_padding">
 
-    <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="MMM dd, yyyy HH:mm:ss zzz"
-            android:id="@+id/LAUNCHDETAIL_launch_window"
-            android:textColor="@color/secondary_text"
-            android:layout_alignTop="@+id/textView"
-            android:layout_toRightOf="@+id/textView"
-            android:layout_marginLeft="10sp"
-            tools:ignore="HardcodedText"/>
+        <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="@dimen/launch_detail_padding">
 
-    <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="@string/LAUNCHDETAIL_location"
-            android:id="@+id/textView2"
-            android:layout_below="@+id/LAUNCHDETAIL_launch_window"
-            android:layout_alignLeft="@+id/textView"
-            android:layout_marginTop="10dp"
-            android:textStyle="bold"/>
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="@string/LAUNCHDETAIL_launch_window"
+                    android:id="@+id/textView"
+                    android:textStyle="bold"
+                    android:gravity="right"
+                    android:layout_marginRight="@dimen/launch_detail_padding"/>
 
-    <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Your Moms House"
-            android:id="@+id/LAUNCHDETAIL_location"
-            android:textColor="@color/secondary_text"
-            android:layout_alignTop="@+id/textView2"
-            android:layout_toRightOf="@+id/textView2"
-            android:layout_marginLeft="10sp"
-            tools:ignore="HardcodedText"/>
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="MMM dd, yyyy HH:mm:ss zzz"
+                    android:id="@+id/LAUNCHDETAIL_launch_window"
+                    android:textColor="@color/secondary_text"
+                    tools:ignore="HardcodedText"
+                    android:layout_weight="1"/>
+        </TableRow>
 
-    <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="@string/LAUNCHDETAIL_count_down"
-            android:id="@+id/textView3"
-            android:textStyle="bold"
-            android:layout_below="@+id/LAUNCHDETAIL_location"
-            android:layout_alignLeft="@+id/textView2"
-            android:layout_marginTop="10dp"/>
+        <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="@dimen/launch_detail_padding"
+                >
 
-    <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="5d 12h 24m"
-            android:id="@+id/LAUNCHDETAIL_time_remaining"
-            android:textColor="@color/secondary_text"
-            android:layout_alignTop="@+id/textView3"
-            android:layout_toRightOf="@+id/textView3"
-            android:layout_marginLeft="10dp"
-            tools:ignore="HardcodedText"/>
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="@string/LAUNCHDETAIL_launch_window_length"
+                    android:id="@+id/textView4"
+                    android:textStyle="bold"
+                    android:gravity="right"
+                    android:layout_marginRight="@dimen/launch_detail_padding"/>
+
+            <TextView
+                    tools:ignore="HardcodedText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="10h 5m"
+                    android:id="@+id/LAUNCHDETAIL_window_length"
+                    android:textColor="@color/secondary_text"
+                    android:layout_weight="1"
+                    android:singleLine="false"/>
+        </TableRow>
+
+        <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingBottom="@dimen/launch_detail_padding">
+
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="@string/LAUNCHDETAIL_location"
+                    android:id="@+id/textView2"
+                    android:textStyle="bold"
+                    android:gravity="right"
+                    android:layout_marginRight="@dimen/launch_detail_padding"/>
+
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="Your Moms House"
+                    android:id="@+id/LAUNCHDETAIL_location"
+                    android:textColor="@color/secondary_text"
+                    tools:ignore="HardcodedText"
+                    android:layout_weight="1"/>
+        </TableRow>
+
+        <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingBottom="@dimen/launch_detail_padding">
+
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="@string/LAUNCHDETAIL_count_down"
+                    android:id="@+id/textView3"
+                    android:textStyle="bold"
+                    android:gravity="right"
+                    android:layout_marginRight="@dimen/launch_detail_padding"/>
+
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="5d 12h 24m"
+                    android:id="@+id/LAUNCHDETAIL_time_remaining"
+                    android:textColor="@color/secondary_text"
+                    android:layout_weight="1"
+                    tools:ignore="HardcodedText"
+                    />
+        </TableRow>
+
+    </TableLayout>
+
 </RelativeLayout>

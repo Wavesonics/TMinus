@@ -26,7 +26,6 @@ import com.j256.ormlite.dao.Dao;
 
 import java.sql.SQLException;
 import java.util.Date;
-import java.util.concurrent.TimeUnit;
 
 /**
  * A fragment representing a single Launch detail screen.
@@ -135,6 +134,10 @@ public class LaunchDetailFragment extends Fragment
 			final TextView location = (TextView)rootView.findViewById( id.LAUNCHDETAIL_location );
 			location.setText( m_launchItem.location.name );
 
+			final TextView windowLength = (TextView)rootView.findViewById( id.LAUNCHDETAIL_window_length );
+			final long windowLengthMs = m_launchItem.windowend.getTime() - m_launchItem.windowstart.getTime();
+			windowLength.setText( Utilities.getFormattedTime( windowLengthMs ) );
+
 			updateTimeViews();
 		}
 	}
@@ -149,14 +152,7 @@ public class LaunchDetailFragment extends Fragment
 			final Date now = new Date();
 
 			final long totalMsLeft = m_launchItem.windowstart.getTime() - now.getTime();
-
-			final long day = TimeUnit.MILLISECONDS.toDays( totalMsLeft );
-			final long hr = TimeUnit.MILLISECONDS.toHours( totalMsLeft - TimeUnit.DAYS.toMillis( day ) );
-			final long min = TimeUnit.MILLISECONDS.toMinutes( totalMsLeft - TimeUnit.DAYS
-			                                                                        .toMillis( day ) - TimeUnit.HOURS
-			                                                                                                   .toMillis( hr ) );
-
-			timeRemaining.setText( day + "d " + hr + "h " + min + "m" );
+			timeRemaining.setText( Utilities.getFormattedTime( totalMsLeft ) );
 		}
 	}
 

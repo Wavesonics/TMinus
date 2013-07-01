@@ -60,7 +60,7 @@ public class LaunchListFragment extends ListFragment
 		{
 		}
 	};
-	private static final long UPDATE_THRESHOLD_MS = 1 * 60 * 1000;
+	private static final long UPDATE_THRESHOLD_MS = 1 * 60 * 60 * 1000;
 	private ArrayAdapter<Launch> m_adapter;
 	private Callbacks m_callbacks         = s_dummyCallbacks;
 	private int       m_activatedPosition = ListView.INVALID_POSITION;
