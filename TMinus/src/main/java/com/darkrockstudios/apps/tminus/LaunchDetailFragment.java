@@ -40,8 +40,8 @@ public class LaunchDetailFragment extends Fragment
 	private Launch              m_launchItem;
 	private TimeReceiver m_timeReceiver;
 
-    private View m_contentView;
-    private View m_progressBar;
+	private View m_contentView;
+	private View m_progressBar;
 
 	/**
 	 * Mandatory empty constructor for the fragment manager to instantiate the
@@ -206,11 +206,25 @@ public class LaunchDetailFragment extends Fragment
 			intent.addFlags( Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET );
 
 			// Add data to the intent, the receiving app will decide what to do with it.
-			intent.putExtra( Intent.EXTRA_SUBJECT, m_launchItem.name );
-			intent.putExtra( Intent.EXTRA_TEXT, m_launchItem.mission.description );
+			intent.putExtra( Intent.EXTRA_SUBJECT, "Upcoming Space Launch: " + m_launchItem.name );
+			intent.putExtra( Intent.EXTRA_TEXT, generateShareBody() );
 
 			m_shareActionProvider.setShareIntent( intent );
 		}
+	}
+
+	private String generateShareBody()
+	{
+		String body = "";
+
+		if( m_launchItem != null )
+		{
+			body += m_launchItem.mission.description + "\n\n";
+			body += "Location: " + m_launchItem.location.name + "\n\n";
+			body += "Expected Launch Time: " + m_launchItem.net + "\n\n";
+		}
+
+		return body;
 	}
 
 	private class TimeReceiver extends BroadcastReceiver
