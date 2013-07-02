@@ -7,14 +7,19 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.darkrockstudios.apps.tminus.R.id;
+import com.darkrockstudios.apps.tminus.R.layout;
 import com.darkrockstudios.apps.tminus.database.DatabaseHelper;
 import com.darkrockstudios.apps.tminus.launchlibrary.Launch;
 import com.darkrockstudios.apps.tminus.launchlibrary.Location;
@@ -49,6 +54,7 @@ public class LaunchListFragment extends ListFragment
 	 * activated item position. Only used on tablets.
 	 */
 	private static final String    STATE_ACTIVATED_POSITION = "activated_position";
+	private static final long UPDATE_THRESHOLD_MS = 1 * 60 * 60 * 1000;
 	/**
 	 * A dummy implementation of the {@link Callbacks} interface that does
 	 * nothing. Used only when this fragment is not attached to an activity.
@@ -60,7 +66,6 @@ public class LaunchListFragment extends ListFragment
 		{
 		}
 	};
-	private static final long UPDATE_THRESHOLD_MS = 1 * 60 * 60 * 1000;
 	private ArrayAdapter<Launch> m_adapter;
 	private Callbacks m_callbacks         = s_dummyCallbacks;
 	private int       m_activatedPosition = ListView.INVALID_POSITION;
@@ -78,10 +83,7 @@ public class LaunchListFragment extends ListFragment
 	{
 		super.onCreate( savedInstanceState );
 
-		m_adapter = new ArrayAdapter<Launch>(
-				                                    getActivity(),
-				                                    android.R.layout.simple_list_item_activated_1,
-				                                    android.R.id.text1 );
+		m_adapter = new LaunchListAdapter( getActivity() );
 
 		setListAdapter( m_adapter );
 
@@ -285,6 +287,36 @@ public class LaunchListFragment extends ListFragment
 		public void onItemSelected( Launch launch );
 	}
 
+	private static class LaunchListAdapter extends ArrayAdapter<Launch>
+	{
+		public LaunchListAdapter( Context context )
+		{
+			super( context, layout.row_launch_list_item );
+		}
+
+		@Override
+		public View getView( int pos, View convertView, ViewGroup parent )
+		{
+			View view = convertView;
+			if( view == null )
+			{
+				LayoutInflater inflater = (LayoutInflater)getContext()
+						                                          .getSystemService( Context.LAYOUT_INFLATER_SERVICE );
+				view = inflater.inflate( R.layout.row_launch_list_item, null );
+			}
+
+			final Launch launch = getItem( pos );
+
+			final TextView titleView = (TextView)view.findViewById( R.id.launch_list_item_title );
+			titleView.setText( launch.name );
+
+			final TextView descriptionView = (TextView)view.findViewById( id.launch_list_item_description );
+			descriptionView.setText( launch.mission.description );
+
+			return view;
+		}
+	}
+
 	private class LaunchListResponseListener implements Response.Listener<JSONObject>, Response.ErrorListener
 	{
 		@Override
@@ -299,14 +331,14 @@ public class LaunchListFragment extends ListFragment
 		{
 			Log.i( TAG, error.getMessage() );
 
-            final Activity activity = getActivity();
-            if( activity != null && isAdded() )
-            {
-                reloadData();
+			final Activity activity = getActivity();
+			if( activity != null && isAdded() )
+			{
+				reloadData();
 
-                Toast.makeText(activity, R.string.TOAST_launch_list_refresh_failed, Toast.LENGTH_LONG).show();
-                activity.setProgressBarIndeterminateVisibility( false );
-            }
+				Toast.makeText( activity, R.string.TOAST_launch_list_refresh_failed, Toast.LENGTH_LONG ).show();
+				activity.setProgressBarIndeterminateVisibility( false );
+			}
 		}
 	}
 
@@ -349,7 +381,7 @@ public class LaunchListFragment extends ListFragment
 								// This must be run after all the others are created so the IDs of the child objects can be set
 								launchDao.createOrUpdate( launch );
 
-                                ++numLaunches;
+								++numLaunches;
 							}
 						}
 

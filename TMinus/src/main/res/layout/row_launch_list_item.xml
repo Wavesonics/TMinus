@@ -14,7 +14,9 @@
             android:text="Launch Name"
             android:layout_gravity="center"
             android:gravity="center_vertical"
-            android:textAppearance="?android:attr/textAppearanceListItem"/>
+            android:textAppearance="?android:attr/textAppearanceListItem"
+            android:singleLine="true"
+            android:ellipsize="end"/>
 
     <TextView
             android:id="@+id/launch_list_item_description"
@@ -24,6 +26,7 @@
             android:textColor="@android:color/secondary_text_light"
             android:layout_gravity="center"
             android:gravity="center_vertical"
-            android:layout_marginTop="10dp"
-            android:textAppearance="?android:attr/textAppearanceListItemSmall"/>
+            android:textAppearance="?android:attr/textAppearanceListItemSmall"
+            android:ellipsize="end"
+            android:singleLine="true"/>
 </LinearLayout>
