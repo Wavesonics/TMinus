@@ -28,7 +28,7 @@ public class Location implements Serializable
 	@DatabaseField
 	public int locationid;
 
-	public Object wikiURL;
-	public Object infoURL;
-	public Object mapURL;
+	public String wikiURL;
+	public String infoURL;
+	public String mapURL;
 }

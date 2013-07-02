@@ -25,7 +25,7 @@ public class Rocket implements Serializable
 	@DatabaseField
 	public String name;
 
-	public Object wikiURL;
-	public Object infoURL;
-	public Object configuration;
+	public String wikiURL;
+	public String infoURL;
+	public String configuration;
 }

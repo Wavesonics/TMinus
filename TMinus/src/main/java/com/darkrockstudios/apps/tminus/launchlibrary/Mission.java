@@ -31,6 +31,6 @@ public class Mission implements Serializable
 	@DatabaseField
 	public String name;
 
-	public Object wikiURL;
-	public Object infoURL;
+	public String wikiURL;
+	public String infoURL;
 }
