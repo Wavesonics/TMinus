@@ -11,18 +11,26 @@
     <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Count Down to launch! .. placeholder... just hit back."
-            android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true"
-            android:layout_marginLeft="15dp"
-            android:layout_marginTop="21dp"/>
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="-00:00:00"
+            android:id="@+id/COUNTDOWN_timer"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="14dp"
+            android:textSize="48sp"
+            android:textColor="#ECB236"
+            android:layout_centerVertical="true"/>
 
-    <ImageView
+    <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/imageView"
-            android:layout_centerVertical="true"
-            android:layout_centerHorizontal="true"
-            android:src="@drawable/count_down_clock"/>
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="@string/COUNTDOWN_launch_status"
+            android:id="@+id/COUNTDOWN_launch_status"
+            android:layout_marginTop="10dp"
+            android:textSize="28sp"
+            android:textColor="#ECB236"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="10dp"/>
 
 </RelativeLayout>

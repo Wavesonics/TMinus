@@ -131,9 +131,9 @@ public class LaunchListActivity extends DatabaseActivity
 		}
 	}
 
-    public void countDownClicked( View v )
-    {
-        Intent intent = new Intent( this, CountDownActivity.class );
-        startActivity(intent);
-    }
+	public void countDownClicked( View v )
+	{
+		Intent intent = new Intent( this, CountDownActivity.class );
+		startActivity( intent );
+	}
 }

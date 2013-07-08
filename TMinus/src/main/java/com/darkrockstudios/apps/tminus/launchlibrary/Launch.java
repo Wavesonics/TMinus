@@ -18,7 +18,7 @@ public class Launch implements Serializable
 	public transient static final String TABLE_NAME  = "Launch";
 	public transient static final String DATE_FORMAT = "MMM dd, yyyy HH:mm:ss zzz";
 
-	@DatabaseField( id = true )
+	@DatabaseField(id = true)
 	public int id;
 
 	@DatabaseField

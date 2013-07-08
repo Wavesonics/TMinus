@@ -54,7 +54,7 @@ public class LaunchListFragment extends ListFragment
 	 * activated item position. Only used on tablets.
 	 */
 	private static final String    STATE_ACTIVATED_POSITION = "activated_position";
-	private static final long UPDATE_THRESHOLD_MS = 1 * 60 * 60 * 1000;
+	private static final long      UPDATE_THRESHOLD_MS      = 1 * 60 * 60 * 1000;
 	/**
 	 * A dummy implementation of the {@link Callbacks} interface that does
 	 * nothing. Used only when this fragment is not attached to an activity.

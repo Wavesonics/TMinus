@@ -98,17 +98,17 @@ public class LaunchDetailFragment extends Fragment
 	public View onCreateView( LayoutInflater inflater, ViewGroup container,
 	                          Bundle savedInstanceState )
 	{
-        View rootView = inflater.inflate( R.layout.fragment_launch_detail, container, false );
+		View rootView = inflater.inflate( R.layout.fragment_launch_detail, container, false );
 
-        if (rootView != null)
-        {
-            m_contentView = rootView.findViewById(R.id.content_view);
-            m_progressBar = rootView.findViewById(R.id.progressBar);
+		if( rootView != null )
+		{
+			m_contentView = rootView.findViewById( R.id.content_view );
+			m_progressBar = rootView.findViewById( R.id.progressBar );
 
-            loadLaunch();
-        }
+			loadLaunch();
+		}
 
-        return rootView;
+		return rootView;
 	}
 
 	@Override
@@ -126,23 +126,23 @@ public class LaunchDetailFragment extends Fragment
 		super.onCreateOptionsMenu( menu, inflater );
 	}
 
-    private void showContent()
-    {
-        if( m_contentView != null && m_progressBar != null )
-        {
-            m_contentView.setVisibility(View.VISIBLE);
-            m_progressBar.setVisibility(View.GONE);
-        }
-    }
+	private void showContent()
+	{
+		if( m_contentView != null && m_progressBar != null )
+		{
+			m_contentView.setVisibility( View.VISIBLE );
+			m_progressBar.setVisibility( View.GONE );
+		}
+	}
 
-    private void showLoading()
-    {
-        if( m_contentView != null && m_progressBar != null )
-        {
-            m_contentView.setVisibility(View.GONE);
-            m_progressBar.setVisibility(View.VISIBLE);
-        }
-    }
+	private void showLoading()
+	{
+		if( m_contentView != null && m_progressBar != null )
+		{
+			m_contentView.setVisibility( View.GONE );
+			m_progressBar.setVisibility( View.VISIBLE );
+		}
+	}
 
 	private void updateViews()
 	{
@@ -190,7 +190,7 @@ public class LaunchDetailFragment extends Fragment
 		{
 			int launchId = getArguments().getInt( ARG_ITEM_ID );
 
-            showLoading();
+			showLoading();
 
 			LaunchLoader loader = new LaunchLoader();
 			loader.execute( launchId );
@@ -272,7 +272,7 @@ public class LaunchDetailFragment extends Fragment
 			m_launchItem = result;
 			updateViews();
 			updateShareIntent();
-            showContent();
+			showContent();
 
 			Log.d( TAG, "Launch details loaded." );
 		}

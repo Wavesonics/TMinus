@@ -69,9 +69,9 @@ public class LaunchDetailActivity extends DatabaseActivity
 		return handled;
 	}
 
-    public void countDownClicked( View v )
-    {
-        Intent intent = new Intent( this, CountDownActivity.class );
-        startActivity(intent);
-    }
+	public void countDownClicked( View v )
+	{
+		Intent intent = new Intent( this, CountDownActivity.class );
+		startActivity( intent );
+	}
 }
