@@ -29,6 +29,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.stmt.PreparedQuery;
+import com.j256.ormlite.stmt.QueryBuilder;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -36,6 +38,7 @@ import org.json.JSONObject;
 
 import java.sql.SQLException;
 import java.util.Date;
+import java.util.List;
 
 /**
  * A list fragment representing a list of Launches. This fragment
@@ -203,10 +206,13 @@ public class LaunchListFragment extends ListFragment
 				try
 				{
 					Dao<Launch, Integer> launchDao = databaseHelper.getLaunchDao();
+                    QueryBuilder<Launch, Integer> queryBuilder = launchDao.queryBuilder();
+                    PreparedQuery<Launch> query = queryBuilder.orderBy("net", true).prepare();
 
-					if( launchDao.countOf() > 0 )
+                    List<Launch> results = launchDao.query(query);
+					if( results != null )
 					{
-						for( Launch launch : launchDao )
+						for( Launch launch : results )
 						{
 							m_adapter.add( launch );
 						}
@@ -235,7 +241,7 @@ public class LaunchListFragment extends ListFragment
 			activity.setProgressBarIndeterminateVisibility( true );
 		}
 
-		final String url = "http://launchlibrary.net/ll/json/next/10";
+		final String url = "http://launchlibrary.net/ll/json/next/20";
 
 		LaunchListResponseListener listener = new LaunchListResponseListener();
 		JsonObjectRequest request = new JsonObjectRequest( url, null, listener, listener );

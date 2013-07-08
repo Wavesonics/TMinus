@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.view.Menu;
+import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.darkrockstudios.apps.tminus.R.id;
@@ -32,6 +33,7 @@ public class CountDownActivity extends Activity
 	protected void onCreate( Bundle savedInstanceState )
 	{
 		super.onCreate( savedInstanceState );
+        getWindow().addFlags( WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON );
 		setContentView( R.layout.activity_count_down );
 
 		m_handler = new Handler();
