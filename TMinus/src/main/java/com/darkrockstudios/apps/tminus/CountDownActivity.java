@@ -4,22 +4,24 @@ package com.darkrockstudios.apps.tminus;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.SystemClock;
 import android.view.Menu;
 import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.darkrockstudios.apps.tminus.R.id;
+import com.darkrockstudios.apps.tminus.launchlibrary.Launch;
 
 import java.text.DecimalFormat;
 import java.util.concurrent.TimeUnit;
 
-public class CountDownActivity extends Activity
+public class CountDownActivity extends Activity implements LaunchLoader.Listener
 {
 	private static final String TAG            = CountDownActivity.class.getSimpleName();
+    private static final String FONT_PATH = "fonts/digital_7_mono.ttf";
 	public static final  String ARG_ITEM_ID    = "item_id";
 	private static final long   INTERVAL_IN_MS = 10;
 	private long      m_endTime;
@@ -28,6 +30,8 @@ public class CountDownActivity extends Activity
 	private TextView  m_statusView;
 	private Handler   m_handler;
 	private TickTimer m_timeTicker;
+
+    private Launch m_launch;
 
 	@Override
 	protected void onCreate( Bundle savedInstanceState )
@@ -39,14 +43,14 @@ public class CountDownActivity extends Activity
 		m_handler = new Handler();
 		m_timeTicker = new TickTimer();
 
-		final Typeface typeface = Typeface.createFromAsset( getAssets(), "fonts/digital_7_mono.ttf" );
+		final Typeface typeface = Typeface.createFromAsset( getAssets(), FONT_PATH );
 		m_timerView = (TextView)findViewById( R.id.COUNTDOWN_timer );
 		m_timerView.setTypeface( typeface );
 
 		m_statusView = (TextView)findViewById( id.COUNTDOWN_launch_status );
 		m_statusView.setTypeface( typeface );
 
-		m_endTime = SystemClock.uptimeMillis() + 10000;
+        loadLaunch();
 	}
 
 	@Override
@@ -54,8 +58,11 @@ public class CountDownActivity extends Activity
 	{
 		super.onStart();
 
-		updateTimer();
-		startTimer();
+        if( m_launch != null )
+        {
+            updateTimer();
+            startTimer();
+        }
 	}
 
 	@Override
@@ -66,15 +73,51 @@ public class CountDownActivity extends Activity
 		stopTimer();
 	}
 
+    private void loadLaunch()
+    {
+        final Intent intent = getIntent();
+        if( intent != null )
+        {
+            final int launchId = intent.getIntExtra( ARG_ITEM_ID, -1 );
+            if( launchId > 0 )
+            {
+                LaunchLoader launchLoader = new LaunchLoader( this, this );
+                launchLoader.execute( launchId );
+            }
+        }
+    }
+
 	private void updateStatus()
 	{
-		//String.format( getString( string.COUNTDOWN_launch_status ),  )
-		//m_statusView.setText(  );
+        if( m_launch != null )
+        {
+            final String status;
+            switch( m_launch.status )
+            {
+                case 1:
+                    status = getString( R.string.COUNTDOWN_launch_status_green );
+                    break;
+                case 2:
+                    status = getString( R.string.COUNTDOWN_launch_status_red );
+                    break;
+                case 3:
+                    status = getString( R.string.COUNTDOWN_launch_status_success );
+                    break;
+                case 4:
+                    status = getString( R.string.COUNTDOWN_launch_status_fail );
+                    break;
+                default:
+                    status = "";
+            }
+
+		    final String statusText = String.format( getString( R.string.COUNTDOWN_launch_status ), status );
+		    m_statusView.setText( statusText );
+        }
 	}
 
 	private void updateTimer()
 	{
-		final long millis = m_endTime - SystemClock.uptimeMillis();
+		final long millis = m_endTime - System.currentTimeMillis();
 
 		final long hr = TimeUnit.MILLISECONDS.toHours( millis );
 
@@ -120,7 +163,7 @@ public class CountDownActivity extends Activity
 	private void startTimer()
 	{
 		m_handler.removeCallbacks( m_timeTicker );
-		m_handler.postDelayed( m_timeTicker, INTERVAL_IN_MS );
+		m_handler.postDelayed( m_timeTicker, 0 );
 	}
 
 	private void stopTimer()
@@ -135,7 +178,19 @@ public class CountDownActivity extends Activity
 		return true;
 	}
 
-	private class TickTimer implements Runnable
+    @Override
+    public void launchLoaded( Launch launch )
+    {
+        m_launch = launch;
+
+        m_endTime = m_launch.windowstart.getTime();
+        updateStatus();
+        updateTimer();
+
+        startTimer();
+    }
+
+    private class TickTimer implements Runnable
 	{
 		@Override
 		public void run()

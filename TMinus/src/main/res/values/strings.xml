@@ -16,7 +16,7 @@
     <string name="TOAST_launch_list_refresh_failed">Launch List update failed</string>
     <string name="COUNTDOWN_launch_status">Status: %s</string>
     <string name="COUNTDOWN_launch_status_green">GO</string>
-    <string name="COUNTDOWN_launch_status_green">NO-GO</string>
-    <string name="COUNTDOWN_launch_status_green">SUCCESS</string>
-    <string name="COUNTDOWN_launch_status_green">FAIL</string>
+    <string name="COUNTDOWN_launch_status_red">NO-GO</string>
+    <string name="COUNTDOWN_launch_status_success">SUCCESS</string>
+    <string name="COUNTDOWN_launch_status_fail">FAIL</string>
 </resources>

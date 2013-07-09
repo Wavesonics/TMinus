@@ -5,10 +5,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -18,12 +16,8 @@ import android.view.ViewGroup;
 import android.widget.ShareActionProvider;
 import android.widget.TextView;
 
-import com.darkrockstudios.apps.tminus.database.DatabaseHelper;
 import com.darkrockstudios.apps.tminus.launchlibrary.Launch;
-import com.j256.ormlite.android.apptools.OpenHelperManager;
-import com.j256.ormlite.dao.Dao;
 
-import java.sql.SQLException;
 import java.util.Date;
 
 /**
@@ -32,7 +26,7 @@ import java.util.Date;
  * in two-pane mode (on tablets) or a {@link LaunchDetailActivity}
  * on handsets.
  */
-public class LaunchDetailFragment extends Fragment
+public class LaunchDetailFragment extends Fragment implements LaunchLoader.Listener
 {
 	public static final String TAG = LaunchDetailFragment.class.getSimpleName();
 	public static final String ARG_ITEM_ID = "item_id";
@@ -126,6 +120,18 @@ public class LaunchDetailFragment extends Fragment
 		super.onCreateOptionsMenu( menu, inflater );
 	}
 
+    public int getLaunchId()
+    {
+        int launchId = -1;
+
+        if( getArguments().containsKey( ARG_ITEM_ID ) )
+        {
+            launchId = getArguments().getInt( ARG_ITEM_ID );
+        }
+
+        return launchId;
+    }
+
 	private void showContent()
 	{
 		if( m_contentView != null && m_progressBar != null )
@@ -186,15 +192,14 @@ public class LaunchDetailFragment extends Fragment
 
 	public void loadLaunch()
 	{
-		if( getArguments().containsKey( ARG_ITEM_ID ) )
-		{
-			int launchId = getArguments().getInt( ARG_ITEM_ID );
+        final int launchId = getLaunchId();
+        if( launchId >= 0 )
+        {
+            showLoading();
 
-			showLoading();
-
-			LaunchLoader loader = new LaunchLoader();
-			loader.execute( launchId );
-		}
+            LaunchLoader loader = new LaunchLoader( getActivity(), this );
+            loader.execute( launchId );
+        }
 	}
 
 	private void updateShareIntent()
@@ -236,45 +241,12 @@ public class LaunchDetailFragment extends Fragment
 		}
 	}
 
-	private class LaunchLoader extends AsyncTask<Integer, Void, Launch>
-	{
-		@Override
-		protected Launch doInBackground( Integer... ids )
-		{
-			Launch launch = null;
-
-			final Activity activity = getActivity();
-			if( activity != null )
-			{
-				final DatabaseHelper databaseHelper = OpenHelperManager.getHelper( activity, DatabaseHelper.class );
-				if( databaseHelper != null )
-				{
-					try
-					{
-						Dao<Launch, Integer> launchDao = databaseHelper.getLaunchDao();
-						launch = launchDao.queryForId( ids[ 0 ] );
-					}
-					catch( SQLException e )
-					{
-						e.printStackTrace();
-					}
-
-					OpenHelperManager.releaseHelper();
-				}
-			}
-
-			return launch;
-		}
-
-		@Override
-		protected void onPostExecute( Launch result )
-		{
-			m_launchItem = result;
-			updateViews();
-			updateShareIntent();
-			showContent();
-
-			Log.d( TAG, "Launch details loaded." );
-		}
-	}
+    @Override
+    public void launchLoaded( Launch launch )
+    {
+        m_launchItem = launch;
+        updateViews();
+        updateShareIntent();
+        showContent();
+    }
 }

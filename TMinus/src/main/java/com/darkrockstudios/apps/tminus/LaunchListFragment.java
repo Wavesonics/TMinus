@@ -212,10 +212,7 @@ public class LaunchListFragment extends ListFragment
                     List<Launch> results = launchDao.query(query);
 					if( results != null )
 					{
-						for( Launch launch : results )
-						{
-							m_adapter.add( launch );
-						}
+                        m_adapter.addAll( results );
 
 						dataLoaded = true;
 					}

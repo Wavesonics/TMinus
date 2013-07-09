@@ -94,13 +94,6 @@ public class LaunchListActivity extends DatabaseActivity
 		return handled;
 	}
 
-	private void refreshLaunchList()
-	{
-		LaunchListFragment launchListFragment = (LaunchListFragment)getSupportFragmentManager()
-				                                                            .findFragmentById( R.id.launch_list );
-		launchListFragment.refresh();
-	}
-
 	/**
 	 * Callback method from {@link LaunchListFragment.Callbacks}
 	 * indicating that the item with the given ID was selected.
@@ -131,9 +124,26 @@ public class LaunchListActivity extends DatabaseActivity
 		}
 	}
 
+    private void refreshLaunchList()
+    {
+        LaunchListFragment launchListFragment = (LaunchListFragment)getSupportFragmentManager()
+                .findFragmentById( R.id.launch_list );
+        launchListFragment.refresh();
+    }
+
 	public void countDownClicked( View v )
 	{
-		Intent intent = new Intent( this, CountDownActivity.class );
-		startActivity( intent );
+        LaunchDetailFragment launchDetailFragment = (LaunchDetailFragment)getSupportFragmentManager()
+                .findFragmentById( id.launch_detail_container );
+        if( launchDetailFragment != null )
+        {
+            final int launchId = launchDetailFragment.getLaunchId();
+            if( launchId >= 0 )
+            {
+                Intent intent = new Intent( this, CountDownActivity.class );
+                intent.putExtra( CountDownActivity.ARG_ITEM_ID, launchId );
+                startActivity( intent );
+            }
+        }
 	}
 }
