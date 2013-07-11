@@ -45,6 +45,8 @@ public class LaunchListActivity extends DatabaseActivity
 		requestWindowFeature( Window.FEATURE_INDETERMINATE_PROGRESS );
 		setContentView( R.layout.activity_launch_list );
 
+        startService( new Intent( this, UpdateAlarmsService.class ) );
+
 		if( findViewById( R.id.launch_detail_container ) != null )
 		{
 			// The detail container view will be present only in the

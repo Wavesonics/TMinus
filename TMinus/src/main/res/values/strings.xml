@@ -7,6 +7,7 @@
     <string name="title_launch_list">Launches</string>
     <string name="title_launch_detail">Launch Detail</string>
     <string name="title_activity_count_down">Count Down</string>
+    <string name="NOTIFICATION_launch_title">Upcoming launch</string>
     <string name="LAUNCHDETAIL_launch_window">Launch:</string>
     <string name="LAUNCHDETAIL_launch_window_length">Window:</string>
     <string name="LAUNCHDETAIL_location">Location:</string>
