@@ -23,7 +23,11 @@ public class NotificationService extends WakefulIntentService
 {
     public static final String TAG = NotificationService.class.getSimpleName();
     public static final String EXTRA_LAUNCH_ID = "launch_id";
-    public static final String NOTIFICATION_TAG_LAUNCH = "launch";
+    public static final String EXTRA_NOTIFICATION_TYPE = "notification_type";
+    public static final int EXTRA_NOTIFICATION_TYPE_REMINDER = 1;
+    public static final int EXTRA_NOTIFICATION_TYPE_LAUNCH_IMMINENT = 2;
+    public static final String NOTIFICATION_TAG_REMINDER = "launch_reminder";
+    public static final String NOTIFICATION_TAG_LAUNCH_IMMINENT = "imminent_launch";
 
     public NotificationService()
     {
@@ -36,7 +40,8 @@ public class NotificationService extends WakefulIntentService
         Log.d( TAG, "Lets post a notification!" );
 
         final int launchId = intent.getIntExtra( EXTRA_LAUNCH_ID, -1 );
-        if( launchId >= 0 )
+        final int notificationType = intent.getIntExtra( EXTRA_NOTIFICATION_TYPE, -1 );
+        if( launchId >= 0 && notificationType > 0 )
         {
             final DatabaseHelper databaseHelper = OpenHelperManager.getHelper(this, DatabaseHelper.class);
             if( databaseHelper != null )
@@ -46,22 +51,14 @@ public class NotificationService extends WakefulIntentService
                     Dao<Launch, Integer> launchDao = databaseHelper.getLaunchDao();
                     Launch launch = launchDao.queryForId( launchId );
 
-                    NotificationCompat.Builder builder = new NotificationCompat.Builder( this );
-                    builder.setContentTitle( getString(R.string.NOTIFICATION_launch_title) );
-	                builder.setContentText( launch.name + launch.net.toString() );
-	                builder.setSmallIcon( R.drawable.ic_stat_rocket );
-	                builder.setAutoCancel(true);
-
-                    Intent launchDetailIntent = new Intent( this, LaunchDetailActivity.class );
-                    launchDetailIntent.putExtra( LaunchDetailFragment.ARG_ITEM_ID, launchId );
-
-                    PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, launchDetailIntent, 0);
-                    builder.setContentIntent( pendingIntent );
-
-                    Notification notification = builder.build();
-
-                    NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-                    notificationManager.notify( NOTIFICATION_TAG_LAUNCH, launchId, notification );
+                    if( notificationType == EXTRA_NOTIFICATION_TYPE_REMINDER )
+                    {
+                        postReminderNotification(launch);
+                    }
+                    else if( notificationType == EXTRA_NOTIFICATION_TYPE_LAUNCH_IMMINENT )
+                    {
+                        postLaunchImminentNotification(launch);
+                    }
                 }
                 catch (SQLException e)
                 {
@@ -71,5 +68,45 @@ public class NotificationService extends WakefulIntentService
 	            OpenHelperManager.releaseHelper();
             }
         }
+    }
+
+    private void postReminderNotification(Launch launch)
+    {
+        NotificationCompat.Builder builder = new NotificationCompat.Builder( this );
+        builder.setContentTitle( getString(R.string.NOTIFICATION_reminder_title) );
+        builder.setContentText( launch.name + launch.net.toString() );
+        builder.setSmallIcon( R.drawable.ic_stat_rocket );
+        builder.setAutoCancel(true);
+
+        Intent launchDetailIntent = new Intent( this, LaunchDetailActivity.class );
+        launchDetailIntent.putExtra( LaunchDetailFragment.ARG_ITEM_ID, launch.id );
+
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, launchDetailIntent, 0);
+        builder.setContentIntent( pendingIntent );
+
+        Notification notification = builder.build();
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+        notificationManager.notify( NOTIFICATION_TAG_REMINDER, launch.id, notification );
+    }
+
+    private void postLaunchImminentNotification(Launch launch)
+    {
+        NotificationCompat.Builder builder = new NotificationCompat.Builder( this );
+        builder.setContentTitle( getString(R.string.NOTIFICATION_launch_imminent_title) );
+        builder.setContentText( launch.name + launch.net.toString() );
+        builder.setSmallIcon( R.drawable.ic_stat_rocket );
+        builder.setAutoCancel(true);
+
+        Intent launchDetailIntent = new Intent( this, CountDownActivity.class );
+        launchDetailIntent.putExtra( CountDownActivity.ARG_ITEM_ID, launch.id );
+
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, launchDetailIntent, 0);
+        builder.setContentIntent( pendingIntent );
+
+        Notification notification = builder.build();
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+        notificationManager.notify( NOTIFICATION_TAG_LAUNCH_IMMINENT, launch.id, notification );
     }
 }

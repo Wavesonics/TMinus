@@ -55,15 +55,10 @@ public class UpdateAlarmsService extends WakefulIntentService
                 {
                     if( launch.net.before( cutOffDate ) )
                     {
-                        Intent serviceIntent = new Intent( this, NotificationService.class );
-                        serviceIntent.putExtra( NotificationService.EXTRA_LAUNCH_ID, launch.id );
+                        setReminderAlarm( launch, alarmManager );
+                        setImminentLaunchAlarm( launch, alarmManager );
 
-                        PendingIntent pendingIntent = PendingIntent.getService( this, 0, serviceIntent, 0 );
-
-                        //alarmManager.set( AlarmManager.RTC_WAKEUP, launch.net.getTime(), pendingIntent );
-                        alarmManager.set( AlarmManager.RTC_WAKEUP, new Date().getTime() + 5000, pendingIntent );
-
-                        Log.d( TAG, "Setting alarm for Launch id: " + launch.id );
+                        Log.d( TAG, "Setting alarms for Launch id: " + launch.id );
                     }
                     else
                     {
@@ -79,5 +74,34 @@ public class UpdateAlarmsService extends WakefulIntentService
 
 	        OpenHelperManager.releaseHelper();
         }
+    }
+
+    private void setReminderAlarm( Launch launch, AlarmManager alarmManager )
+    {
+        Intent serviceIntent = new Intent( this, NotificationService.class );
+        serviceIntent.putExtra( NotificationService.EXTRA_LAUNCH_ID, launch.id );
+        serviceIntent.putExtra( NotificationService.EXTRA_NOTIFICATION_TYPE, NotificationService.EXTRA_NOTIFICATION_TYPE_REMINDER );
+
+        PendingIntent pendingIntent = PendingIntent.getService( this, getUniqueRequestCode( launch, NotificationService.EXTRA_NOTIFICATION_TYPE_REMINDER ), serviceIntent, 0 );
+
+        long dayBefore = launch.net.getTime() - TimeUnit.DAYS.toMillis( 1 );
+        alarmManager.set( AlarmManager.RTC_WAKEUP, dayBefore, pendingIntent );
+    }
+
+    private void setImminentLaunchAlarm( Launch launch, AlarmManager alarmManager )
+    {
+        Intent serviceIntent = new Intent( this, NotificationService.class );
+        serviceIntent.putExtra( NotificationService.EXTRA_LAUNCH_ID, launch.id );
+        serviceIntent.putExtra( NotificationService.EXTRA_NOTIFICATION_TYPE, NotificationService.EXTRA_NOTIFICATION_TYPE_LAUNCH_IMMINENT );
+
+        PendingIntent pendingIntent = PendingIntent.getService( this, getUniqueRequestCode( launch, NotificationService.EXTRA_NOTIFICATION_TYPE_LAUNCH_IMMINENT ), serviceIntent, 0 );
+
+        long tiggerTime = launch.net.getTime() - TimeUnit.MINUTES.toMillis( 10 );
+        alarmManager.set( AlarmManager.RTC_WAKEUP, tiggerTime, pendingIntent );
+    }
+
+    private int getUniqueRequestCode( Launch launch, int notificationType )
+    {
+        return launch.id * 10 + notificationType;
     }
 }
