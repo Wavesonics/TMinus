@@ -45,8 +45,6 @@ public class LaunchListActivity extends DatabaseActivity
 		requestWindowFeature( Window.FEATURE_INDETERMINATE_PROGRESS );
 		setContentView( R.layout.activity_launch_list );
 
-        startService( new Intent( this, UpdateAlarmsService.class ) );
-
 		if( findViewById( R.id.launch_detail_container ) != null )
 		{
 			// The detail container view will be present only in the
@@ -126,26 +124,26 @@ public class LaunchListActivity extends DatabaseActivity
 		}
 	}
 
-    private void refreshLaunchList()
-    {
-        LaunchListFragment launchListFragment = (LaunchListFragment)getSupportFragmentManager()
-                .findFragmentById( R.id.launch_list );
-        launchListFragment.refresh();
-    }
+	private void refreshLaunchList()
+	{
+		LaunchListFragment launchListFragment = (LaunchListFragment)getSupportFragmentManager()
+				                                                            .findFragmentById( R.id.launch_list );
+		launchListFragment.refresh();
+	}
 
 	public void countDownClicked( View v )
 	{
-        LaunchDetailFragment launchDetailFragment = (LaunchDetailFragment)getSupportFragmentManager()
-                .findFragmentById( id.launch_detail_container );
-        if( launchDetailFragment != null )
-        {
-            final int launchId = launchDetailFragment.getLaunchId();
-            if( launchId >= 0 )
-            {
-                Intent intent = new Intent( this, CountDownActivity.class );
-                intent.putExtra( CountDownActivity.ARG_ITEM_ID, launchId );
-                startActivity( intent );
-            }
-        }
+		LaunchDetailFragment launchDetailFragment = (LaunchDetailFragment)getSupportFragmentManager()
+				                                                                  .findFragmentById( id.launch_detail_container );
+		if( launchDetailFragment != null )
+		{
+			final int launchId = launchDetailFragment.getLaunchId();
+			if( launchId >= 0 )
+			{
+				Intent intent = new Intent( this, CountDownActivity.class );
+				intent.putExtra( CountDownActivity.ARG_ITEM_ID, launchId );
+				startActivity( intent );
+			}
+		}
 	}
 }

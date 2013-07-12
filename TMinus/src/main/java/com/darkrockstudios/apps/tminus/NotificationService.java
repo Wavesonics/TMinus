@@ -48,9 +48,9 @@ public class NotificationService extends WakefulIntentService
 
                     NotificationCompat.Builder builder = new NotificationCompat.Builder( this );
                     builder.setContentTitle( getString(R.string.NOTIFICATION_launch_title) );
-                    builder.setContentText(launch.name + "\n" + launch.net.toString());
-                    builder.setSmallIcon(R.drawable.stat_launch);
-                    builder.setAutoCancel(true);
+	                builder.setContentText( launch.name + launch.net.toString() );
+	                builder.setSmallIcon( R.drawable.ic_stat_rocket );
+	                builder.setAutoCancel(true);
 
                     Intent launchDetailIntent = new Intent( this, LaunchDetailActivity.class );
                     launchDetailIntent.putExtra( LaunchDetailFragment.ARG_ITEM_ID, launchId );
@@ -62,12 +62,13 @@ public class NotificationService extends WakefulIntentService
 
                     NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
                     notificationManager.notify( NOTIFICATION_TAG_LAUNCH, launchId, notification );
-
                 }
                 catch (SQLException e)
                 {
                     e.printStackTrace();
                 }
+
+	            OpenHelperManager.releaseHelper();
             }
         }
     }

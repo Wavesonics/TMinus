@@ -2,6 +2,7 @@ package com.darkrockstudios.apps.tminus;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -29,6 +30,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.misc.TransactionManager;
 import com.j256.ormlite.stmt.PreparedQuery;
 import com.j256.ormlite.stmt.QueryBuilder;
 
@@ -39,6 +41,7 @@ import org.json.JSONObject;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.Callable;
 
 /**
  * A list fragment representing a list of Launches. This fragment
@@ -325,7 +328,7 @@ public class LaunchListFragment extends ListFragment
 		@Override
 		public void onResponse( JSONObject response )
 		{
-			LaunchListLoader loader = new LaunchListLoader();
+			LaunchListSaver loader = new LaunchListSaver();
 			loader.execute( response );
 		}
 
@@ -345,12 +348,12 @@ public class LaunchListFragment extends ListFragment
 		}
 	}
 
-	private class LaunchListLoader extends AsyncTask<JSONObject, Void, Integer>
+	private class LaunchListSaver extends AsyncTask<JSONObject, Void, Long>
 	{
 		@Override
-		protected Integer doInBackground( JSONObject... response )
+		protected Long doInBackground( JSONObject... response )
 		{
-			int numLaunches = 0;
+			long numLaunches = 0;
 
 			final Gson gson = new GsonBuilder().setDateFormat( Launch.DATE_FORMAT ).create();
 
@@ -375,22 +378,44 @@ public class LaunchListFragment extends ListFragment
 							final JSONObject launchObj = launchListArray.getJSONObject( ii );
 							if( launchObj != null && m_adapter != null )
 							{
-								Launch launch = gson.fromJson( launchObj.toString(), Launch.class );
+								final Launch launch = gson.fromJson( launchObj.toString(), Launch.class );
 
-								locationDao.createOrUpdate( launch.location );
-								missionDao.createOrUpdate( launch.mission );
-								rocketDao.createOrUpdate( launch.rocket );
+								try
+								{
+									TransactionManager.callInTransaction( databaseHelper.getConnectionSource(),
+									                                      new Callable<Void>()
+									                                      {
+										                                      public Void call() throws Exception
+										                                      {
+											                                      locationDao
+													                                      .createOrUpdate( launch.location );
+											                                      missionDao
+													                                      .createOrUpdate( launch.mission );
+											                                      rocketDao
+													                                      .createOrUpdate( launch.rocket );
 
-								// This must be run after all the others are created so the IDs of the child objects can be set
-								launchDao.createOrUpdate( launch );
+											                                      // This must be run after all the others are created so the IDs of the child objects can be set
+											                                      launchDao.createOrUpdate( launch );
 
-								++numLaunches;
+											                                      return null;
+										                                      }
+									                                      } );
+								}
+								catch( SQLException e )
+								{
+									e.printStackTrace();
+								}
 							}
 						}
 
+						// Now that we have new data, ensure our Alarms are set correctly
+						activity.startService( new Intent( activity, UpdateAlarmsService.class ) );
+
+						numLaunches = launchDao.countOf();
+
 						final SharedPreferences preferences = activity.getPreferences( Context.MODE_PRIVATE );
 						preferences.edit().putLong( Preferences.KEY_LAST_UPDATED, new Date().getTime() ).commit();
-						Log.d( TAG, "Refresh successful: " + launchDao.countOf() + " Launches in database." );
+						Log.d( TAG, "Refresh successful: " + numLaunches + " Launches in database." );
 					}
 					catch( SQLException e )
 					{
@@ -409,7 +434,7 @@ public class LaunchListFragment extends ListFragment
 		}
 
 		@Override
-		protected void onPostExecute( Integer result )
+		protected void onPostExecute( Long result )
 		{
 			final Activity activity = getActivity();
 			if( activity != null && isAdded() )

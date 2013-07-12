@@ -76,6 +76,8 @@ public class UpdateAlarmsService extends WakefulIntentService
             {
                 e.printStackTrace();
             }
+
+	        OpenHelperManager.releaseHelper();
         }
     }
 }
