@@ -39,6 +39,9 @@ public class UpdateAlarmsService extends WakefulIntentService
 
         final AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 
+        // Cancel all current Alarms
+        cancelAllAlarms(alarmManager);
+
         final DatabaseHelper databaseHelper = OpenHelperManager.getHelper(this, DatabaseHelper.class);
         if( databaseHelper != null )
         {
@@ -98,6 +101,14 @@ public class UpdateAlarmsService extends WakefulIntentService
 
         long tiggerTime = launch.net.getTime() - TimeUnit.MINUTES.toMillis( 10 );
         alarmManager.set( AlarmManager.RTC_WAKEUP, tiggerTime, pendingIntent );
+    }
+
+    private void cancelAllAlarms( AlarmManager alarmManager )
+    {
+        Intent serviceIntent = new Intent( this, NotificationService.class );
+        PendingIntent pendingIntent = PendingIntent.getService( this, 0, serviceIntent, 0 );
+
+        alarmManager.cancel( pendingIntent );
     }
 
     private int getUniqueRequestCode( Launch launch, int notificationType )
