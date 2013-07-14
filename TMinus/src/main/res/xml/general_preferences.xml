@@ -31,4 +31,12 @@
                 android:summary="@string/PREF_imminent_launch_notification_summary"
                 android:defaultValue="true"/>
     </PreferenceCategory>
+    <PreferenceCategory
+            android:title="@string/PREF_debug_preferences_title">
+        <CheckBoxPreference
+                android:key="always_show_count_down"
+                android:title="@string/PREF_always_show_count_down"
+                android:summary="@string/PREF_always_show_count_down_summary"
+                android:defaultValue="false"/>
+    </PreferenceCategory>
 </PreferenceScreen>

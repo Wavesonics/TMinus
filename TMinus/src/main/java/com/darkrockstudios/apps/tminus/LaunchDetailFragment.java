@@ -5,7 +5,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -17,6 +19,7 @@ import android.widget.ShareActionProvider;
 import android.widget.TextView;
 
 import com.darkrockstudios.apps.tminus.launchlibrary.Launch;
+import com.darkrockstudios.apps.tminus.misc.Preferences;
 import com.darkrockstudios.apps.tminus.misc.Utilities;
 
 import java.util.Date;
@@ -55,6 +58,14 @@ public class LaunchDetailFragment extends Fragment implements LaunchLoader.Liste
 		super.onCreate( savedInstanceState );
 
 		setHasOptionsMenu( true );
+	}
+
+	@Override
+	public void onResume()
+	{
+		super.onResume();
+
+		handleCountDownContainer();
 	}
 
 	@Override
@@ -213,10 +224,19 @@ public class LaunchDetailFragment extends Fragment implements LaunchLoader.Liste
 
 	private void handleCountDownContainer()
 	{
+		boolean alwaysShow = false;
+
+		final Activity activity = getActivity();
+		if( activity != null )
+		{
+			final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences( activity );
+			alwaysShow = preferences.getBoolean( Preferences.KEY_ALWAYS_SHOW_COUNT_DOWN, false );
+		}
+
 		if( m_launchItem != null )
 		{
 			final Date thresholdDate = new Date( m_launchItem.net.getTime() - DISPLAY_COUNTDOWN_THRESHOLD );
-			if( thresholdDate.before( new Date() ) )
+			if( thresholdDate.before( new Date() ) || alwaysShow )
 			{
 				m_countDownContainer.setVisibility( View.VISIBLE );
 			}

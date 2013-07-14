@@ -11,6 +11,7 @@ import android.util.Log;
 import com.commonsware.cwac.wakeful.WakefulIntentService;
 import com.darkrockstudios.apps.tminus.database.DatabaseHelper;
 import com.darkrockstudios.apps.tminus.launchlibrary.Launch;
+import com.darkrockstudios.apps.tminus.misc.Preferences;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.PreparedQuery;
@@ -68,12 +69,18 @@ public class UpdateAlarmsService extends WakefulIntentService
 		final AlarmManager alarmManager = (AlarmManager)getSystemService( Context.ALARM_SERVICE );
 
 		final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences( this );
-		final boolean showReminderNotifications = preferences.getBoolean( "reminder_notification", true );
-		final boolean showImminentLaunchNotifications = preferences.getBoolean( "imminent_launch_notification", true );
+		final boolean showReminderNotifications = preferences.getBoolean( Preferences.KEY_REMINDER_NOTIFICATION, true );
+		final boolean showImminentLaunchNotifications = preferences
+				                                                .getBoolean( Preferences.KEY_IMMINENT_LAUNCH_NOTIFICATION, true );
 
-		long updateFrequency = Long.parseLong( preferences.getString( "automatic_updating_frequency", "24" ) );
-		updateFrequency = TimeUnit.HOURS.toMillis( updateFrequency );
-		setLaunchUpdateAlarm( alarmManager, updateFrequency );
+		final boolean automaticUpdating = preferences.getBoolean( Preferences.KEY_AUTOMATIC_UPDATING, true );
+		if( automaticUpdating )
+		{
+			long updateFrequency = Long.parseLong( preferences
+					                                       .getString( Preferences.KEY_AUTOMATIC_UPDATING_FREQUENCY, "24" ) );
+			updateFrequency = TimeUnit.HOURS.toMillis( updateFrequency );
+			setLaunchUpdateAlarm( alarmManager, updateFrequency );
+		}
 
 		Log.i( TAG, "Updating Alarms for upcoming Launches..." );
 		final DatabaseHelper databaseHelper = OpenHelperManager.getHelper( this, DatabaseHelper.class );

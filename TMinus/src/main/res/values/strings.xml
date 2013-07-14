@@ -42,4 +42,10 @@
     <string name="PREF_imminent_launch_notification">Imminent Launch notifications</string>
     <string name="PREF_imminent_launch_notification_summary">Display a notification when a Launch is 10 minutes out
     </string>
+    <string name="PREF_debug_preferences_title">Debug</string>
+    <string name="PREF_always_show_count_down">Always show Count Down</string>
+    <string name="PREF_always_show_count_down_summary">Display the Count Down button for all Launches regardless of how
+        far off they are
+    </string>
+
 </resources>
