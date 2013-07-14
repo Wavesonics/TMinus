@@ -140,8 +140,6 @@ public class UpdateAlarmsService extends WakefulIntentService
 
 	public static void cancelAlarmsForLaunch( Launch launch, Context context )
 	{
-		Log.d( TAG, "Cancel Alarms for Launch id " + launch.id );
-
 		final AlarmManager alarmManager = (AlarmManager)context.getSystemService( Context.ALARM_SERVICE );
 
 		final Intent serviceIntent = new Intent( context, NotificationService.class );
