@@ -209,13 +209,13 @@ public class LaunchListFragment extends ListFragment
 				try
 				{
 					Dao<Launch, Integer> launchDao = databaseHelper.getLaunchDao();
-                    QueryBuilder<Launch, Integer> queryBuilder = launchDao.queryBuilder();
-                    PreparedQuery<Launch> query = queryBuilder.orderBy("net", true).prepare();
+					QueryBuilder<Launch, Integer> queryBuilder = launchDao.queryBuilder();
+					PreparedQuery<Launch> query = queryBuilder.orderBy( "net", true ).prepare();
 
-                    List<Launch> results = launchDao.query(query);
+					List<Launch> results = launchDao.query( query );
 					if( results != null )
 					{
-                        m_adapter.addAll( results );
+						m_adapter.addAll( results );
 
 						dataLoaded = true;
 					}

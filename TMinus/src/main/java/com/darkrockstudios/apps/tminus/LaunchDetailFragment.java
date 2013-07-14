@@ -28,11 +28,11 @@ import java.util.Date;
  */
 public class LaunchDetailFragment extends Fragment implements LaunchLoader.Listener
 {
-	public static final String TAG = LaunchDetailFragment.class.getSimpleName();
+	public static final String TAG         = LaunchDetailFragment.class.getSimpleName();
 	public static final String ARG_ITEM_ID = "item_id";
 	private ShareActionProvider m_shareActionProvider;
 	private Launch              m_launchItem;
-	private TimeReceiver m_timeReceiver;
+	private TimeReceiver        m_timeReceiver;
 
 	private View m_contentView;
 	private View m_progressBar;
@@ -120,17 +120,17 @@ public class LaunchDetailFragment extends Fragment implements LaunchLoader.Liste
 		super.onCreateOptionsMenu( menu, inflater );
 	}
 
-    public int getLaunchId()
-    {
-        int launchId = -1;
+	public int getLaunchId()
+	{
+		int launchId = -1;
 
-        if( getArguments().containsKey( ARG_ITEM_ID ) )
-        {
-            launchId = getArguments().getInt( ARG_ITEM_ID );
-        }
+		if( getArguments().containsKey( ARG_ITEM_ID ) )
+		{
+			launchId = getArguments().getInt( ARG_ITEM_ID );
+		}
 
-        return launchId;
-    }
+		return launchId;
+	}
 
 	private void showContent()
 	{
@@ -192,14 +192,14 @@ public class LaunchDetailFragment extends Fragment implements LaunchLoader.Liste
 
 	public void loadLaunch()
 	{
-        final int launchId = getLaunchId();
-        if( launchId >= 0 )
-        {
-            showLoading();
+		final int launchId = getLaunchId();
+		if( launchId >= 0 )
+		{
+			showLoading();
 
-            LaunchLoader loader = new LaunchLoader( getActivity(), this );
-            loader.execute( launchId );
-        }
+			LaunchLoader loader = new LaunchLoader( getActivity(), this );
+			loader.execute( launchId );
+		}
 	}
 
 	private void updateShareIntent()
@@ -241,12 +241,12 @@ public class LaunchDetailFragment extends Fragment implements LaunchLoader.Liste
 		}
 	}
 
-    @Override
-    public void launchLoaded( Launch launch )
-    {
-        m_launchItem = launch;
-        updateViews();
-        updateShareIntent();
-        showContent();
-    }
+	@Override
+	public void launchLoaded( Launch launch )
+	{
+		m_launchItem = launch;
+		updateViews();
+		updateShareIntent();
+		showContent();
+	}
 }

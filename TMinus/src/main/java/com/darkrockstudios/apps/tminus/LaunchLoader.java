@@ -16,53 +16,53 @@ import java.sql.SQLException;
  */
 class LaunchLoader extends AsyncTask<Integer, Void, Launch>
 {
-    public static interface Listener
-    {
-        public void launchLoaded( Launch launch );
-    }
+	public static interface Listener
+	{
+		public void launchLoaded( Launch launch );
+	}
 
-    private static final String TAG = LaunchLoader.class.getSimpleName();
+	private static final String TAG = LaunchLoader.class.getSimpleName();
 
-    private Context m_context;
-    private LaunchLoader.Listener m_listener;
+	private Context               m_context;
+	private LaunchLoader.Listener m_listener;
 
-    public LaunchLoader( Context context, LaunchLoader.Listener listener )
-    {
-        m_context = context;
-        m_listener = listener;
-    }
+	public LaunchLoader( Context context, LaunchLoader.Listener listener )
+	{
+		m_context = context;
+		m_listener = listener;
+	}
 
-    @Override
-    protected Launch doInBackground( Integer... ids )
-    {
-        Launch launch = null;
+	@Override
+	protected Launch doInBackground( Integer... ids )
+	{
+		Launch launch = null;
 
-        if( m_context != null )
-        {
-            final DatabaseHelper databaseHelper = OpenHelperManager.getHelper(m_context, DatabaseHelper.class);
-            if( databaseHelper != null )
-            {
-                try
-                {
-                    Dao<Launch, Integer> launchDao = databaseHelper.getLaunchDao();
-                    launch = launchDao.queryForId( ids[ 0 ] );
-                }
-                catch( SQLException e )
-                {
-                    e.printStackTrace();
-                }
+		if( m_context != null )
+		{
+			final DatabaseHelper databaseHelper = OpenHelperManager.getHelper( m_context, DatabaseHelper.class );
+			if( databaseHelper != null )
+			{
+				try
+				{
+					Dao<Launch, Integer> launchDao = databaseHelper.getLaunchDao();
+					launch = launchDao.queryForId( ids[ 0 ] );
+				}
+				catch( SQLException e )
+				{
+					e.printStackTrace();
+				}
 
-                OpenHelperManager.releaseHelper();
-            }
-        }
+				OpenHelperManager.releaseHelper();
+			}
+		}
 
-        return launch;
-    }
+		return launch;
+	}
 
-    @Override
-    protected void onPostExecute( Launch result )
-    {
-        Log.d(TAG, "Launch details loaded.");
-        m_listener.launchLoaded( result );
-    }
+	@Override
+	protected void onPostExecute( Launch result )
+	{
+		Log.d( TAG, "Launch details loaded." );
+		m_listener.launchLoaded( result );
+	}
 }

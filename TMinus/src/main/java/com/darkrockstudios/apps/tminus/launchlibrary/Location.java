@@ -28,12 +28,12 @@ public class Location implements Serializable
 	@DatabaseField
 	public int locationid;
 
-    @DatabaseField
+	@DatabaseField
 	public String wikiURL;
 
-    @DatabaseField
+	@DatabaseField
 	public String infoURL;
 
-    @DatabaseField
+	@DatabaseField
 	public String mapURL;
 }

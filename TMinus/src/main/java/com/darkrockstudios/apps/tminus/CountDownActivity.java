@@ -21,7 +21,7 @@ import java.util.concurrent.TimeUnit;
 public class CountDownActivity extends Activity implements LaunchLoader.Listener
 {
 	private static final String TAG            = CountDownActivity.class.getSimpleName();
-    private static final String FONT_PATH = "fonts/digital_7_mono.ttf";
+	private static final String FONT_PATH      = "fonts/digital_7_mono.ttf";
 	public static final  String ARG_ITEM_ID    = "item_id";
 	private static final long   INTERVAL_IN_MS = 10;
 	private long      m_endTime;
@@ -31,13 +31,13 @@ public class CountDownActivity extends Activity implements LaunchLoader.Listener
 	private Handler   m_handler;
 	private TickTimer m_timeTicker;
 
-    private Launch m_launch;
+	private Launch m_launch;
 
 	@Override
 	protected void onCreate( Bundle savedInstanceState )
 	{
 		super.onCreate( savedInstanceState );
-        getWindow().addFlags( WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON );
+		getWindow().addFlags( WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON );
 		setContentView( R.layout.activity_count_down );
 
 		m_handler = new Handler();
@@ -50,7 +50,7 @@ public class CountDownActivity extends Activity implements LaunchLoader.Listener
 		m_statusView = (TextView)findViewById( id.COUNTDOWN_launch_status );
 		m_statusView.setTypeface( typeface );
 
-        loadLaunch();
+		loadLaunch();
 	}
 
 	@Override
@@ -58,11 +58,11 @@ public class CountDownActivity extends Activity implements LaunchLoader.Listener
 	{
 		super.onStart();
 
-        if( m_launch != null )
-        {
-            updateTimer();
-            startTimer();
-        }
+		if( m_launch != null )
+		{
+			updateTimer();
+			startTimer();
+		}
 	}
 
 	@Override
@@ -73,46 +73,46 @@ public class CountDownActivity extends Activity implements LaunchLoader.Listener
 		stopTimer();
 	}
 
-    private void loadLaunch()
-    {
-        final Intent intent = getIntent();
-        if( intent != null )
-        {
-            final int launchId = intent.getIntExtra( ARG_ITEM_ID, -1 );
-            if( launchId > 0 )
-            {
-                LaunchLoader launchLoader = new LaunchLoader( this, this );
-                launchLoader.execute( launchId );
-            }
-        }
-    }
+	private void loadLaunch()
+	{
+		final Intent intent = getIntent();
+		if( intent != null )
+		{
+			final int launchId = intent.getIntExtra( ARG_ITEM_ID, -1 );
+			if( launchId > 0 )
+			{
+				LaunchLoader launchLoader = new LaunchLoader( this, this );
+				launchLoader.execute( launchId );
+			}
+		}
+	}
 
 	private void updateStatus()
 	{
-        if( m_launch != null )
-        {
-            final String status;
-            switch( m_launch.status )
-            {
-                case 1:
-                    status = getString( R.string.COUNTDOWN_launch_status_green );
-                    break;
-                case 2:
-                    status = getString( R.string.COUNTDOWN_launch_status_red );
-                    break;
-                case 3:
-                    status = getString( R.string.COUNTDOWN_launch_status_success );
-                    break;
-                case 4:
-                    status = getString( R.string.COUNTDOWN_launch_status_fail );
-                    break;
-                default:
-                    status = "";
-            }
+		if( m_launch != null )
+		{
+			final String status;
+			switch( m_launch.status )
+			{
+				case 1:
+					status = getString( R.string.COUNTDOWN_launch_status_green );
+					break;
+				case 2:
+					status = getString( R.string.COUNTDOWN_launch_status_red );
+					break;
+				case 3:
+					status = getString( R.string.COUNTDOWN_launch_status_success );
+					break;
+				case 4:
+					status = getString( R.string.COUNTDOWN_launch_status_fail );
+					break;
+				default:
+					status = "";
+			}
 
-		    final String statusText = String.format( getString( R.string.COUNTDOWN_launch_status ), status );
-		    m_statusView.setText( statusText );
-        }
+			final String statusText = String.format( getString( R.string.COUNTDOWN_launch_status ), status );
+			m_statusView.setText( statusText );
+		}
 	}
 
 	private void updateTimer()
@@ -178,19 +178,19 @@ public class CountDownActivity extends Activity implements LaunchLoader.Listener
 		return true;
 	}
 
-    @Override
-    public void launchLoaded( Launch launch )
-    {
-        m_launch = launch;
+	@Override
+	public void launchLoaded( Launch launch )
+	{
+		m_launch = launch;
 
-        m_endTime = m_launch.windowstart.getTime();
-        updateStatus();
-        updateTimer();
+		m_endTime = m_launch.windowstart.getTime();
+		updateStatus();
+		updateTimer();
 
-        startTimer();
-    }
+		startTimer();
+	}
 
-    private class TickTimer implements Runnable
+	private class TickTimer implements Runnable
 	{
 		@Override
 		public void run()

@@ -25,85 +25,89 @@ import java.util.concurrent.TimeUnit;
  */
 public class UpdateAlarmsService extends WakefulIntentService
 {
-    private static final String TAG = UpdateAlarmsService.class.getSimpleName();
+	private static final String TAG = UpdateAlarmsService.class.getSimpleName();
 
-    public UpdateAlarmsService()
-    {
-        super("UpdateAlarmsService");
-    }
+	public UpdateAlarmsService()
+	{
+		super( "UpdateAlarmsService" );
+	}
 
-    @Override
-    protected void doWakefulWork(Intent intent)
-    {
-        Log.i( TAG, "doWakefulWork" );
+	@Override
+	protected void doWakefulWork( Intent intent )
+	{
+		Log.i( TAG, "doWakefulWork" );
 
-        final AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+		final AlarmManager alarmManager = (AlarmManager)getSystemService( Context.ALARM_SERVICE );
 
-        final DatabaseHelper databaseHelper = OpenHelperManager.getHelper(this, DatabaseHelper.class);
-        if( databaseHelper != null )
-        {
-            try
-            {
-	            final Dao<Launch, Integer> launchDao = databaseHelper.getLaunchDao();
-	            final QueryBuilder<Launch, Integer> queryBuilder = launchDao.queryBuilder();
-	            final PreparedQuery<Launch> query = queryBuilder.orderBy( "net", true ).prepare();
+		final DatabaseHelper databaseHelper = OpenHelperManager.getHelper( this, DatabaseHelper.class );
+		if( databaseHelper != null )
+		{
+			try
+			{
+				final Dao<Launch, Integer> launchDao = databaseHelper.getLaunchDao();
+				final QueryBuilder<Launch, Integer> queryBuilder = launchDao.queryBuilder();
+				final PreparedQuery<Launch> query = queryBuilder.orderBy( "net", true ).prepare();
 
-	            final Date cutOffDate = new Date( new Date().getTime() + TimeUnit.DAYS.toMillis( 10 ) );
+				final Date cutOffDate = new Date( new Date().getTime() + TimeUnit.DAYS.toMillis( 10 ) );
 
-	            final List<Launch> results = launchDao.query( query );
-	            for( Launch launch : results )
-                {
-                    if( launch.net.before( cutOffDate ) )
-                    {
-                        setReminderAlarm( launch, alarmManager );
-                        setImminentLaunchAlarm( launch, alarmManager );
+				final List<Launch> results = launchDao.query( query );
+				for( Launch launch : results )
+				{
+					if( launch.net.before( cutOffDate ) )
+					{
+						setReminderAlarm( launch, alarmManager );
+						setImminentLaunchAlarm( launch, alarmManager );
 
-                        Log.d( TAG, "Setting alarms for Launch id: " + launch.id );
-                    }
-                    else
-                    {
-                        Log.d( TAG, "No more alarms to set!" );
-                        break;
-                    }
-                }
-            }
-            catch( SQLException e )
-            {
-                e.printStackTrace();
-            }
+						Log.d( TAG, "Setting alarms for Launch id: " + launch.id );
+					}
+					else
+					{
+						Log.d( TAG, "No more alarms to set!" );
+						break;
+					}
+				}
+			}
+			catch( SQLException e )
+			{
+				e.printStackTrace();
+			}
 
-	        OpenHelperManager.releaseHelper();
-        }
-    }
+			OpenHelperManager.releaseHelper();
+		}
+	}
 
-    private void setReminderAlarm( Launch launch, AlarmManager alarmManager )
-    {
-        Intent serviceIntent = new Intent( this, NotificationService.class );
-        serviceIntent.putExtra( NotificationService.EXTRA_LAUNCH_ID, launch.id );
-        serviceIntent.putExtra( NotificationService.EXTRA_NOTIFICATION_TYPE, NotificationService.EXTRA_NOTIFICATION_TYPE_REMINDER );
+	private void setReminderAlarm( Launch launch, AlarmManager alarmManager )
+	{
+		Intent serviceIntent = new Intent( this, NotificationService.class );
+		serviceIntent.putExtra( NotificationService.EXTRA_LAUNCH_ID, launch.id );
+		serviceIntent
+				.putExtra( NotificationService.EXTRA_NOTIFICATION_TYPE, NotificationService.EXTRA_NOTIFICATION_TYPE_REMINDER );
 
-        PendingIntent pendingIntent = PendingIntent.getService( this, getUniqueRequestCode( launch, NotificationService.EXTRA_NOTIFICATION_TYPE_REMINDER ), serviceIntent, 0 );
+		PendingIntent pendingIntent = PendingIntent
+				                              .getService( this, getUniqueRequestCode( launch, NotificationService.EXTRA_NOTIFICATION_TYPE_REMINDER ), serviceIntent, 0 );
 
-        long dayBefore = launch.net.getTime() - TimeUnit.DAYS.toMillis( 1 );
-        alarmManager.set( AlarmManager.RTC, dayBefore, pendingIntent );
-    }
+		long dayBefore = launch.net.getTime() - TimeUnit.DAYS.toMillis( 1 );
+		alarmManager.set( AlarmManager.RTC, dayBefore, pendingIntent );
+	}
 
-    private void setImminentLaunchAlarm( Launch launch, AlarmManager alarmManager )
-    {
-        Intent serviceIntent = new Intent( this, NotificationService.class );
-        serviceIntent.putExtra( NotificationService.EXTRA_LAUNCH_ID, launch.id );
-        serviceIntent.putExtra( NotificationService.EXTRA_NOTIFICATION_TYPE, NotificationService.EXTRA_NOTIFICATION_TYPE_LAUNCH_IMMINENT );
+	private void setImminentLaunchAlarm( Launch launch, AlarmManager alarmManager )
+	{
+		Intent serviceIntent = new Intent( this, NotificationService.class );
+		serviceIntent.putExtra( NotificationService.EXTRA_LAUNCH_ID, launch.id );
+		serviceIntent
+				.putExtra( NotificationService.EXTRA_NOTIFICATION_TYPE, NotificationService.EXTRA_NOTIFICATION_TYPE_LAUNCH_IMMINENT );
 
-        PendingIntent pendingIntent = PendingIntent.getService( this, getUniqueRequestCode( launch, NotificationService.EXTRA_NOTIFICATION_TYPE_LAUNCH_IMMINENT ), serviceIntent, 0 );
+		PendingIntent pendingIntent = PendingIntent
+				                              .getService( this, getUniqueRequestCode( launch, NotificationService.EXTRA_NOTIFICATION_TYPE_LAUNCH_IMMINENT ), serviceIntent, 0 );
 
-        long tiggerTime = launch.net.getTime() - TimeUnit.MINUTES.toMillis( 10 );
-        alarmManager.set( AlarmManager.RTC_WAKEUP, tiggerTime, pendingIntent );
-    }
+		long tiggerTime = launch.net.getTime() - TimeUnit.MINUTES.toMillis( 10 );
+		alarmManager.set( AlarmManager.RTC_WAKEUP, tiggerTime, pendingIntent );
+	}
 
 	public static int getUniqueRequestCode( Launch launch, int notificationType )
 	{
-        return launch.id * 10 + notificationType;
-    }
+		return launch.id * 10 + notificationType;
+	}
 
 	public static void cancelAlarmsForLaunch( Launch launch, Context context )
 	{

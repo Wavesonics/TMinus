@@ -11,12 +11,12 @@ import java.io.Serializable;
  * darkrockstudios.com
  */
 
-@DatabaseTable( tableName = Mission.TABLE_NAME )
+@DatabaseTable(tableName = Mission.TABLE_NAME)
 public class Mission implements Serializable
 {
 	public transient static final String TABLE_NAME = "Mission";
 
-	@DatabaseField( id = true )
+	@DatabaseField(id = true)
 	public int id;
 
 	@DatabaseField
@@ -31,9 +31,9 @@ public class Mission implements Serializable
 	@DatabaseField
 	public String name;
 
-    @DatabaseField
+	@DatabaseField
 	public String wikiURL;
 
-    @DatabaseField
+	@DatabaseField
 	public String infoURL;
 }

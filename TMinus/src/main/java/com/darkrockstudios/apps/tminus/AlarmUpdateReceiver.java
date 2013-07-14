@@ -9,8 +9,8 @@ import android.content.Intent;
  */
 public class AlarmUpdateReceiver extends BroadcastReceiver
 {
-    public void onReceive(Context context, Intent intent)
-    {
-        UpdateAlarmsService.sendWakefulWork( context, UpdateAlarmsService.class );
-    }
+	public void onReceive( Context context, Intent intent )
+	{
+		UpdateAlarmsService.sendWakefulWork( context, UpdateAlarmsService.class );
+	}
 }
