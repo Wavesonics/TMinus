@@ -88,7 +88,7 @@ public class UpdateAlarmsService extends WakefulIntentService
         PendingIntent pendingIntent = PendingIntent.getService( this, getUniqueRequestCode( launch, NotificationService.EXTRA_NOTIFICATION_TYPE_REMINDER ), serviceIntent, 0 );
 
         long dayBefore = launch.net.getTime() - TimeUnit.DAYS.toMillis( 1 );
-        alarmManager.set( AlarmManager.RTC_WAKEUP, dayBefore, pendingIntent );
+        alarmManager.set( AlarmManager.RTC, dayBefore, pendingIntent );
     }
 
     private void setImminentLaunchAlarm( Launch launch, AlarmManager alarmManager )
