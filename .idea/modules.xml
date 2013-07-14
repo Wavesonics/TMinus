@@ -2,8 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/TMinus/TMinus.iml" filepath="$PROJECT_DIR$/TMinus/TMinus.iml" />
-      <module fileurl="file://$PROJECT_DIR$/TMinusProject.iml" filepath="$PROJECT_DIR$/TMinusProject.iml" />
+      <module fileurl="file://$PROJECT_DIR$/TMinus/src/main/TMinus.iml" filepath="$PROJECT_DIR$/TMinus/src/main/TMinus.iml" />
     </modules>
   </component>
 </project>
