@@ -22,8 +22,7 @@
                 android:text="@string/LAUNCHDETAIL_imminent_launch"
                 android:textStyle="bold|italic"
                 android:textColor="@color/count_down_alert_text"
-                android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"
-                />
+                android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"/>
 
         <Button
                 android:layout_width="wrap_content"
