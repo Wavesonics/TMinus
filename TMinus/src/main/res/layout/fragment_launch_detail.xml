@@ -38,9 +38,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/content_view"
-            android:layout_below="@id/LAUNCHDETAIL_imminent_launch_container"
-            android:layout_alignParentStart="false"
-            android:layout_alignParentLeft="true">
+            android:layout_below="@id/LAUNCHDETAIL_imminent_launch_container">
 
     <ImageView
                 android:layout_width="128dp"
