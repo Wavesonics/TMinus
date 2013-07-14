@@ -45,7 +45,8 @@
                 android:id="@+id/LAUNCHDETAIL_mission_image"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentLeft="true"
-                android:src="@drawable/rocket"/>
+                android:src="@drawable/rocket"
+                android:contentDescription="@string/LAUNCHDETAIL_launch_image_description"/>
 
         <TextView
                 android:layout_width="wrap_content"
