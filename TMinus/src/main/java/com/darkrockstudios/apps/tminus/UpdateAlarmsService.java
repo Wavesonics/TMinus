@@ -44,14 +44,14 @@ public class UpdateAlarmsService extends WakefulIntentService
         {
             try
             {
-                Dao<Launch, Integer> launchDao = databaseHelper.getLaunchDao();
-                QueryBuilder<Launch, Integer> queryBuilder = launchDao.queryBuilder();
-                PreparedQuery<Launch> query = queryBuilder.orderBy("net", true).prepare();
+	            final Dao<Launch, Integer> launchDao = databaseHelper.getLaunchDao();
+	            final QueryBuilder<Launch, Integer> queryBuilder = launchDao.queryBuilder();
+	            final PreparedQuery<Launch> query = queryBuilder.orderBy( "net", true ).prepare();
 
-                final Date cutOffDate = new Date( new Date().getTime() + TimeUnit.DAYS.toMillis( 10 ) );
+	            final Date cutOffDate = new Date( new Date().getTime() + TimeUnit.DAYS.toMillis( 10 ) );
 
-                List<Launch> results = launchDao.query(query);
-                for( Launch launch : results )
+	            final List<Launch> results = launchDao.query( query );
+	            for( Launch launch : results )
                 {
                     if( launch.net.before( cutOffDate ) )
                     {
@@ -100,8 +100,23 @@ public class UpdateAlarmsService extends WakefulIntentService
         alarmManager.set( AlarmManager.RTC_WAKEUP, tiggerTime, pendingIntent );
     }
 
-    private int getUniqueRequestCode( Launch launch, int notificationType )
-    {
+	public static int getUniqueRequestCode( Launch launch, int notificationType )
+	{
         return launch.id * 10 + notificationType;
     }
+
+	public static void cancelAlarmsForLaunch( Launch launch, Context context )
+	{
+		final AlarmManager alarmManager = (AlarmManager)context.getSystemService( Context.ALARM_SERVICE );
+
+		final Intent serviceIntent = new Intent( context, NotificationService.class );
+
+		final PendingIntent pendingIntentReminder = PendingIntent
+				                                            .getService( context, getUniqueRequestCode( launch, NotificationService.EXTRA_NOTIFICATION_TYPE_REMINDER ), serviceIntent, 0 );
+		final PendingIntent pendingIntentLaunchImminent = PendingIntent
+				                                                  .getService( context, getUniqueRequestCode( launch, NotificationService.EXTRA_NOTIFICATION_TYPE_LAUNCH_IMMINENT ), serviceIntent, 0 );
+
+		alarmManager.cancel( pendingIntentReminder );
+		alarmManager.cancel( pendingIntentLaunchImminent );
+	}
 }

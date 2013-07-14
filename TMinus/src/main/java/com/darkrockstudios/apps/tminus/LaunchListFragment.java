@@ -387,6 +387,14 @@ public class LaunchListFragment extends ListFragment
 									                                      {
 										                                      public Void call() throws Exception
 										                                      {
+											                                      // If the launch already exists, cancel any alarms for it
+											                                      if( launchDao.idExists( launchDao
+													                                                              .extractId( launch ) ) )
+											                                      {
+												                                      UpdateAlarmsService
+														                                      .cancelAlarmsForLaunch( launch, activity );
+											                                      }
+
 											                                      locationDao
 													                                      .createOrUpdate( launch.location );
 											                                      missionDao
