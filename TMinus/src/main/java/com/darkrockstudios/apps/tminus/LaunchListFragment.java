@@ -76,18 +76,9 @@ public class LaunchListFragment extends ListFragment
 	{
 		super.onCreate( savedInstanceState );
 
-		m_updateIntentFilter = new IntentFilter();
-		m_updateIntentFilter.addAction( LaunchUpdateService.ACTION_LAUNCH_LIST_UPDATED );
-		m_updateIntentFilter.addAction( LaunchUpdateService.ACTION_LAUNCH_LIST_UPDATE_FAILED );
-
 		m_adapter = new LaunchListAdapter( getActivity() );
 
 		setListAdapter( m_adapter );
-
-		if( !reloadData() )
-		{
-			refresh();
-		}
 	}
 
 	@Override
@@ -100,6 +91,11 @@ public class LaunchListFragment extends ListFragment
 				    && savedInstanceState.containsKey( STATE_ACTIVATED_POSITION ) )
 		{
 			setActivatedPosition( savedInstanceState.getInt( STATE_ACTIVATED_POSITION ) );
+		}
+
+		if( !reloadData() )
+		{
+			refresh();
 		}
 	}
 
@@ -117,6 +113,13 @@ public class LaunchListFragment extends ListFragment
 		{
 			m_callbacks = (Callbacks)activity;
 		}
+
+		m_updateReceiver = new LaunchUpdateReceiver();
+
+		m_updateIntentFilter = new IntentFilter();
+		m_updateIntentFilter.addAction( LaunchUpdateService.ACTION_LAUNCH_LIST_UPDATED );
+		m_updateIntentFilter.addAction( LaunchUpdateService.ACTION_LAUNCH_LIST_UPDATE_FAILED );
+		activity.registerReceiver( m_updateReceiver, m_updateIntentFilter );
 	}
 
 	@Override
@@ -126,22 +129,6 @@ public class LaunchListFragment extends ListFragment
 
 		// Reset the active callbacks interface to the dummy implementation.
 		m_callbacks = s_dummyCallbacks;
-	}
-
-	public void onStart()
-	{
-		super.onStart();
-
-		m_updateReceiver = new LaunchUpdateReceiver();
-
-		Activity activity = getActivity();
-		activity.registerReceiver( m_updateReceiver, m_updateIntentFilter );
-	}
-
-	@Override
-	public void onStop()
-	{
-		super.onStop();
 
 		Activity activity = getActivity();
 		activity.unregisterReceiver( m_updateReceiver );
@@ -216,10 +203,9 @@ public class LaunchListFragment extends ListFragment
 					PreparedQuery<Launch> query = queryBuilder.orderBy( "net", true ).prepare();
 
 					List<Launch> results = launchDao.query( query );
-					if( results != null )
+					if( results != null && results.size() > 0 )
 					{
 						m_adapter.addAll( results );
-
 						dataLoaded = true;
 					}
 				}
@@ -285,7 +271,7 @@ public class LaunchListFragment extends ListFragment
 				view = inflater.inflate( R.layout.row_launch_list_item, null );
 			}
 
-			final com.darkrockstudios.apps.tminus.launchlibrary.Launch launch = getItem( pos );
+			final Launch launch = getItem( pos );
 
 			final TextView titleView = (TextView)view.findViewById( R.id.launch_list_item_title );
 			titleView.setText( launch.name );
@@ -305,7 +291,7 @@ public class LaunchListFragment extends ListFragment
 			final Activity activity = getActivity();
 			if( activity != null )
 			{
-				if( intent.getAction().equals( LaunchUpdateService.ACTION_LAUNCH_LIST_UPDATED ) )
+				if( LaunchUpdateService.ACTION_LAUNCH_LIST_UPDATED.equals( intent.getAction() ) )
 				{
 					Log.d( TAG, "Received Launch List update SUCCESS broadcast, will update the UI now." );
 
@@ -314,7 +300,7 @@ public class LaunchListFragment extends ListFragment
 					activity.setProgressBarIndeterminateVisibility( false );
 					Toast.makeText( activity, R.string.TOAST_launch_list_refresh_complete, Toast.LENGTH_SHORT ).show();
 				}
-				else if( intent.getAction().equals( LaunchUpdateService.ACTION_LAUNCH_LIST_UPDATE_FAILED ) )
+				else if( LaunchUpdateService.ACTION_LAUNCH_LIST_UPDATE_FAILED.equals( intent.getAction() ) )
 				{
 					Log.d( TAG, "Received Launch List update FAILURE broadcast." );
 

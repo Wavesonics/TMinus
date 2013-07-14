@@ -1,15 +1,48 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:tools="http://schemas.android.com/tools"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_marginRight="@dimen/activity_horizontal_margin"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:layout_marginBottom="@dimen/activity_vertical_margin">
+
+    <LinearLayout
+            android:id="@+id/LAUNCHDETAIL_imminent_launch_container"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/launch_detail_padding"
+            android:background="@color/count_down_alert_background"
+            android:padding="@dimen/launch_detail_padding">
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/LAUNCHDETAIL_imminent_launch"
+                android:textStyle="bold|italic"
+                android:textColor="@color/count_down_alert_text"
+                android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"
+                />
+
+        <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/LAUNCHDETAIL_count_down_button"
+                android:id="@+id/button"
+                android:onClick="countDownClicked"
+                android:layout_gravity="center"/>
+    </LinearLayout>
 
     <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="@dimen/launch_detail_padding"
-            android:id="@+id/content_view">
+            android:id="@+id/content_view"
+            android:layout_below="@id/LAUNCHDETAIL_imminent_launch_container"
+            android:layout_alignParentStart="false"
+            android:layout_alignParentLeft="true">
 
-        <ImageView
+    <ImageView
                 android:layout_width="128dp"
                 android:layout_height="128dp"
                 android:id="@+id/LAUNCHDETAIL_mission_image"
@@ -156,16 +189,6 @@
 
         </TableLayout>
 
-        <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/LAUNCHDETAIL_count_down_button"
-                android:id="@+id/button"
-                android:layout_column="1"
-                android:layout_below="@+id/tableLayout"
-                android:layout_alignRight="@+id/tableLayout"
-                android:onClick="countDownClicked"/>
-
     </RelativeLayout>
 
     <ProgressBar
@@ -174,5 +197,6 @@
             android:layout_height="wrap_content"
             android:id="@+id/progressBar"
             android:indeterminate="true"
-            android:layout_gravity="center"/>
-</FrameLayout>
+            android:layout_centerInParent="true"/>
+
+</RelativeLayout>

@@ -20,6 +20,7 @@ import com.darkrockstudios.apps.tminus.launchlibrary.Launch;
 import com.darkrockstudios.apps.tminus.misc.Utilities;
 
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 /**
  * A fragment representing a single Launch detail screen.
@@ -29,14 +30,16 @@ import java.util.Date;
  */
 public class LaunchDetailFragment extends Fragment implements LaunchLoader.Listener
 {
-	public static final String TAG         = LaunchDetailFragment.class.getSimpleName();
-	public static final String ARG_ITEM_ID = "item_id";
+	public static final  String TAG                         = LaunchDetailFragment.class.getSimpleName();
+	public static final  String ARG_ITEM_ID                 = "item_id";
+	private static final long   DISPLAY_COUNTDOWN_THRESHOLD = TimeUnit.DAYS.toMillis( 2 );
 	private ShareActionProvider m_shareActionProvider;
 	private Launch              m_launchItem;
 	private TimeReceiver        m_timeReceiver;
 
 	private View m_contentView;
 	private View m_progressBar;
+	private View m_countDownContainer;
 
 	/**
 	 * Mandatory empty constructor for the fragment manager to instantiate the
@@ -99,6 +102,8 @@ public class LaunchDetailFragment extends Fragment implements LaunchLoader.Liste
 		{
 			m_contentView = rootView.findViewById( R.id.content_view );
 			m_progressBar = rootView.findViewById( R.id.progressBar );
+			m_countDownContainer = rootView.findViewById( R.id.LAUNCHDETAIL_imminent_launch_container );
+			m_countDownContainer.setVisibility( View.GONE );
 
 			loadLaunch();
 		}
@@ -174,6 +179,7 @@ public class LaunchDetailFragment extends Fragment implements LaunchLoader.Liste
 			windowLength.setText( Utilities.getFormattedTime( windowLengthMs ) );
 
 			updateTimeViews();
+			handleCountDownContainer();
 		}
 	}
 
@@ -188,6 +194,8 @@ public class LaunchDetailFragment extends Fragment implements LaunchLoader.Liste
 
 			final long totalMsLeft = m_launchItem.windowstart.getTime() - now.getTime();
 			timeRemaining.setText( Utilities.getFormattedTime( totalMsLeft ) );
+
+			handleCountDownContainer();
 		}
 	}
 
@@ -200,6 +208,22 @@ public class LaunchDetailFragment extends Fragment implements LaunchLoader.Liste
 
 			LaunchLoader loader = new LaunchLoader( getActivity(), this );
 			loader.execute( launchId );
+		}
+	}
+
+	private void handleCountDownContainer()
+	{
+		if( m_launchItem != null )
+		{
+			final Date thresholdDate = new Date( m_launchItem.net.getTime() - DISPLAY_COUNTDOWN_THRESHOLD );
+			if( thresholdDate.before( new Date() ) )
+			{
+				m_countDownContainer.setVisibility( View.VISIBLE );
+			}
+			else
+			{
+				m_countDownContainer.setVisibility( View.GONE );
+			}
 		}
 	}
 
