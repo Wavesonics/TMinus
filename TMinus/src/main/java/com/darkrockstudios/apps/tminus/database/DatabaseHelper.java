@@ -29,7 +29,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper
 {
 	private static final String                 TAG              = DatabaseHelper.class.getSimpleName();
 	private static final String                 DATABASE_NAME    = "TMinus.db";
-	private static final int                    DATABASE_VERSION = 1;
+	private static final int                    DATABASE_VERSION = 2;
 	private              Dao<Launch, Integer>   m_launchDao      = null;
 	private              Dao<Location, Integer> m_locationDao    = null;
 	private              Dao<Mission, Integer>  m_missionDao     = null;
