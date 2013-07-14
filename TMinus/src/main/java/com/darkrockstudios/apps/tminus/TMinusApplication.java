@@ -1,6 +1,7 @@
 package com.darkrockstudios.apps.tminus;
 
 import android.app.Application;
+import android.preference.PreferenceManager;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
@@ -17,6 +18,8 @@ public class TMinusApplication extends Application
 	public void onCreate()
 	{
 		super.onCreate();
+
+		PreferenceManager.setDefaultValues( this, R.xml.general_preferences, false );
 
 		s_requestQueue = Volley.newRequestQueue( this );
 	}

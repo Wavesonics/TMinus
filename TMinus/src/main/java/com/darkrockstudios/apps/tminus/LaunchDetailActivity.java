@@ -57,8 +57,12 @@ public class LaunchDetailActivity extends DatabaseActivity
 				handled = true;
 				break;
 			case R.id.action_settings:
+			{
+				Intent intent = new Intent( this, SettingsActivity.class );
+				startActivity( intent );
 				handled = true;
-				break;
+			}
+			break;
 			default:
 				handled = super.onOptionsItemSelected( item );
 		}

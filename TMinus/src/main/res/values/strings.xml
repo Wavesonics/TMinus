@@ -21,4 +21,24 @@
     <string name="COUNTDOWN_launch_status_red">NO-GO</string>
     <string name="COUNTDOWN_launch_status_success">SUCCESS</string>
     <string name="COUNTDOWN_launch_status_fail">FAIL</string>
+    <string name="PREF_general_preferences_title">Background Updating</string>
+    <string name="PREF_automatic_updating">Automatic Updating</string>
+    <string name="PREF_automatic_updating_summary">Update Launch data in the background</string>
+    <string name="PREF_automatic_updating_frequency">Update Frequency</string>
+    <string name="PREF_automatic_updating_frequency_dialog_title">Update Frequency</string>
+    <string name="PREF_automatic_updating_frequency_summary">How often TMinus will update Launch data</string>
+
+    <string-array name="PREF_automatic_updating_frequency_options">
+        <item>Twice a day</item>
+        <item>Once a day</item>
+        <item>Every other day</item>
+        <item>Once a week</item>
+    </string-array>
+
+    <string name="PREF_notification_preferences_title">Notifications</string>
+    <string name="PREF_reminder_notification">Launch reminder notifications</string>
+    <string name="PREF_reminder_notification_summary">Display a notification one day before each Launch</string>
+    <string name="PREF_imminent_launch_notification">Imminent Launch notifications</string>
+    <string name="PREF_imminent_launch_notification_summary">Display a notification when a Launch is 10 minutes out
+    </string>
 </resources>

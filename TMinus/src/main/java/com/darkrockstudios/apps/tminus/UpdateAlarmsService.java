@@ -4,6 +4,8 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.commonsware.cwac.wakeful.WakefulIntentService;
@@ -34,11 +36,44 @@ public class UpdateAlarmsService extends WakefulIntentService
 		super( UpdateAlarmsService.class.getSimpleName() );
 	}
 
+	public static int getUniqueRequestCode( Launch launch, int notificationType )
+	{
+		return launch.id * 10 + notificationType;
+	}
+
+	public static void cancelAlarmsForLaunch( Launch launch, Context context )
+	{
+		final AlarmManager alarmManager = (AlarmManager)context.getSystemService( Context.ALARM_SERVICE );
+
+		final Intent serviceIntent = new Intent( context, NotificationService.class );
+
+		final PendingIntent pendingIntentReminder = PendingIntent
+				                                            .getService( context, getUniqueRequestCode( launch, NotificationService.EXTRA_NOTIFICATION_TYPE_REMINDER ), serviceIntent, 0 );
+		final PendingIntent pendingIntentLaunchImminent = PendingIntent
+				                                                  .getService( context, getUniqueRequestCode( launch, NotificationService.EXTRA_NOTIFICATION_TYPE_LAUNCH_IMMINENT ), serviceIntent, 0 );
+
+		alarmManager.cancel( pendingIntentReminder );
+		alarmManager.cancel( pendingIntentLaunchImminent );
+	}
+
+	public static void cancelAutoUpdateAlarm( Context context )
+	{
+		final AlarmManager alarmManager = (AlarmManager)context.getSystemService( Context.ALARM_SERVICE );
+		alarmManager.cancel( createLaunchUpdateIntent( context ) );
+	}
+
 	@Override
 	protected void doWakefulWork( Intent intent )
 	{
 		final AlarmManager alarmManager = (AlarmManager)getSystemService( Context.ALARM_SERVICE );
-		setLaunchUpdateAlarm( alarmManager );
+
+		final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences( this );
+		final boolean showReminderNotifications = preferences.getBoolean( "reminder_notification", true );
+		final boolean showImminentLaunchNotifications = preferences.getBoolean( "imminent_launch_notification", true );
+
+		long updateFrequency = Long.parseLong( preferences.getString( "automatic_updating_frequency", "24" ) );
+		updateFrequency = TimeUnit.HOURS.toMillis( updateFrequency );
+		setLaunchUpdateAlarm( alarmManager, updateFrequency );
 
 		Log.i( TAG, "Updating Alarms for upcoming Launches..." );
 		final DatabaseHelper databaseHelper = OpenHelperManager.getHelper( this, DatabaseHelper.class );
@@ -50,16 +85,23 @@ public class UpdateAlarmsService extends WakefulIntentService
 				final QueryBuilder<Launch, Integer> queryBuilder = launchDao.queryBuilder();
 				final PreparedQuery<Launch> query = queryBuilder.orderBy( "net", true ).prepare();
 
-				final Date cutOffDate = new Date( new Date().getTime() + TimeUnit.DAYS.toMillis( 10 ) );
+				final Date cutOffDate = new Date( new Date().getTime() + TimeUnit.DAYS.toMillis( 2 ) );
 
 				final List<Launch> results = launchDao.query( query );
-				for( Launch launch : results )
+				for( final Launch launch : results )
 				{
 					if( launch.net.before( cutOffDate ) )
 					{
 						Log.d( TAG, "Setting alarms for Launch id: " + launch.id );
-						setReminderAlarm( launch, alarmManager );
-						setImminentLaunchAlarm( launch, alarmManager );
+						if( showReminderNotifications )
+						{
+							setReminderAlarm( launch, alarmManager );
+						}
+
+						if( showImminentLaunchNotifications )
+						{
+							setImminentLaunchAlarm( launch, alarmManager );
+						}
 					}
 					else
 					{
@@ -77,17 +119,20 @@ public class UpdateAlarmsService extends WakefulIntentService
 		}
 	}
 
-	private void setLaunchUpdateAlarm( AlarmManager alarmManager )
+	private static PendingIntent createLaunchUpdateIntent( Context context )
 	{
-		Log.d( TAG, "Setting the auto-update alarm for Launches" );
+		final Intent serviceIntent = new Intent( context, LaunchUpdateService.class );
+		return PendingIntent.getService( context, 0, serviceIntent, PendingIntent.FLAG_UPDATE_CURRENT );
+	}
 
-		Intent serviceIntent = new Intent( this, LaunchUpdateService.class );
-		PendingIntent pendingIntent = PendingIntent
-				                              .getService( this, 0, serviceIntent, PendingIntent.FLAG_UPDATE_CURRENT );
+	private void setLaunchUpdateAlarm( AlarmManager alarmManager, long updateFrequency )
+	{
+		Log.d( TAG, "Setting the auto-update alarm for Launches every " + TimeUnit.MILLISECONDS
+		                                                                          .toHours( updateFrequency ) + " hours" );
 
 		final long now = new Date().getTime();
 		alarmManager
-				.setInexactRepeating( AlarmManager.RTC, now + AlarmManager.INTERVAL_DAY, AlarmManager.INTERVAL_DAY, pendingIntent );
+				.setInexactRepeating( AlarmManager.RTC, now + updateFrequency, updateFrequency, createLaunchUpdateIntent( this ) );
 	}
 
 	private void setReminderAlarm( Launch launch, AlarmManager alarmManager )
@@ -100,7 +145,7 @@ public class UpdateAlarmsService extends WakefulIntentService
 		PendingIntent pendingIntent = PendingIntent
 				                              .getService( this, getUniqueRequestCode( launch, NotificationService.EXTRA_NOTIFICATION_TYPE_REMINDER ), serviceIntent, 0 );
 
-		long dayBefore = launch.net.getTime() - TimeUnit.DAYS.toMillis( 1 );
+		final long dayBefore = launch.net.getTime() - TimeUnit.DAYS.toMillis( 1 );
 		// Don't set alarms for the past
 		if( new Date( dayBefore ).after( new Date() ) )
 		{
@@ -131,25 +176,5 @@ public class UpdateAlarmsService extends WakefulIntentService
 		{
 			Log.d( TAG, "Not setting imminent launch alarm for launch id " + launch.id + " because it has already passed." );
 		}
-	}
-
-	public static int getUniqueRequestCode( Launch launch, int notificationType )
-	{
-		return launch.id * 10 + notificationType;
-	}
-
-	public static void cancelAlarmsForLaunch( Launch launch, Context context )
-	{
-		final AlarmManager alarmManager = (AlarmManager)context.getSystemService( Context.ALARM_SERVICE );
-
-		final Intent serviceIntent = new Intent( context, NotificationService.class );
-
-		final PendingIntent pendingIntentReminder = PendingIntent
-				                                            .getService( context, getUniqueRequestCode( launch, NotificationService.EXTRA_NOTIFICATION_TYPE_REMINDER ), serviceIntent, 0 );
-		final PendingIntent pendingIntentLaunchImminent = PendingIntent
-				                                                  .getService( context, getUniqueRequestCode( launch, NotificationService.EXTRA_NOTIFICATION_TYPE_LAUNCH_IMMINENT ), serviceIntent, 0 );
-
-		alarmManager.cancel( pendingIntentReminder );
-		alarmManager.cancel( pendingIntentLaunchImminent );
 	}
 }

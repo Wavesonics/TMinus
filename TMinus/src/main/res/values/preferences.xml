@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Update intervals in hours -->
+    <string-array name="PREF_automatic_updating_frequency_values">
+        <item>12</item>
+        <item>24</item>
+        <item>48</item>
+        <item>168</item>
+    </string-array>
+    <string name="PREF_automatic_updating_frequency_default_value">24</string>
+</resources>

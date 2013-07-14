@@ -9,7 +9,9 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.NavUtils;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;
@@ -77,6 +79,31 @@ public class CountDownActivity extends Activity implements LaunchLoader.Listener
 		super.onStop();
 
 		stopTimer();
+	}
+
+	@Override
+	public boolean onOptionsItemSelected( MenuItem item )
+	{
+		final boolean handled;
+		// Handle item selection
+		switch( item.getItemId() )
+		{
+			case android.R.id.home:
+				NavUtils.navigateUpTo( this, new Intent( this, LaunchListActivity.class ) );
+				handled = true;
+				break;
+			case id.action_settings:
+			{
+				Intent intent = new Intent( this, SettingsActivity.class );
+				startActivity( intent );
+				handled = true;
+			}
+			break;
+			default:
+				handled = super.onOptionsItemSelected( item );
+		}
+
+		return handled;
 	}
 
 	public void screenTouched( View view )
