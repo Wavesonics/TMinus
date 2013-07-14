@@ -31,13 +31,13 @@ public class NotificationService extends WakefulIntentService
 
 	public NotificationService()
 	{
-		super( "NotificationService" );
+		super( NotificationService.class.getSimpleName() );
 	}
 
 	@Override
 	protected void doWakefulWork( Intent intent )
 	{
-		Log.d( TAG, "Lets post a notification!" );
+		Log.d( TAG, "Notification alarm:" );
 
 		final int launchId = intent.getIntExtra( EXTRA_LAUNCH_ID, -1 );
 		final int notificationType = intent.getIntExtra( EXTRA_NOTIFICATION_TYPE, -1 );
@@ -96,6 +96,8 @@ public class NotificationService extends WakefulIntentService
 		builder.setContentTitle( getString( R.string.NOTIFICATION_launch_imminent_title ) );
 		builder.setContentText( launch.name + launch.net.toString() );
 		builder.setSmallIcon( R.drawable.ic_stat_rocket );
+		builder.setDefaults( Notification.DEFAULT_ALL );
+		builder.setPriority( Notification.PRIORITY_HIGH );
 		builder.setAutoCancel( true );
 
 		Intent launchDetailIntent = new Intent( this, CountDownActivity.class );

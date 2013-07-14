@@ -42,11 +42,13 @@
                 <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
             </intent-filter>
         </receiver>
-        <service android:name=".UpdateAlarmsService">
-        </service>
+
+        <service android:name=".UpdateAlarmsService"/>
         <service android:name=".NotificationService"/>
+        <service android:name=".LaunchUpdateService"/>
     </application>
 
+    <uses-permission android:name="android.permission.VIBRATE"/>
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>

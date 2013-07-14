@@ -17,6 +17,7 @@ import android.widget.ShareActionProvider;
 import android.widget.TextView;
 
 import com.darkrockstudios.apps.tminus.launchlibrary.Launch;
+import com.darkrockstudios.apps.tminus.misc.Utilities;
 
 import java.util.Date;
 

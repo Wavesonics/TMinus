@@ -1,4 +1,4 @@
-package com.darkrockstudios.apps.tminus;
+package com.darkrockstudios.apps.tminus.misc;
 
 import java.util.concurrent.TimeUnit;
 

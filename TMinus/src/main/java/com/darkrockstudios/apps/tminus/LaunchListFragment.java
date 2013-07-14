@@ -1,10 +1,10 @@
 package com.darkrockstudios.apps.tminus;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.os.AsyncTask;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
@@ -16,32 +16,17 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.darkrockstudios.apps.tminus.R.id;
 import com.darkrockstudios.apps.tminus.R.layout;
 import com.darkrockstudios.apps.tminus.database.DatabaseHelper;
 import com.darkrockstudios.apps.tminus.launchlibrary.Launch;
-import com.darkrockstudios.apps.tminus.launchlibrary.Location;
-import com.darkrockstudios.apps.tminus.launchlibrary.Mission;
-import com.darkrockstudios.apps.tminus.launchlibrary.Rocket;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.Dao;
-import com.j256.ormlite.misc.TransactionManager;
 import com.j256.ormlite.stmt.PreparedQuery;
 import com.j256.ormlite.stmt.QueryBuilder;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.sql.SQLException;
-import java.util.Date;
 import java.util.List;
-import java.util.concurrent.Callable;
 
 /**
  * A list fragment representing a list of Launches. This fragment
@@ -60,7 +45,7 @@ public class LaunchListFragment extends ListFragment
 	 * activated item position. Only used on tablets.
 	 */
 	private static final String    STATE_ACTIVATED_POSITION = "activated_position";
-	private static final long      UPDATE_THRESHOLD_MS      = 1 * 60 * 60 * 1000;
+
 	/**
 	 * A dummy implementation of the {@link Callbacks} interface that does
 	 * nothing. Used only when this fragment is not attached to an activity.
@@ -75,6 +60,8 @@ public class LaunchListFragment extends ListFragment
 	private ArrayAdapter<Launch> m_adapter;
 	private Callbacks m_callbacks         = s_dummyCallbacks;
 	private int       m_activatedPosition = ListView.INVALID_POSITION;
+	private IntentFilter         m_updateIntentFilter;
+	private LaunchUpdateReceiver m_updateReceiver;
 
 	/**
 	 * Mandatory empty constructor for the fragment manager to instantiate the
@@ -89,11 +76,15 @@ public class LaunchListFragment extends ListFragment
 	{
 		super.onCreate( savedInstanceState );
 
+		m_updateIntentFilter = new IntentFilter();
+		m_updateIntentFilter.addAction( LaunchUpdateService.ACTION_LAUNCH_LIST_UPDATED );
+		m_updateIntentFilter.addAction( LaunchUpdateService.ACTION_LAUNCH_LIST_UPDATE_FAILED );
+
 		m_adapter = new LaunchListAdapter( getActivity() );
 
 		setListAdapter( m_adapter );
 
-		if( !reloadData() || shouldRefresh() )
+		if( !reloadData() )
 		{
 			refresh();
 		}
@@ -137,12 +128,24 @@ public class LaunchListFragment extends ListFragment
 		m_callbacks = s_dummyCallbacks;
 	}
 
+	public void onStart()
+	{
+		super.onStart();
+
+		m_updateReceiver = new LaunchUpdateReceiver();
+
+		Activity activity = getActivity();
+		activity.registerReceiver( m_updateReceiver, m_updateIntentFilter );
+	}
+
 	@Override
 	public void onStop()
 	{
 		super.onStop();
 
-		TMinusApplication.getRequestQueue().cancelAll( this );
+		Activity activity = getActivity();
+		activity.unregisterReceiver( m_updateReceiver );
+		m_updateReceiver = null;
 	}
 
 	@Override
@@ -234,45 +237,16 @@ public class LaunchListFragment extends ListFragment
 
 	private void requestLaunches()
 	{
-		Log.d( TAG, "Requesting launches..." );
 		Activity activity = getActivity();
 		if( activity != null && isAdded() )
 		{
+			Log.d( TAG, "Requesting launches..." );
+
 			activity.setProgressBarIndeterminateVisibility( true );
+
+			Intent launchUpdate = new Intent( activity, LaunchUpdateService.class );
+			activity.startService( launchUpdate );
 		}
-
-		final String url = "http://launchlibrary.net/ll/json/next/20";
-
-		LaunchListResponseListener listener = new LaunchListResponseListener();
-		JsonObjectRequest request = new JsonObjectRequest( url, null, listener, listener );
-		request.setTag( this );
-		TMinusApplication.getRequestQueue().add( request );
-	}
-
-	private boolean shouldRefresh()
-	{
-		boolean refresh = false;
-
-		final Activity activity = getActivity();
-		if( activity != null )
-		{
-			final SharedPreferences preferences = activity.getPreferences( Context.MODE_PRIVATE );
-			final long lastUpdatedMs = preferences.getLong( Preferences.KEY_LAST_UPDATED, 0 );
-			final long nowMs = new Date().getTime();
-			final long deltaMs = nowMs - lastUpdatedMs;
-
-			if( deltaMs > UPDATE_THRESHOLD_MS )
-			{
-				refresh = true;
-				Log.i( TAG, "Data is a bit old, we should refresh it." );
-			}
-			else
-			{
-				Log.d( TAG, "It's been " + deltaMs / 1000 + " seconds since our last update, no need to refresh." );
-			}
-		}
-
-		return refresh;
 	}
 
 	public void refresh()
@@ -311,7 +285,7 @@ public class LaunchListFragment extends ListFragment
 				view = inflater.inflate( R.layout.row_launch_list_item, null );
 			}
 
-			final Launch launch = getItem( pos );
+			final com.darkrockstudios.apps.tminus.launchlibrary.Launch launch = getItem( pos );
 
 			final TextView titleView = (TextView)view.findViewById( R.id.launch_list_item_title );
 			titleView.setText( launch.name );
@@ -323,134 +297,30 @@ public class LaunchListFragment extends ListFragment
 		}
 	}
 
-	private class LaunchListResponseListener implements Response.Listener<JSONObject>, Response.ErrorListener
+	private class LaunchUpdateReceiver extends BroadcastReceiver
 	{
 		@Override
-		public void onResponse( JSONObject response )
+		public void onReceive( Context context, Intent intent )
 		{
-			LaunchListSaver loader = new LaunchListSaver();
-			loader.execute( response );
-		}
-
-		@Override
-		public void onErrorResponse( VolleyError error )
-		{
-			Log.i( TAG, error.getMessage() );
-
-			final Activity activity = getActivity();
-			if( activity != null && isAdded() )
-			{
-				reloadData();
-
-				Toast.makeText( activity, R.string.TOAST_launch_list_refresh_failed, Toast.LENGTH_LONG ).show();
-				activity.setProgressBarIndeterminateVisibility( false );
-			}
-		}
-	}
-
-	private class LaunchListSaver extends AsyncTask<JSONObject, Void, Long>
-	{
-		@Override
-		protected Long doInBackground( JSONObject... response )
-		{
-			long numLaunches = 0;
-
-			final Gson gson = new GsonBuilder().setDateFormat( Launch.DATE_FORMAT ).create();
-
-			final JSONObject launchListObj = response[ 0 ];
-
 			final Activity activity = getActivity();
 			if( activity != null )
 			{
-				final DatabaseHelper databaseHelper = OpenHelperManager.getHelper( activity, DatabaseHelper.class );
-				if( databaseHelper != null )
+				if( intent.getAction().equals( LaunchUpdateService.ACTION_LAUNCH_LIST_UPDATED ) )
 				{
-					try
-					{
-						final Dao<Launch, Integer> launchDao = databaseHelper.getLaunchDao();
-						final Dao<Location, Integer> locationDao = databaseHelper.getLocationDao();
-						final Dao<Mission, Integer> missionDao = databaseHelper.getMissionDao();
-						final Dao<Rocket, Integer> rocketDao = databaseHelper.getRocketDao();
+					Log.d( TAG, "Received Launch List update SUCCESS broadcast, will update the UI now." );
 
-						final JSONArray launchListArray = launchListObj.getJSONArray( "launch" );
-						for( int ii = 0; ii < launchListArray.length(); ++ii )
-						{
-							final JSONObject launchObj = launchListArray.getJSONObject( ii );
-							if( launchObj != null && m_adapter != null )
-							{
-								final Launch launch = gson.fromJson( launchObj.toString(), Launch.class );
+					reloadData();
 
-								try
-								{
-									TransactionManager.callInTransaction( databaseHelper.getConnectionSource(),
-									                                      new Callable<Void>()
-									                                      {
-										                                      public Void call() throws Exception
-										                                      {
-											                                      // If the launch already exists, cancel any alarms for it
-											                                      if( launchDao.idExists( launchDao
-													                                                              .extractId( launch ) ) )
-											                                      {
-												                                      UpdateAlarmsService
-														                                      .cancelAlarmsForLaunch( launch, activity );
-											                                      }
-
-											                                      locationDao
-													                                      .createOrUpdate( launch.location );
-											                                      missionDao
-													                                      .createOrUpdate( launch.mission );
-											                                      rocketDao
-													                                      .createOrUpdate( launch.rocket );
-
-											                                      // This must be run after all the others are created so the IDs of the child objects can be set
-											                                      launchDao.createOrUpdate( launch );
-
-											                                      return null;
-										                                      }
-									                                      } );
-								}
-								catch( SQLException e )
-								{
-									e.printStackTrace();
-								}
-							}
-						}
-
-						// Now that we have new data, ensure our Alarms are set correctly
-						activity.startService( new Intent( activity, UpdateAlarmsService.class ) );
-
-						numLaunches = launchDao.countOf();
-
-						final SharedPreferences preferences = activity.getPreferences( Context.MODE_PRIVATE );
-						preferences.edit().putLong( Preferences.KEY_LAST_UPDATED, new Date().getTime() ).commit();
-						Log.d( TAG, "Refresh successful: " + numLaunches + " Launches in database." );
-					}
-					catch( SQLException e )
-					{
-						e.printStackTrace();
-					}
-					catch( JSONException e )
-					{
-						e.printStackTrace();
-					}
-
-					OpenHelperManager.releaseHelper();
+					activity.setProgressBarIndeterminateVisibility( false );
+					Toast.makeText( activity, R.string.TOAST_launch_list_refresh_complete, Toast.LENGTH_SHORT ).show();
 				}
-			}
+				else if( intent.getAction().equals( LaunchUpdateService.ACTION_LAUNCH_LIST_UPDATE_FAILED ) )
+				{
+					Log.d( TAG, "Received Launch List update FAILURE broadcast." );
 
-			return numLaunches;
-		}
-
-		@Override
-		protected void onPostExecute( Long result )
-		{
-			final Activity activity = getActivity();
-			if( activity != null && isAdded() )
-			{
-				reloadData();
-
-				activity.setProgressBarIndeterminateVisibility( false );
-				Toast.makeText( activity, R.string.TOAST_launch_list_refresh_complete, Toast.LENGTH_SHORT ).show();
+					Toast.makeText( activity, R.string.TOAST_launch_list_refresh_failed, Toast.LENGTH_LONG ).show();
+					activity.setProgressBarIndeterminateVisibility( false );
+				}
 			}
 		}
 	}
