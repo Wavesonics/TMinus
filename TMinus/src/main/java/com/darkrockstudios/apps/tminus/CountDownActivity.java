@@ -3,12 +3,14 @@ package com.darkrockstudios.apps.tminus;
 
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.Menu;
+import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;
 
@@ -20,9 +22,9 @@ import java.util.concurrent.TimeUnit;
 
 public class CountDownActivity extends Activity implements LaunchLoader.Listener
 {
+	public static final  String ARG_ITEM_ID    = "item_id";
 	private static final String TAG            = CountDownActivity.class.getSimpleName();
 	private static final String FONT_PATH      = "fonts/digital_7_mono.ttf";
-	public static final  String ARG_ITEM_ID    = "item_id";
 	private static final long   INTERVAL_IN_MS = 10;
 	private long      m_endTime;
 	private boolean   m_launched;
@@ -30,14 +32,16 @@ public class CountDownActivity extends Activity implements LaunchLoader.Listener
 	private TextView  m_statusView;
 	private Handler   m_handler;
 	private TickTimer m_timeTicker;
-
-	private Launch m_launch;
+	private Launch    m_launch;
 
 	@Override
 	protected void onCreate( Bundle savedInstanceState )
 	{
 		super.onCreate( savedInstanceState );
+		getWindow().addFlags( WindowManager.LayoutParams.FLAG_FULLSCREEN );
 		getWindow().addFlags( WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON );
+		getWindow().addFlags( WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED );
+		getWindow().addFlags( WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD );
 		setContentView( R.layout.activity_count_down );
 
 		m_handler = new Handler();
@@ -51,6 +55,8 @@ public class CountDownActivity extends Activity implements LaunchLoader.Listener
 		m_statusView.setTypeface( typeface );
 
 		loadLaunch();
+
+		getActionBar().hide();
 	}
 
 	@Override
@@ -71,6 +77,25 @@ public class CountDownActivity extends Activity implements LaunchLoader.Listener
 		super.onStop();
 
 		stopTimer();
+	}
+
+	public void screenTouched( View view )
+	{
+		WindowManager.LayoutParams attrs = getWindow().getAttributes();
+
+		ActionBar actionBar = getActionBar();
+		if( actionBar.isShowing() )
+		{
+			actionBar.hide();
+			attrs.flags |= WindowManager.LayoutParams.FLAG_FULLSCREEN;
+		}
+		else
+		{
+			actionBar.show();
+			attrs.flags &= ~WindowManager.LayoutParams.FLAG_FULLSCREEN;
+		}
+
+		getWindow().setAttributes( attrs );
 	}
 
 	private void loadLaunch()

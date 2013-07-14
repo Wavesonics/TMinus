@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="secondary_text">#636363</color>
+    <color name="count_down">#ECB236</color>
+    <color name="count_down_actionbar">#66d18b46</color>
 </resources>
