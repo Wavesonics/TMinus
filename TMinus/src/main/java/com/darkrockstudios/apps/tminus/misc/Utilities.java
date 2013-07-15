@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class Utilities
 {
-	public static final String DATE_FORMAT = "HH:mm dd-MM-yyy";
+	public static final String DATE_FORMAT = "HH:mm - dd MMM yyy";
 
 	public static String getFormattedTime( final long timeMs )
 	{
