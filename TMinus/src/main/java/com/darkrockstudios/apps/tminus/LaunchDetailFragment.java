@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.ShareActionProvider;
 import android.widget.TextView;
 
+import com.darkrockstudios.apps.tminus.R.id;
 import com.darkrockstudios.apps.tminus.launchlibrary.Launch;
 import com.darkrockstudios.apps.tminus.misc.Preferences;
 import com.darkrockstudios.apps.tminus.misc.Utilities;
@@ -43,6 +44,16 @@ public class LaunchDetailFragment extends Fragment implements LaunchLoader.Liste
 	private View m_contentView;
 	private View m_progressBar;
 	private View m_countDownContainer;
+	private View m_rocketDetailButton;
+
+	public static LaunchDetailFragment newInstance( int launchId )
+	{
+		Bundle arguments = new Bundle();
+		arguments.putInt( LaunchDetailFragment.ARG_ITEM_ID, launchId );
+		LaunchDetailFragment fragment = new LaunchDetailFragment();
+		fragment.setArguments( arguments );
+		return fragment;
+	}
 
 	/**
 	 * Mandatory empty constructor for the fragment manager to instantiate the
@@ -115,6 +126,7 @@ public class LaunchDetailFragment extends Fragment implements LaunchLoader.Liste
 			m_progressBar = rootView.findViewById( R.id.progressBar );
 			m_countDownContainer = rootView.findViewById( R.id.LAUNCHDETAIL_imminent_launch_container );
 			m_countDownContainer.setVisibility( View.GONE );
+			m_rocketDetailButton = rootView.findViewById( id.LAUNCHDETAIL_rocket_detail_button );
 
 			loadLaunch();
 		}
@@ -141,9 +153,10 @@ public class LaunchDetailFragment extends Fragment implements LaunchLoader.Liste
 	{
 		int launchId = -1;
 
-		if( getArguments().containsKey( ARG_ITEM_ID ) )
+		final Bundle arguments = getArguments();
+		if( arguments != null && arguments.containsKey( ARG_ITEM_ID ) )
 		{
-			launchId = getArguments().getInt( ARG_ITEM_ID );
+			launchId = arguments.getInt( ARG_ITEM_ID );
 		}
 
 		return launchId;
@@ -179,8 +192,11 @@ public class LaunchDetailFragment extends Fragment implements LaunchLoader.Liste
 			final TextView description = (TextView)rootView.findViewById( R.id.LAUNCHDETAIL_mission_description );
 			description.setText( m_launchItem.mission.description );
 
+			final TextView status = (TextView)rootView.findViewById( R.id.LAUNCHDETAIL_status );
+			status.setText( Utilities.getStatusText( m_launchItem, rootView.getContext() ) );
+
 			final TextView launchWindow = (TextView)rootView.findViewById( R.id.LAUNCHDETAIL_launch_window );
-			launchWindow.setText( m_launchItem.windowstart.toString() );
+			launchWindow.setText( Utilities.getDateText( m_launchItem.windowstart ) );
 
 			final TextView location = (TextView)rootView.findViewById( R.id.LAUNCHDETAIL_location );
 			location.setText( m_launchItem.location.name );
@@ -290,6 +306,8 @@ public class LaunchDetailFragment extends Fragment implements LaunchLoader.Liste
 	public void launchLoaded( Launch launch )
 	{
 		m_launchItem = launch;
+		m_rocketDetailButton.setTag( m_launchItem.rocket );
+
 		updateViews();
 		updateShareIntent();
 		showContent();

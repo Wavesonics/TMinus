@@ -4,29 +4,38 @@
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:padding="@dimen/launch_list_row_padding"
-              android:orientation="vertical">
+              android:orientation="vertical"
+              android:gravity="left">
 
-    <!--suppress AndroidLintHardcodedText -->
     <TextView
             android:id="@+id/launch_list_item_title"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:text="Launch Name"
-            android:layout_gravity="center"
             android:gravity="center_vertical"
             android:textAppearance="?android:attr/textAppearanceListItem"
-            android:singleLine="true"
+            android:singleLine="false"
             android:ellipsize="end"/>
 
     <TextView
             android:id="@+id/launch_list_item_description"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:text="description"
             android:textColor="@color/secondary_text"
-            android:layout_gravity="center"
-            android:gravity="center_vertical"
+            android:textAppearance="?android:attr/textAppearanceListItemSmall"
+            android:ellipsize="end"
+            android:singleLine="false"/>
+
+    <TextView
+            android:id="@+id/launch_list_item_net"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:text="July 24, 2013 00:00:00 GMT"
+            android:textColor="@color/secondary_text"
             android:textAppearance="?android:attr/textAppearanceListItemSmall"
             android:ellipsize="end"
             android:singleLine="true"/>
+
 </LinearLayout>

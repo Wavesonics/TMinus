@@ -9,6 +9,7 @@
     <string name="title_activity_count_down">Count Down</string>
     <string name="NOTIFICATION_reminder_title">Upcoming launch</string>
     <string name="NOTIFICATION_launch_imminent_title">Launch Imminent!</string>
+    <string name="LAUNCHDETAIL_status">Status:</string>
     <string name="LAUNCHDETAIL_launch_window">Launch:</string>
     <string name="LAUNCHDETAIL_launch_window_length">Window:</string>
     <string name="LAUNCHDETAIL_location">Location:</string>
@@ -16,6 +17,7 @@
     <string name="LAUNCHDETAIL_count_down_button">Count Down</string>
     <string name="LAUNCHDETAIL_launch_image_description">Picture of the rocket</string>
     <string name="LAUNCHDETAIL_imminent_launch">This rocket is launching soon, go to the count down!</string>
+    <string name="ROCKETDETAIL_title">Rocket Detail</string>
     <string name="TOAST_launch_list_refresh_complete">Launch List updated</string>
     <string name="TOAST_launch_list_refresh_failed">Launch List update failed</string>
     <string name="COUNTDOWN_launch_status">Status: %s</string>
@@ -48,5 +50,6 @@
     <string name="PREF_always_show_count_down_summary">Display the Count Down button for all Launches regardless of how
         far off they are
     </string>
+    <string name="LAUNCHDETAIL_rocket_detail_button">Rocket Details</string>
 
 </resources>

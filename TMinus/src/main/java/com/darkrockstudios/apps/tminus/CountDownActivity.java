@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import com.darkrockstudios.apps.tminus.R.id;
 import com.darkrockstudios.apps.tminus.launchlibrary.Launch;
+import com.darkrockstudios.apps.tminus.misc.Utilities;
 
 import java.text.DecimalFormat;
 import java.util.concurrent.TimeUnit;
@@ -141,30 +142,10 @@ public class CountDownActivity extends Activity implements LaunchLoader.Listener
 
 	private void updateStatus()
 	{
-		if( m_launch != null )
-		{
-			final String status;
-			switch( m_launch.status )
-			{
-				case 1:
-					status = getString( R.string.COUNTDOWN_launch_status_green );
-					break;
-				case 2:
-					status = getString( R.string.COUNTDOWN_launch_status_red );
-					break;
-				case 3:
-					status = getString( R.string.COUNTDOWN_launch_status_success );
-					break;
-				case 4:
-					status = getString( R.string.COUNTDOWN_launch_status_fail );
-					break;
-				default:
-					status = "";
-			}
+		String status = Utilities.getStatusText( m_launch, this );
 
-			final String statusText = String.format( getString( R.string.COUNTDOWN_launch_status ), status );
-			m_statusView.setText( statusText );
-		}
+		final String statusText = String.format( getString( R.string.COUNTDOWN_launch_status ), status );
+		m_statusView.setText( statusText );
 	}
 
 	private void updateTimer()

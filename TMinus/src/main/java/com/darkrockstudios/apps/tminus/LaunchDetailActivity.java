@@ -1,5 +1,6 @@
 package com.darkrockstudios.apps.tminus;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
@@ -8,9 +9,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 
+import com.darkrockstudios.apps.tminus.launchlibrary.Rocket;
+
 public class LaunchDetailActivity extends DatabaseActivity
 {
-	private static String FRAGMENT_TAG = "LaunchDetailFragment";
+	private static final String FRAGMENT_TAG = "LaunchDetailFragment";
 	private int m_launchId;
 
 	@Override
@@ -27,10 +30,7 @@ public class LaunchDetailActivity extends DatabaseActivity
 			{
 				// Create the detail fragment and add it to the activity
 				// using a fragment transaction.
-				Bundle arguments = new Bundle();
-				arguments.putInt( LaunchDetailFragment.ARG_ITEM_ID, m_launchId );
-				LaunchDetailFragment fragment = new LaunchDetailFragment();
-				fragment.setArguments( arguments );
+				LaunchDetailFragment fragment = LaunchDetailFragment.newInstance( m_launchId );
 				getSupportFragmentManager().beginTransaction()
 						.add( R.id.launch_detail_container, fragment, FRAGMENT_TAG )
 						.commit();
@@ -91,5 +91,15 @@ public class LaunchDetailActivity extends DatabaseActivity
 			countDownIntent.putExtra( CountDownActivity.ARG_ITEM_ID, m_launchId );
 			startActivity( countDownIntent );
 		}
+	}
+
+	public void rocketDetailsClicked( View v )
+	{
+		Rocket rocket = (Rocket)v.getTag();
+
+		final Context context = v.getContext();
+		Intent intent = new Intent( context, RocketDetailActivity.class );
+		intent.putExtra( RocketDetailActivity.ARG_ITEM_ID, rocket.id );
+		context.startActivity( intent );
 	}
 }

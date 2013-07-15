@@ -86,6 +86,32 @@
                 <TableRow
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:paddingBottom="@dimen/launch_detail_padding"
+                        android:id="@+id/tableRow">
+
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="?android:attr/textAppearanceMedium"
+                            android:text="@string/LAUNCHDETAIL_status"
+                            android:textStyle="bold"
+                            android:gravity="right"
+                            android:layout_marginRight="@dimen/launch_detail_padding"/>
+
+                    <TextView
+                            tools:ignore="HardcodedText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="?android:attr/textAppearanceMedium"
+                            android:text="GO"
+                            android:id="@+id/LAUNCHDETAIL_status"
+                            android:textColor="@color/secondary_text"
+                            android:layout_weight="1"/>
+                </TableRow>
+
+                <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
                         android:paddingBottom="@dimen/launch_detail_padding">
 
                     <TextView
@@ -93,7 +119,6 @@
                             android:layout_height="wrap_content"
                             android:textAppearance="?android:attr/textAppearanceMedium"
                             android:text="@string/LAUNCHDETAIL_launch_window"
-                            android:id="@+id/textView"
                             android:textStyle="bold"
                             android:gravity="right"
                             android:layout_marginRight="@dimen/launch_detail_padding"/>
@@ -120,7 +145,6 @@
                             android:layout_height="wrap_content"
                             android:textAppearance="?android:attr/textAppearanceMedium"
                             android:text="@string/LAUNCHDETAIL_launch_window_length"
-                            android:id="@+id/textView4"
                             android:textStyle="bold"
                             android:gravity="right"
                             android:layout_marginRight="@dimen/launch_detail_padding"/>
@@ -147,7 +171,6 @@
                             android:layout_height="wrap_content"
                             android:textAppearance="?android:attr/textAppearanceMedium"
                             android:text="@string/LAUNCHDETAIL_location"
-                            android:id="@+id/textView2"
                             android:textStyle="bold"
                             android:gravity="right"
                             android:layout_marginRight="@dimen/launch_detail_padding"/>
@@ -173,7 +196,6 @@
                             android:layout_height="wrap_content"
                             android:textAppearance="?android:attr/textAppearanceMedium"
                             android:text="@string/LAUNCHDETAIL_count_down"
-                            android:id="@+id/textView3"
                             android:textStyle="bold"
                             android:gravity="right"
                             android:layout_marginRight="@dimen/launch_detail_padding"/>
@@ -190,7 +212,21 @@
                             />
                 </TableRow>
 
+                <TableRow
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent">
+
+                </TableRow>
+
             </TableLayout>
+
+            <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/LAUNCHDETAIL_rocket_detail_button"
+                    android:id="@+id/LAUNCHDETAIL_rocket_detail_button"
+                    android:layout_below="@id/tableLayout"
+                    android:onClick="rocketDetailsClicked"/>
 
         </RelativeLayout>
 

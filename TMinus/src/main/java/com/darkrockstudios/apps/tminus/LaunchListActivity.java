@@ -11,6 +11,7 @@ import android.view.Window;
 import com.darkrockstudios.apps.tminus.LaunchListFragment.Callbacks;
 import com.darkrockstudios.apps.tminus.R.id;
 import com.darkrockstudios.apps.tminus.launchlibrary.Launch;
+import com.darkrockstudios.apps.tminus.launchlibrary.Rocket;
 
 
 /**
@@ -149,5 +150,13 @@ public class LaunchListActivity extends DatabaseActivity
 				startActivity( intent );
 			}
 		}
+	}
+
+	public void rocketDetailsClicked( View v )
+	{
+		Rocket rocket = (Rocket)v.getTag();
+
+		RocketDetailFragment rocketDetailFragment = RocketDetailFragment.newInstance( rocket.id );
+		rocketDetailFragment.show( getSupportFragmentManager(), "dialog" );
 	}
 }

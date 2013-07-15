@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Rocket Name"
+            android:id="@+id/ROCKETDETAIL_name"
+            android:layout_gravity="center"
+            android:layout_alignTop="@+id/imageView"
+            android:layout_toRightOf="@+id/imageView"/>
+
+    <ImageView
+            android:layout_width="106dp"
+            android:layout_height="144dp"
+            android:id="@+id/imageView"
+            android:layout_gravity="left|center_vertical"
+            android:src="@drawable/rocket"
+            android:layout_margin="@dimen/rocket_detail_padding"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"/>
+
+    <TextView
+            tools:ignore="HardcodedText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="configuration"
+            android:id="@+id/ROCKETDETAIL_configuration"
+            android:textColor="@color/secondary_text"
+            android:layout_below="@+id/ROCKETDETAIL_name"
+            android:layout_toRightOf="@+id/imageView"/>
+
+</RelativeLayout>

@@ -20,6 +20,7 @@ import com.darkrockstudios.apps.tminus.R.id;
 import com.darkrockstudios.apps.tminus.R.layout;
 import com.darkrockstudios.apps.tminus.database.DatabaseHelper;
 import com.darkrockstudios.apps.tminus.launchlibrary.Launch;
+import com.darkrockstudios.apps.tminus.misc.Utilities;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.PreparedQuery;
@@ -39,18 +40,18 @@ import java.util.List;
  */
 public class LaunchListFragment extends ListFragment
 {
-	private static final String    TAG                      = LaunchListFragment.class.getSimpleName();
+	private static final String TAG                      = LaunchListFragment.class.getSimpleName();
 	/**
 	 * The serialization (saved instance state) Bundle key representing the
 	 * activated item position. Only used on tablets.
 	 */
-	private static final String    STATE_ACTIVATED_POSITION = "activated_position";
+	private static final String STATE_ACTIVATED_POSITION = "activated_position";
 
 	/**
 	 * A dummy implementation of the {@link Callbacks} interface that does
 	 * nothing. Used only when this fragment is not attached to an activity.
 	 */
-	private static       Callbacks s_dummyCallbacks         = new Callbacks()
+	private static Callbacks s_dummyCallbacks = new Callbacks()
 	{
 		@Override
 		public void onItemSelected( Launch launch )
@@ -278,6 +279,9 @@ public class LaunchListFragment extends ListFragment
 
 			final TextView descriptionView = (TextView)view.findViewById( id.launch_list_item_description );
 			descriptionView.setText( launch.mission.description );
+
+			final TextView netView = (TextView)view.findViewById( id.launch_list_item_net );
+			netView.setText( Utilities.getDateText( launch.net ) );
 
 			return view;
 		}

@@ -13,7 +13,10 @@
     </content>
     <orderEntry type="jdk" jdkName="Android SDK" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="libs" level="project" />
+    <orderEntry type="library" name="android-support-v4" level="project" />
+    <orderEntry type="library" name="gson-2.2.4" level="project" />
+    <orderEntry type="library" name="ormlite-android-4.45" level="project" />
+    <orderEntry type="library" name="ormlite-core-4.45" level="project" />
   </component>
 </module>
 
