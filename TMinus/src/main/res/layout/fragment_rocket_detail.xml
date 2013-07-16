@@ -13,13 +13,13 @@
             android:text="Rocket Name"
             android:id="@+id/ROCKETDETAIL_name"
             android:layout_gravity="center"
-            android:layout_alignTop="@+id/imageView"
-            android:layout_toRightOf="@+id/imageView"/>
+            android:layout_alignTop="@+id/ROCKETDETAIL_rocket_image"
+            android:layout_toRightOf="@+id/ROCKETDETAIL_rocket_image"/>
 
-    <ImageView
+    <com.android.volley.toolbox.NetworkImageView
             android:layout_width="106dp"
             android:layout_height="144dp"
-            android:id="@+id/imageView"
+            android:id="@+id/ROCKETDETAIL_rocket_image"
             android:layout_gravity="left|center_vertical"
             android:src="@drawable/rocket"
             android:layout_margin="@dimen/rocket_detail_padding"
@@ -35,6 +35,6 @@
             android:id="@+id/ROCKETDETAIL_configuration"
             android:textColor="@color/secondary_text"
             android:layout_below="@+id/ROCKETDETAIL_name"
-            android:layout_toRightOf="@+id/imageView"/>
+            android:layout_toRightOf="@+id/ROCKETDETAIL_rocket_image"/>
 
 </RelativeLayout>

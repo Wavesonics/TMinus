@@ -12,12 +12,24 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.android.volley.Response.ErrorListener;
+import com.android.volley.Response.Listener;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.NetworkImageView;
 import com.darkrockstudios.apps.tminus.R.string;
 import com.darkrockstudios.apps.tminus.database.DatabaseHelper;
 import com.darkrockstudios.apps.tminus.launchlibrary.Rocket;
+import com.darkrockstudios.apps.tminus.misc.DiskBitmapCache;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.Dao;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.File;
 import java.sql.SQLException;
 
 /**
@@ -29,11 +41,15 @@ public class RocketDetailFragment extends DialogFragment
 {
 	public static final String TAG         = LaunchDetailFragment.class.getSimpleName();
 	public static final String ARG_ITEM_ID = "item_id";
+	private File             m_dataDirectory;
+	private Rocket           m_rocket;
+	private NetworkImageView m_rocketImage;
+	private TextView         m_rocketName;
+	private TextView         m_rocketConfiguration;
 
-	private Rocket m_rocket;
-
-	private TextView m_rocketName;
-	private TextView m_rocketConfiguration;
+	public RocketDetailFragment()
+	{
+	}
 
 	public static RocketDetailFragment newInstance( int rocketId )
 	{
@@ -44,10 +60,6 @@ public class RocketDetailFragment extends DialogFragment
 		rocketDetailFragment.setArguments( arguments );
 
 		return rocketDetailFragment;
-	}
-
-	public RocketDetailFragment()
-	{
 	}
 
 	@Override
@@ -71,8 +83,7 @@ public class RocketDetailFragment extends DialogFragment
 
 		if( rootView != null )
 		{
-			//m_contentView = rootView.findViewById( R.id.content_view );
-			//m_progressBar = rootView.findViewById( R.id.progressBar );
+			m_rocketImage = (NetworkImageView)rootView.findViewById( R.id.ROCKETDETAIL_rocket_image );
 			m_rocketName = (TextView)rootView.findViewById( R.id.ROCKETDETAIL_name );
 			m_rocketConfiguration = (TextView)rootView.findViewById( R.id.ROCKETDETAIL_configuration );
 
@@ -80,6 +91,15 @@ public class RocketDetailFragment extends DialogFragment
 		}
 
 		return rootView;
+	}
+
+	@Override
+	public void onAttach( Activity activity )
+	{
+		super.onAttach( activity );
+
+		String dataDirPath = activity.getApplicationInfo().dataDir;
+		m_dataDirectory = new File( dataDirPath );
 	}
 
 	private void updateViews()
@@ -113,6 +133,84 @@ public class RocketDetailFragment extends DialogFragment
 		}
 
 		return rocketId;
+	}
+
+	private void requestRocketImage()
+	{
+		// This gives the "page image"
+		// Action: query
+		// prop=pageimages
+
+		final String hardCodedArticleTitle = "Falcon_9";
+
+		final String baseUrl = "http://en.wikipedia.org";
+		final String imageQuery = "/w/api.php?action=query&prop=pageimages&format=json&piprop=thumbnail%7Cname&pithumbsize=512&pilimit=1&indexpageids=&titles=";
+
+		final String url = baseUrl + imageQuery + hardCodedArticleTitle;
+
+		WikiImageListener listener = new WikiImageListener( m_rocketImage, m_dataDirectory );
+		JsonObjectRequest request = new JsonObjectRequest( url, null, listener, listener );
+		request.setTag( this );
+		TMinusApplication.getRequestQueue().add( request );
+	}
+
+	// This Wiki api call will get the summary section for a given article
+	// /w/api.php?action=parse&format=json&page=Falcon_9&prop=text&section=0
+
+	private static class WikiImageListener implements Listener<JSONObject>, ErrorListener
+	{
+		private File             m_dataDirectory;
+		private NetworkImageView m_rocketImage;
+
+		public WikiImageListener( NetworkImageView rocketImage, File dataDirectory )
+		{
+			m_rocketImage = rocketImage;
+			m_dataDirectory = dataDirectory;
+		}
+
+		@Override
+		public void onResponse( JSONObject response )
+		{
+			Log.d( TAG, "Received wiki article data" );
+			if( response != null )
+			{
+				try
+				{
+					JSONObject parse = response.getJSONObject( "query" );
+					JSONArray pageIdsArray = parse.getJSONArray( "pageids" );
+
+					if( pageIdsArray.length() == 1 )
+					{
+						final String pageId = pageIdsArray.getString( 0 );
+
+						JSONObject pages = parse.getJSONObject( "pages" );
+						JSONObject rocketPage = pages.getJSONObject( pageId );
+
+						JSONObject rocketThumbnail = rocketPage.getJSONObject( "thumbnail" );
+						String rocketThumbnailUrl = rocketThumbnail.getString( "source" );
+
+						if( rocketThumbnailUrl != null )
+						{
+							Log.d( TAG, "Preparing to load rocket image: " + rocketThumbnailUrl );
+							ImageLoader imageLoader = new ImageLoader( TMinusApplication
+									                                           .getRequestQueue(), new DiskBitmapCache( m_dataDirectory, 10485760 ) );
+							m_rocketImage.setImageUrl( rocketThumbnailUrl, imageLoader );
+						}
+					}
+				}
+				catch( JSONException e )
+				{
+					e.printStackTrace();
+				}
+
+			}
+		}
+
+		@Override
+		public void onErrorResponse( VolleyError error )
+		{
+
+		}
 	}
 
 	private class RocketLoader extends AsyncTask<Integer, Void, Rocket>
@@ -151,7 +249,12 @@ public class RocketDetailFragment extends DialogFragment
 			Log.d( TAG, "Rocket details loaded." );
 			m_rocket = result;
 
-			updateViews();
+			if( m_rocket != null )
+			{
+				requestRocketImage();
+
+				updateViews();
+			}
 		}
 	}
 }
