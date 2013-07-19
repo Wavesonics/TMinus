@@ -37,4 +37,19 @@
             android:layout_below="@+id/ROCKETDETAIL_name"
             android:layout_toRightOf="@+id/ROCKETDETAIL_rocket_image"/>
 
+    <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/scrollView"
+            android:padding="@dimen/rocket_detail_padding"
+            android:layout_below="@id/ROCKETDETAIL_rocket_image">
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="New Text"
+                android:id="@+id/ROCKETDETAIL_details"
+                android:singleLine="false"/>
+    </ScrollView>
+
 </RelativeLayout>
