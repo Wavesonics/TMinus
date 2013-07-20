@@ -17,6 +17,8 @@
     <orderEntry type="library" name="gson-2.2.4" level="project" />
     <orderEntry type="library" name="ormlite-android-4.45" level="project" />
     <orderEntry type="library" name="ormlite-core-4.45" level="project" />
+    <orderEntry type="library" name="volley" level="project" />
+    <orderEntry type="library" name="CWAC-WakefulIntentService" level="project" />
   </component>
 </module>
 
