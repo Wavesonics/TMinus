@@ -29,11 +29,12 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper
 {
 	private static final String                 TAG              = DatabaseHelper.class.getSimpleName();
 	private static final String                 DATABASE_NAME    = "TMinus.db";
-	private static final int                    DATABASE_VERSION = 2;
+	private static final int                    DATABASE_VERSION = 3;
 	private              Dao<Launch, Integer>   m_launchDao      = null;
 	private              Dao<Location, Integer> m_locationDao    = null;
 	private              Dao<Mission, Integer>  m_missionDao     = null;
 	private              Dao<Rocket, Integer>   m_rocketDao      = null;
+    private              Dao<RocketDetail, Integer>   m_rocketDetailDao      = null;
 
 	public DatabaseHelper( Context context )
 	{
@@ -50,6 +51,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper
 			TableUtils.createTable( connectionSource, Location.class );
 			TableUtils.createTable( connectionSource, Mission.class );
 			TableUtils.createTable( connectionSource, Rocket.class );
+            TableUtils.createTable( connectionSource, RocketDetail.class );
 		}
 		catch( SQLException e )
 		{
@@ -68,6 +70,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper
 			TableUtils.dropTable( connectionSource, Location.class, true );
 			TableUtils.dropTable( connectionSource, Mission.class, true );
 			TableUtils.dropTable( connectionSource, Rocket.class, true );
+            TableUtils.dropTable( connectionSource, RocketDetail.class, true );
 			// after we drop the old databases, we create the new ones
 			onCreate( db, connectionSource );
 		}
@@ -114,6 +117,15 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper
 		return m_rocketDao;
 	}
 
+    public Dao<RocketDetail, Integer> getRocketDetailDao() throws SQLException
+    {
+        if( m_rocketDetailDao == null )
+        {
+            m_rocketDetailDao = getDao( RocketDetail.class );
+        }
+        return m_rocketDetailDao;
+    }
+
 	@Override
 	public void close()
 	{
@@ -122,5 +134,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper
 		m_locationDao = null;
 		m_missionDao = null;
 		m_rocketDao = null;
+        m_rocketDetailDao = null;
 	}
 }

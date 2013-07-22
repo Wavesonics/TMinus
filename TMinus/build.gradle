@@ -17,6 +17,8 @@ dependencies {
     compile files('libs/gson-2.2.4.jar')
     compile files('libs/ormlite-core-4.45.jar')
     compile files('libs/ormlite-android-4.45.jar')
+    compile files('libs/volley.jar')
+    compile files('libs/CWAC-WakefulIntentService.jar')
 }
 
 android {
@@ -28,3 +30,4 @@ android {
         targetSdkVersion 17
     }
 }
+
