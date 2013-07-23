@@ -238,10 +238,8 @@
                             android:layout_height="wrap_content"
                             android:textAppearance="?android:attr/textAppearanceMedium"
                             android:text="Rocket Name"
-                            android:layout_weight="3"
                             android:id="@+id/LAUNCHDETAIL_rocket_name"
-                            android:textColor="@color/secondary_text"
-                            tools:ignore="HardcodedText"/>
+                            android:textColor="@color/secondary_text"/>
 
                     <Button
                             android:layout_width="wrap_content"
@@ -250,6 +248,44 @@
                             android:text="@string/LAUNCHDETAIL_rocket_detail_button"
                             android:id="@+id/LAUNCHDETAIL_rocket_detail_button"
                             android:onClick="rocketDetailsClicked"/>
+                </TableRow>
+
+                <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:paddingTop="@dimen/launch_detail_padding"
+                        android:paddingBottom="@dimen/launch_detail_padding">
+
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_span="2"
+                            android:textAppearance="?android:attr/textAppearanceLarge"
+                            android:text="@string/LAUNCHDETAIL_launch_location"
+                            android:textStyle="bold"
+                            android:layout_marginRight="@dimen/launch_detail_padding"/>
+                </TableRow>
+
+                <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:paddingBottom="@dimen/launch_detail_padding">
+
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="?android:attr/textAppearanceMedium"
+                            android:text="Location Name"
+                            android:id="@+id/LAUNCHDETAIL_location_name"
+                            android:textColor="@color/secondary_text"/>
+
+                    <Button
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textAlignment="center"
+                            android:layout_weight="1"
+                            android:text="@string/LAUNCHDETAIL_location_detail_button"
+                            android:id="@+id/LAUNCHDETAIL_location_detail_button"/>
                 </TableRow>
 
             </TableLayout>

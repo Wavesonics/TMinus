@@ -4,13 +4,17 @@
     <string name="app_name">TMinus</string>
     <string name="action_settings">Settings</string>
     <string name="action_refresh">Refresh</string>
+
     <string name="title_launch_list">Launches</string>
     <string name="title_launch_detail">Launch Detail</string>
     <string name="title_activity_count_down">Count Down</string>
+
     <string name="MENU_share_item">Share</string>
     <string name="MENU_add_to_calendar_item">Add to Calendar</string>
+
     <string name="CALENDAR_event_title">Space Launch: %1$s</string>
     <string name="CALENDAR_event_description">Launch vehicle: %1$s\nConfiguration: %2$s</string>
+
     <string name="NOTIFICATION_reminder_title">Upcoming launch</string>
     <string name="NOTIFICATION_reminder_summary">%1$s\n\nNET: %2$s\nFrom: %3$s</string>
     <string name="NOTIFICATION_launch_imminent_title">Launch Imminent!</string>
@@ -27,16 +31,22 @@
     <string name="LAUNCHDETAIL_imminent_launch">This rocket is launching soon, go to the count down!</string>
     <string name="LAUNCHDETAIL_launch_vehicle">Launch Vehicle</string>
     <string name="LAUNCHDETAIL_rocket_detail_button">Details</string>
+    <string name="LAUNCHDETAIL_launch_location">Launch Location</string>
+    <string name="LAUNCHDETAIL_location_detail_button">Details</string>
+
     <string name="ROCKETDETAIL_title">Rocket Detail</string>
     <string name="ROCKETDETAIL_loading_summary">Loading rocket summary…</string>
     <string name="ROCKETDETAIL_no_summary">No summary available.</string>
+
     <string name="TOAST_launch_list_refresh_complete">Launch List updated</string>
     <string name="TOAST_launch_list_refresh_failed">Launch List update failed</string>
+
     <string name="COUNTDOWN_launch_status">Status: %s</string>
     <string name="COUNTDOWN_launch_status_green">GO</string>
     <string name="COUNTDOWN_launch_status_red">NO-GO</string>
     <string name="COUNTDOWN_launch_status_success">SUCCESS</string>
     <string name="COUNTDOWN_launch_status_fail">FAIL</string>
+
     <string name="PREF_general_preferences_title">Background Updating</string>
     <string name="PREF_automatic_updating">Automatic Updating</string>
     <string name="PREF_automatic_updating_summary">Update Launch data in the background</string>
