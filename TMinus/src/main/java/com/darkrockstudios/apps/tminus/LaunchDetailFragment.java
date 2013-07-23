@@ -244,6 +244,9 @@ public class LaunchDetailFragment extends Fragment implements LaunchLoader.Liste
 			final long windowLengthMs = m_launchItem.windowend.getTime() - m_launchItem.windowstart.getTime();
 			windowLength.setText( Utilities.getFormattedTime( windowLengthMs ) );
 
+			final TextView rocketName = (TextView)rootView.findViewById( id.LAUNCHDETAIL_rocket_name );
+			rocketName.setText( m_launchItem.rocket.name );
+
 			updateTimeViews();
 			handleCountDownContainer();
 		}
