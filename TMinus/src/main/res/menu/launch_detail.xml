@@ -4,6 +4,11 @@
     <item
             android:id="@+id/menu_item_share"
             android:showAsAction="ifRoom"
-            android:title="Share"
+            android:title="@string/MENU_share_item"
             android:actionProviderClass="android.widget.ShareActionProvider"/>
+    <item
+            android:id="@+id/menu_item_add_to_calendar"
+            android:showAsAction="ifRoom"
+            android:icon="@drawable/ic_action_calendar_day"
+            android:title="@string/MENU_add_to_calendar_item"/>
 </menu>

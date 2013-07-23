@@ -7,6 +7,10 @@
     <string name="title_launch_list">Launches</string>
     <string name="title_launch_detail">Launch Detail</string>
     <string name="title_activity_count_down">Count Down</string>
+    <string name="MENU_share_item">Share</string>
+    <string name="MENU_add_to_calendar_item">Add to Calendar</string>
+    <string name="CALENDAR_event_title">Space Launch: %1$s</string>
+    <string name="CALENDAR_event_description">Launch vehicle: %1$s\nConfiguration: %2$s</string>
     <string name="NOTIFICATION_reminder_title">Upcoming launch</string>
     <string name="NOTIFICATION_reminder_summary">%1$s\n\nNET: %2$s\nFrom: %3$s</string>
     <string name="NOTIFICATION_launch_imminent_title">Launch Imminent!</string>

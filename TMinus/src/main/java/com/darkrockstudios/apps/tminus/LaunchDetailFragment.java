@@ -8,6 +8,8 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.provider.CalendarContract;
+import android.provider.CalendarContract.Events;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -41,11 +43,18 @@ public class LaunchDetailFragment extends Fragment implements LaunchLoader.Liste
 	private ShareActionProvider m_shareActionProvider;
 	private Launch              m_launchItem;
 	private TimeReceiver        m_timeReceiver;
-
 	private View m_contentView;
 	private View m_progressBar;
 	private View m_countDownContainer;
 	private View m_rocketDetailButton;
+
+	/**
+	 * Mandatory empty constructor for the fragment manager to instantiate the
+	 * fragment (e.g. upon screen orientation changes).
+	 */
+	public LaunchDetailFragment()
+	{
+	}
 
 	public static LaunchDetailFragment newInstance( int launchId )
 	{
@@ -54,14 +63,6 @@ public class LaunchDetailFragment extends Fragment implements LaunchLoader.Liste
 		LaunchDetailFragment fragment = new LaunchDetailFragment();
 		fragment.setArguments( arguments );
 		return fragment;
-	}
-
-	/**
-	 * Mandatory empty constructor for the fragment manager to instantiate the
-	 * fragment (e.g. upon screen orientation changes).
-	 */
-	public LaunchDetailFragment()
-	{
 	}
 
 	@Override
@@ -148,6 +149,43 @@ public class LaunchDetailFragment extends Fragment implements LaunchLoader.Liste
 		updateShareIntent();
 
 		super.onCreateOptionsMenu( menu, inflater );
+	}
+
+	@Override
+	public boolean onOptionsItemSelected( MenuItem item )
+	{
+		final boolean handled;
+
+		switch( item.getItemId() )
+		{
+			case id.menu_item_add_to_calendar:
+				addLaunchToCalendar();
+				handled = true;
+				break;
+			default:
+				handled = super.onOptionsItemSelected( item );
+		}
+
+		return handled;
+	}
+
+	private void addLaunchToCalendar()
+	{
+		if( m_launchItem != null )
+		{
+			final String title = getString( R.string.CALENDAR_event_title, m_launchItem.name );
+			final String description = getString( R.string.CALENDAR_event_description, m_launchItem.rocket.name, m_launchItem.rocket.configuration );
+
+			Intent intent = new Intent( Intent.ACTION_INSERT )
+					                .setData( Events.CONTENT_URI )
+					                .putExtra( CalendarContract.EXTRA_EVENT_BEGIN_TIME, m_launchItem.net.getTime() )
+					                .putExtra( CalendarContract.EXTRA_EVENT_END_TIME, m_launchItem.windowend.getTime() )
+					                .putExtra( Events.TITLE, title )
+					                .putExtra( Events.DESCRIPTION, description )
+					                .putExtra( Events.EVENT_LOCATION, m_launchItem.location.name )
+					                .putExtra( Events.AVAILABILITY, Events.AVAILABILITY_BUSY );
+			startActivity( intent );
+		}
 	}
 
 	public int getLaunchId()
@@ -294,15 +332,6 @@ public class LaunchDetailFragment extends Fragment implements LaunchLoader.Liste
 		return body;
 	}
 
-	private class TimeReceiver extends BroadcastReceiver
-	{
-		@Override
-		public void onReceive( Context context, Intent intent )
-		{
-			updateTimeViews();
-		}
-	}
-
 	@Override
 	public void launchLoaded( Launch launch )
 	{
@@ -312,5 +341,14 @@ public class LaunchDetailFragment extends Fragment implements LaunchLoader.Liste
 		updateViews();
 		updateShareIntent();
 		showContent();
+	}
+
+	private class TimeReceiver extends BroadcastReceiver
+	{
+		@Override
+		public void onReceive( Context context, Intent intent )
+		{
+			updateTimeViews();
+		}
 	}
 }
