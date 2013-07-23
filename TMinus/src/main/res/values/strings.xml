@@ -26,6 +26,8 @@
     <string name="LAUNCHDETAIL_launch_image_description">Picture of the rocket</string>
     <string name="LAUNCHDETAIL_imminent_launch">This rocket is launching soon, go to the count down!</string>
     <string name="ROCKETDETAIL_title">Rocket Detail</string>
+    <string name="ROCKETDETAIL_loading_summary">Loading rocket summary...</string>
+    <string name="ROCKETDETAIL_no_summary">No summary available.</string>
     <string name="TOAST_launch_list_refresh_complete">Launch List updated</string>
     <string name="TOAST_launch_list_refresh_failed">Launch List update failed</string>
     <string name="COUNTDOWN_launch_status">Status: %s</string>

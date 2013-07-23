@@ -10,7 +10,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Rocket Name"
             android:id="@+id/ROCKETDETAIL_name"
             android:layout_gravity="center"
             android:layout_alignTop="@+id/ROCKETDETAIL_rocket_image"
@@ -47,7 +46,7 @@
         <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="New Text"
+                android:text="@string/ROCKETDETAIL_loading_summary"
                 android:id="@+id/ROCKETDETAIL_details"
                 android:singleLine="false"/>
     </ScrollView>
