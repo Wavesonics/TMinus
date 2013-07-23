@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import com.darkrockstudios.apps.tminus.R.id;
 import com.darkrockstudios.apps.tminus.launchlibrary.Launch;
+import com.darkrockstudios.apps.tminus.loaders.LaunchLoader;
 import com.darkrockstudios.apps.tminus.misc.Utilities;
 
 import java.text.DecimalFormat;

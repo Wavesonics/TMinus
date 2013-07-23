@@ -1,4 +1,4 @@
-package com.darkrockstudios.apps.tminus;
+package com.darkrockstudios.apps.tminus.loaders;
 
 import android.content.Context;
 import android.os.AsyncTask;
@@ -14,7 +14,7 @@ import java.sql.SQLException;
 /**
  * Created by adam on 7/8/13.
  */
-class LaunchLoader extends AsyncTask<Integer, Void, Launch>
+public class LaunchLoader extends AsyncTask<Integer, Void, Launch>
 {
 	public static interface Listener
 	{

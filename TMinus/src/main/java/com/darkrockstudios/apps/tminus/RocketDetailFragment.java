@@ -133,6 +133,8 @@ public class RocketDetailFragment extends DialogFragment
 		{
 			RocketLoader rocketLoader = new RocketLoader();
 			rocketLoader.execute( rocketId );
+
+
 		}
 	}
 
