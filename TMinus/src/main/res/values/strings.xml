@@ -8,7 +8,11 @@
     <string name="title_launch_detail">Launch Detail</string>
     <string name="title_activity_count_down">Count Down</string>
     <string name="NOTIFICATION_reminder_title">Upcoming launch</string>
+    <string name="NOTIFICATION_reminder_summary">%1$s\n\nNET: %2$s\nFrom: %3$s</string>
     <string name="NOTIFICATION_launch_imminent_title">Launch Imminent!</string>
+    <string name="NOTIFICATION_launch_imminent_summary">%1$s\nLaunch has entered it\'s terminal count.\n\nNET:
+        %2$s\nFrom: %3$s
+    </string>
     <string name="LAUNCHDETAIL_status">Status:</string>
     <string name="LAUNCHDETAIL_launch_window">Launch:</string>
     <string name="LAUNCHDETAIL_launch_window_length">Window:</string>

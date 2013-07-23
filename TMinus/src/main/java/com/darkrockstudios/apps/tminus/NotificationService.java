@@ -9,8 +9,10 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.commonsware.cwac.wakeful.WakefulIntentService;
+import com.darkrockstudios.apps.tminus.R.string;
 import com.darkrockstudios.apps.tminus.database.DatabaseHelper;
 import com.darkrockstudios.apps.tminus.launchlibrary.Launch;
+import com.darkrockstudios.apps.tminus.misc.Utilities;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.Dao;
 
@@ -78,6 +80,11 @@ public class NotificationService extends WakefulIntentService
 		builder.setSmallIcon( R.drawable.ic_stat_rocket );
 		builder.setAutoCancel( true );
 
+		final String summary = getString( string.NOTIFICATION_reminder_summary, launch.name, Utilities
+				                                                                                     .getDateText( launch.net ), launch.location.name );
+		builder.setStyle( new NotificationCompat.BigTextStyle()
+				                  .bigText( summary ) );
+
 		Intent launchDetailIntent = new Intent( this, LaunchDetailActivity.class );
 		launchDetailIntent.putExtra( LaunchDetailFragment.ARG_ITEM_ID, launch.id );
 
@@ -99,6 +106,10 @@ public class NotificationService extends WakefulIntentService
 		builder.setDefaults( Notification.DEFAULT_ALL );
 		builder.setPriority( Notification.PRIORITY_HIGH );
 		builder.setAutoCancel( true );
+
+		final String summary = getString( string.NOTIFICATION_launch_imminent_summary, launch.name, Utilities
+				                                                                                            .getDateText( launch.net ), launch.location.name );
+		builder.setStyle( new NotificationCompat.BigTextStyle().bigText( summary ) );
 
 		Intent launchDetailIntent = new Intent( this, CountDownActivity.class );
 		launchDetailIntent.putExtra( CountDownActivity.ARG_ITEM_ID, launch.id );
