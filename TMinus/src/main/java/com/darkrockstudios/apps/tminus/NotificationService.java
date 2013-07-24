@@ -16,7 +16,12 @@ import com.darkrockstudios.apps.tminus.misc.Utilities;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.Dao;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by adam on 7/10/13.
@@ -74,9 +79,12 @@ public class NotificationService extends WakefulIntentService
 
 	private void postReminderNotification( Launch launch )
 	{
+		final String title = getString( R.string.NOTIFICATION_reminder_title );
+		final String shortBody = launch.name + " " + Utilities.getDateText( launch.net );
+
 		NotificationCompat.Builder builder = new NotificationCompat.Builder( this );
-		builder.setContentTitle( getString( R.string.NOTIFICATION_reminder_title ) );
-		builder.setContentText( launch.name + launch.net.toString() );
+		builder.setContentTitle( title );
+		builder.setContentText( shortBody );
 		builder.setSmallIcon( R.drawable.ic_stat_rocket );
 		builder.setAutoCancel( true );
 
@@ -95,13 +103,22 @@ public class NotificationService extends WakefulIntentService
 		NotificationManager notificationManager = (NotificationManager)getSystemService( Context.NOTIFICATION_SERVICE );
 
 		notificationManager.notify( NOTIFICATION_TAG_REMINDER, launch.id, notification );
+
+		// TODO: Use a setting to control pebble alerts
+		if( true )
+		{
+			sendAlertToPebble( title, shortBody );
+		}
 	}
 
 	private void postLaunchImminentNotification( Launch launch )
 	{
+		final String title = getString( R.string.NOTIFICATION_launch_imminent_title );
+		final String shortBody = launch.name + " " + Utilities.getDateText( launch.net );
+
 		NotificationCompat.Builder builder = new NotificationCompat.Builder( this );
-		builder.setContentTitle( getString( R.string.NOTIFICATION_launch_imminent_title ) );
-		builder.setContentText( launch.name + launch.net.toString() );
+		builder.setContentTitle( title );
+		builder.setContentText( shortBody );
 		builder.setSmallIcon( R.drawable.ic_stat_rocket );
 		builder.setDefaults( Notification.DEFAULT_ALL );
 		builder.setPriority( Notification.PRIORITY_HIGH );
@@ -121,5 +138,31 @@ public class NotificationService extends WakefulIntentService
 		NotificationManager notificationManager = (NotificationManager)getSystemService( Context.NOTIFICATION_SERVICE );
 
 		notificationManager.notify( NOTIFICATION_TAG_LAUNCH_IMMINENT, launch.id, notification );
+
+		// TODO: Use a setting to control pebble alerts
+		if( true )
+		{
+			sendAlertToPebble( title, shortBody );
+		}
+	}
+
+	public void sendAlertToPebble( String title, String body )
+	{
+		final Intent intent = new Intent( "com.getpebble.action.SEND_NOTIFICATION" );
+
+		final String appName = getString( string.app_name );
+
+		final Map<String, String> data = new HashMap<String, String>();
+		data.put( "title", title );
+		data.put( "body", body );
+		final JSONObject jsonData = new JSONObject( data );
+		final String notificationData = new JSONArray().put( jsonData ).toString();
+
+		intent.putExtra( "messageType", "PEBBLE_ALERT" );
+		intent.putExtra( "sender", appName );
+		intent.putExtra( "notificationData", notificationData );
+
+		Log.d( TAG, "About to send a modal alert to Pebble: " + title );
+		sendBroadcast( intent );
 	}
 }
