@@ -3,6 +3,8 @@ package com.darkrockstudios.apps.tminus;
 import android.app.Activity;
 import android.os.Bundle;
 
+import com.darkrockstudios.apps.tminus.fragments.SettingsFragment;
+
 /**
  * Created by Adam on 7/13/13.
  * Dark Rock Studios

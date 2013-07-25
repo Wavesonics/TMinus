@@ -13,6 +13,7 @@ import android.util.Log;
 import com.commonsware.cwac.wakeful.WakefulIntentService;
 import com.darkrockstudios.apps.tminus.R.string;
 import com.darkrockstudios.apps.tminus.database.DatabaseHelper;
+import com.darkrockstudios.apps.tminus.fragments.LaunchDetailFragment;
 import com.darkrockstudios.apps.tminus.launchlibrary.Launch;
 import com.darkrockstudios.apps.tminus.misc.Preferences;
 import com.darkrockstudios.apps.tminus.misc.Utilities;

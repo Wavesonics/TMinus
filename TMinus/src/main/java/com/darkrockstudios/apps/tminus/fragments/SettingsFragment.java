@@ -1,4 +1,4 @@
-package com.darkrockstudios.apps.tminus;
+package com.darkrockstudios.apps.tminus.fragments;
 
 import android.app.Activity;
 import android.content.Context;
@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 
+import com.darkrockstudios.apps.tminus.R;
+import com.darkrockstudios.apps.tminus.UpdateAlarmsService;
 import com.darkrockstudios.apps.tminus.database.DatabaseHelper;
 import com.darkrockstudios.apps.tminus.launchlibrary.Launch;
 import com.j256.ormlite.android.apptools.OpenHelperManager;

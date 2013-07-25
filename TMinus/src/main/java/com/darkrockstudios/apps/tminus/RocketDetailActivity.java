@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Window;
 
+import com.darkrockstudios.apps.tminus.fragments.RocketDetailFragment;
+
 /**
  * Created by Adam on 7/14/13.
  * Dark Rock Studios

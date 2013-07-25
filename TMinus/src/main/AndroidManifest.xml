@@ -4,7 +4,7 @@
           android:versionCode="5"
           android:versionName="0.4">
 
-<uses-sdk
+    <uses-sdk
             android:minSdkVersion="14"
             android:targetSdkVersion="17"/>
 
@@ -35,8 +35,15 @@
                 android:label="@string/title_activity_count_down"
                 android:theme="@style/CountDownTheme">
         </activity>
-        <activity android:name=".SettingsActivity"/>
-        <activity android:name=".RocketDetailActivity"/>
+        <activity
+                android:name=".SettingsActivity"
+                android:label="@string/title_activity_settings"/>
+        <activity
+                android:name=".RocketDetailActivity"
+                android:label="@string/title_activity_rocket_detail"/>
+        <activity
+                android:name=".LocationDetailActivity"
+                android:label="@string/title_activity_location_detail"/>
 
         <receiver android:name=".AlarmUpdateReceiver">
             <intent-filter>

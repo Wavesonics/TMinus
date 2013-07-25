@@ -23,7 +23,7 @@
 
     <fragment
             android:id="@+id/launch_list"
-            android:name="com.darkrockstudios.apps.tminus.LaunchListFragment"
+            android:name="com.darkrockstudios.apps.tminus.fragments.LaunchListFragment"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"

@@ -1,4 +1,4 @@
-package com.darkrockstudios.apps.tminus;
+package com.darkrockstudios.apps.tminus.fragments;
 
 
 import android.app.Activity;
@@ -15,6 +15,8 @@ import android.widget.TextView;
 
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
+import com.darkrockstudios.apps.tminus.R;
+import com.darkrockstudios.apps.tminus.TMinusApplication;
 import com.darkrockstudios.apps.tminus.database.DatabaseHelper;
 import com.darkrockstudios.apps.tminus.database.RocketDetail;
 import com.darkrockstudios.apps.tminus.launchlibrary.Rocket;
@@ -59,13 +61,6 @@ public class RocketDetailFragment extends DialogFragment
 		rocketDetailFragment.setArguments( arguments );
 
 		return rocketDetailFragment;
-	}
-
-	@Override
-	public void onCreate( Bundle savedInstanceState )
-	{
-		super.onCreate( savedInstanceState );
-
 	}
 
 	@Override

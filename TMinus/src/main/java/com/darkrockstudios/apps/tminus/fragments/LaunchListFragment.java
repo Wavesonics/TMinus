@@ -1,4 +1,4 @@
-package com.darkrockstudios.apps.tminus;
+package com.darkrockstudios.apps.tminus.fragments;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
@@ -16,6 +16,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.darkrockstudios.apps.tminus.LaunchUpdateService;
+import com.darkrockstudios.apps.tminus.R;
 import com.darkrockstudios.apps.tminus.R.id;
 import com.darkrockstudios.apps.tminus.R.layout;
 import com.darkrockstudios.apps.tminus.database.DatabaseHelper;
@@ -33,7 +35,7 @@ import java.util.List;
  * A list fragment representing a list of Launches. This fragment
  * also supports tablet devices by allowing list items to be given an
  * 'activated' state upon selection. This helps indicate which item is
- * currently being viewed in a {@link com.darkrockstudios.apps.tminus.LaunchDetailFragment}.
+ * currently being viewed in a {@link com.darkrockstudios.apps.tminus.fragments.LaunchDetailFragment}.
  * <p/>
  * Activities containing this fragment MUST implement the {@link Callbacks}
  * interface.

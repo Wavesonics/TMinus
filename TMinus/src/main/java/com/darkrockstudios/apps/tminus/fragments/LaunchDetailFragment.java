@@ -1,4 +1,4 @@
-package com.darkrockstudios.apps.tminus;
+package com.darkrockstudios.apps.tminus.fragments;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
@@ -20,6 +20,7 @@ import android.view.ViewGroup;
 import android.widget.ShareActionProvider;
 import android.widget.TextView;
 
+import com.darkrockstudios.apps.tminus.R;
 import com.darkrockstudios.apps.tminus.R.id;
 import com.darkrockstudios.apps.tminus.launchlibrary.Launch;
 import com.darkrockstudios.apps.tminus.loaders.LaunchLoader;
@@ -31,8 +32,8 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * A fragment representing a single Launch detail screen.
- * This fragment is either contained in a {@link LaunchListActivity}
- * in two-pane mode (on tablets) or a {@link LaunchDetailActivity}
+ * This fragment is either contained in a {@link com.darkrockstudios.apps.tminus.LaunchListActivity}
+ * in two-pane mode (on tablets) or a {@link com.darkrockstudios.apps.tminus.LaunchDetailActivity}
  * on handsets.
  */
 public class LaunchDetailFragment extends Fragment implements LaunchLoader.Listener
@@ -43,10 +44,11 @@ public class LaunchDetailFragment extends Fragment implements LaunchLoader.Liste
 	private ShareActionProvider m_shareActionProvider;
 	private Launch              m_launchItem;
 	private TimeReceiver        m_timeReceiver;
-	private View m_contentView;
-	private View m_progressBar;
-	private View m_countDownContainer;
-	private View m_rocketDetailButton;
+	private View                m_contentView;
+	private View                m_progressBar;
+	private View                m_countDownContainer;
+	private View                m_rocketDetailButton;
+	private View                m_launchDetailButton;
 
 	/**
 	 * Mandatory empty constructor for the fragment manager to instantiate the
@@ -128,7 +130,8 @@ public class LaunchDetailFragment extends Fragment implements LaunchLoader.Liste
 			m_progressBar = rootView.findViewById( R.id.progressBar );
 			m_countDownContainer = rootView.findViewById( R.id.LAUNCHDETAIL_imminent_launch_container );
 			m_countDownContainer.setVisibility( View.GONE );
-			m_rocketDetailButton = rootView.findViewById( id.LAUNCHDETAIL_rocket_detail_button );
+			m_rocketDetailButton = rootView.findViewById( R.id.LAUNCHDETAIL_rocket_detail_button );
+			m_launchDetailButton = rootView.findViewById( R.id.LAUNCHDETAIL_location_detail_button );
 
 			loadLaunch();
 		}
@@ -340,6 +343,7 @@ public class LaunchDetailFragment extends Fragment implements LaunchLoader.Liste
 	{
 		m_launchItem = launch;
 		m_rocketDetailButton.setTag( m_launchItem.rocket );
+		m_launchDetailButton.setTag( m_launchItem.location );
 
 		updateViews();
 		updateShareIntent();

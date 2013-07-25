@@ -8,9 +8,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 
-import com.darkrockstudios.apps.tminus.LaunchListFragment.Callbacks;
 import com.darkrockstudios.apps.tminus.R.id;
+import com.darkrockstudios.apps.tminus.fragments.LaunchDetailFragment;
+import com.darkrockstudios.apps.tminus.fragments.LaunchListFragment;
+import com.darkrockstudios.apps.tminus.fragments.LaunchListFragment.Callbacks;
+import com.darkrockstudios.apps.tminus.fragments.LocationDetailFragment;
+import com.darkrockstudios.apps.tminus.fragments.RocketDetailFragment;
 import com.darkrockstudios.apps.tminus.launchlibrary.Launch;
+import com.darkrockstudios.apps.tminus.launchlibrary.Location;
 import com.darkrockstudios.apps.tminus.launchlibrary.Rocket;
 
 
@@ -23,11 +28,11 @@ import com.darkrockstudios.apps.tminus.launchlibrary.Rocket;
  * item details side-by-side using two vertical panes.
  * <p/>
  * The activity makes heavy use of fragments. The list of items is a
- * {@link LaunchListFragment} and the item details
- * (if present) is a {@link LaunchDetailFragment}.
+ * {@link com.darkrockstudios.apps.tminus.fragments.LaunchListFragment} and the item details
+ * (if present) is a {@link com.darkrockstudios.apps.tminus.fragments.LaunchDetailFragment}.
  * <p/>
  * This activity also implements the required
- * {@link LaunchListFragment.Callbacks} interface
+ * {@link com.darkrockstudios.apps.tminus.fragments.LaunchListFragment.Callbacks} interface
  * to listen for item selections.
  */
 public class LaunchListActivity extends DatabaseActivity
@@ -158,5 +163,13 @@ public class LaunchListActivity extends DatabaseActivity
 
 		RocketDetailFragment rocketDetailFragment = RocketDetailFragment.newInstance( rocket.id );
 		rocketDetailFragment.show( getSupportFragmentManager(), "dialog" );
+	}
+
+	public void locationDetailsClicked( View v )
+	{
+		Location location = (Location)v.getTag();
+
+		LocationDetailFragment locationDetailFragment = LocationDetailFragment.newInstance( location.id );
+		locationDetailFragment.show( getSupportFragmentManager(), "dialog" );
 	}
 }
