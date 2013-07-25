@@ -30,6 +30,11 @@
                 android:title="@string/PREF_imminent_launch_notification"
                 android:summary="@string/PREF_imminent_launch_notification_summary"
                 android:defaultValue="true"/>
+        <CheckBoxPreference
+                android:key="alert_pebble_for_notifications"
+                android:title="@string/PREF_alert_pebble_for_notifications"
+                android:summary="@string/PREF_alert_pebble_for_notifications_summary"
+                android:defaultValue="true"/>
     </PreferenceCategory>
     <PreferenceCategory
             android:title="@string/PREF_debug_preferences_title">

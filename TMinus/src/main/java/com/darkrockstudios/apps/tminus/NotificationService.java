@@ -5,6 +5,8 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
@@ -12,6 +14,7 @@ import com.commonsware.cwac.wakeful.WakefulIntentService;
 import com.darkrockstudios.apps.tminus.R.string;
 import com.darkrockstudios.apps.tminus.database.DatabaseHelper;
 import com.darkrockstudios.apps.tminus.launchlibrary.Launch;
+import com.darkrockstudios.apps.tminus.misc.Preferences;
 import com.darkrockstudios.apps.tminus.misc.Utilities;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.Dao;
@@ -104,8 +107,10 @@ public class NotificationService extends WakefulIntentService
 
 		notificationManager.notify( NOTIFICATION_TAG_REMINDER, launch.id, notification );
 
-		// TODO: Use a setting to control pebble alerts
-		if( true )
+		final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences( this );
+		final boolean alertPebbleForNotifications = preferences
+				                                            .getBoolean( Preferences.KEY_ALERT_PEBBLE_FOR_NOTIFICATIONS, true );
+		if( alertPebbleForNotifications )
 		{
 			sendAlertToPebble( title, shortBody );
 		}
@@ -139,8 +144,10 @@ public class NotificationService extends WakefulIntentService
 
 		notificationManager.notify( NOTIFICATION_TAG_LAUNCH_IMMINENT, launch.id, notification );
 
-		// TODO: Use a setting to control pebble alerts
-		if( true )
+		final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences( this );
+		final boolean alertPebbleForNotifications = preferences
+				                                            .getBoolean( Preferences.KEY_ALERT_PEBBLE_FOR_NOTIFICATIONS, true );
+		if( alertPebbleForNotifications )
 		{
 			sendAlertToPebble( title, shortBody );
 		}
