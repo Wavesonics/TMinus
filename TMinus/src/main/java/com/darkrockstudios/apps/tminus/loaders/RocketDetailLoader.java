@@ -79,5 +79,4 @@ public class RocketDetailLoader extends AsyncTask<Integer, Void, RocketDetail>
 
 		public void rocketDetailMissing( int rocketId );
 	}
-
 }

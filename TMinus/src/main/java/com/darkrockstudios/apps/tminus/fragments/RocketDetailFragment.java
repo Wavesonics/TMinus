@@ -42,11 +42,11 @@ public class RocketDetailFragment extends DialogFragment
 	public static final String ARG_ITEM_ID = "item_id";
 	private File             m_dataDirectory;
 	private Rocket           m_rocket;
-	private RocketDetail m_rocketDetail;
+	private RocketDetail     m_rocketDetail;
 	private NetworkImageView m_rocketImage;
 	private TextView         m_rocketName;
 	private TextView         m_rocketConfiguration;
-	private TextView     m_rocketSummary;
+	private TextView         m_rocketSummary;
 
 	public RocketDetailFragment()
 	{
@@ -123,8 +123,6 @@ public class RocketDetailFragment extends DialogFragment
 		{
 			RocketLoader rocketLoader = new RocketLoader();
 			rocketLoader.execute( rocketId );
-
-
 		}
 	}
 

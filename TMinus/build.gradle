@@ -13,21 +13,22 @@ repositories {
 }
 
 dependencies {
-    compile files('libs/android-support-v4.jar')
+    compile files('libs/android-support-v13.jar')
     compile files('libs/gson-2.2.4.jar')
     compile files('libs/ormlite-core-4.45.jar')
     compile files('libs/ormlite-android-4.45.jar')
     compile files('libs/volley.jar')
     compile files('libs/CWAC-WakefulIntentService.jar')
+    compile project(':LibraryProjects:google-play-services_lib')
 }
 
 android {
-    compileSdkVersion 17
-    buildToolsVersion "17.0.0"
+    compileSdkVersion 18
+    buildToolsVersion "18.0.0"
 
     defaultConfig {
         minSdkVersion 14
-        targetSdkVersion 17
+        targetSdkVersion 18
     }
 }
 

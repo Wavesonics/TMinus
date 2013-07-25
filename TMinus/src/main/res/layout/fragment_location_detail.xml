@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="match_parent">
@@ -9,7 +10,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="LOCATIONS DETAILS"
-            android:id="@+id/textView"
-            android:layout_gravity="center"/>
+            android:text="Location Name"
+            android:id="@+id/LOCATIONDETAIL_name"
+            android:layout_gravity="center"
+            tools:ignore="HardcodedText"/>
+
+    <fragment
+            android:id="@+id/LOCATIONDETAIL_map"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            class="com.google.android.gms.maps.SupportMapFragment"/>
 </LinearLayout>

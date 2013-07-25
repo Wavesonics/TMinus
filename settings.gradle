@@ -1,1 +1,2 @@
 include ':TMinus'
+include ':LibraryProjects:google-play-services_lib'
