@@ -3,7 +3,6 @@ package com.darkrockstudios.apps.tminus.fragments;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.text.Html;
@@ -17,26 +16,24 @@ import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 import com.darkrockstudios.apps.tminus.R;
 import com.darkrockstudios.apps.tminus.TMinusApplication;
-import com.darkrockstudios.apps.tminus.database.DatabaseHelper;
 import com.darkrockstudios.apps.tminus.database.RocketDetail;
 import com.darkrockstudios.apps.tminus.launchlibrary.Rocket;
 import com.darkrockstudios.apps.tminus.loaders.RocketDetailFetcher;
 import com.darkrockstudios.apps.tminus.loaders.RocketDetailFetcher.RocketDetailFetchListener;
 import com.darkrockstudios.apps.tminus.loaders.RocketDetailLoader;
 import com.darkrockstudios.apps.tminus.loaders.RocketDetailLoader.Listener;
+import com.darkrockstudios.apps.tminus.loaders.RocketLoader;
+import com.darkrockstudios.apps.tminus.loaders.RocketLoader.RocketLoadListener;
 import com.darkrockstudios.apps.tminus.misc.DiskBitmapCache;
-import com.j256.ormlite.android.apptools.OpenHelperManager;
-import com.j256.ormlite.dao.Dao;
 
 import java.io.File;
-import java.sql.SQLException;
 
 /**
  * Created by Adam on 7/14/13.
  * Dark Rock Studios
  * darkrockstudios.com
  */
-public class RocketDetailFragment extends DialogFragment
+public class RocketDetailFragment extends DialogFragment implements Listener, RocketLoadListener, RocketDetailFetchListener
 {
 	public static final String TAG         = LaunchDetailFragment.class.getSimpleName();
 	public static final String ARG_ITEM_ID = "item_id";
@@ -117,11 +114,12 @@ public class RocketDetailFragment extends DialogFragment
 
 	private void loadRocket()
 	{
-		int rocketId = getRocketId();
+		final Activity activity = getActivity();
+		final int rocketId = getRocketId();
 
-		if( rocketId >= 0 )
+		if( rocketId >= 0 && activity != null )
 		{
-			RocketLoader rocketLoader = new RocketLoader();
+			RocketLoader rocketLoader = new RocketLoader( this, activity );
 			rocketLoader.execute( rocketId );
 		}
 	}
@@ -139,87 +137,61 @@ public class RocketDetailFragment extends DialogFragment
 		return rocketId;
 	}
 
-	private class RocketLoader extends AsyncTask<Integer, Void, Rocket> implements Listener, RocketDetailFetchListener
+	@Override
+	public void rocketLoaded( Rocket rocket )
 	{
-		@Override
-		protected Rocket doInBackground( Integer... ids )
+		m_rocket = rocket;
+
+		final Activity activity = getActivity();
+		if( m_rocket != null && activity != null )
 		{
-			Rocket rocket = null;
+			RocketDetailLoader detailLoader = new RocketDetailLoader( activity, this );
+			detailLoader.execute( m_rocket.id );
 
-			Activity activity = getActivity();
-			if( activity != null )
-			{
-				final DatabaseHelper databaseHelper = OpenHelperManager.getHelper( activity, DatabaseHelper.class );
-				if( databaseHelper != null )
-				{
-					try
-					{
-						Dao<Rocket, Integer> rocketDao = databaseHelper.getRocketDao();
-						rocket = rocketDao.queryForId( ids[ 0 ] );
-					}
-					catch( SQLException e )
-					{
-						e.printStackTrace();
-					}
-
-					OpenHelperManager.releaseHelper();
-				}
-			}
-
-			return rocket;
-		}
-
-		@Override
-		protected void onPostExecute( Rocket result )
-		{
-			Log.i( TAG, "Rocket loaded." );
-			m_rocket = result;
-
-			final Activity activity = getActivity();
-			if( m_rocket != null && activity != null )
-			{
-				RocketDetailLoader detailLoader = new RocketDetailLoader( activity, this );
-				detailLoader.execute( m_rocket.id );
-
-				updateViews();
-			}
-		}
-
-		@Override
-		public void rocketDetailLoaded( RocketDetail rocketDetail )
-		{
-			m_rocketDetail = rocketDetail;
 			updateViews();
 		}
+	}
 
-		@Override
-		public void rocketDetailMissing( int rocketId )
+	@Override
+	public void rocketLoadFailed( int rocketId )
+	{
+		// TODO: Handle rocket load failure
+	}
+
+	@Override
+	public void rocketDetailLoaded( RocketDetail rocketDetail )
+	{
+		m_rocketDetail = rocketDetail;
+		updateViews();
+	}
+
+	@Override
+	public void rocketDetailMissing( int rocketId )
+	{
+		final Activity activity = getActivity();
+		if( activity != null && m_rocket != null )
 		{
-			final Activity activity = getActivity();
-			if( activity != null && m_rocket != null )
-			{
-				RocketDetailFetcher.requestRocketDetails( m_rocket, this, activity );
-			}
+			RocketDetailFetcher.requestRocketDetails( m_rocket, this, activity );
 		}
+	}
 
-		@Override
-		public void rocketDetailFetchSuccessful( int rocketId )
+	@Override
+	public void rocketDetailFetchSuccessful( int rocketId )
+	{
+		Log.i( TAG, "Rocket Detail fetch completely successfully for rocket id: " + rocketId );
+
+		final Activity activity = getActivity();
+		if( activity != null && m_rocket != null )
 		{
-			Log.i( TAG, "Rocket Detail fetch completely successfully for rocket id: " + rocketId );
-
-			final Activity activity = getActivity();
-			if( activity != null && m_rocket != null )
-			{
-				RocketDetailLoader detailLoader = new RocketDetailLoader( activity, this );
-				detailLoader.execute( m_rocket.id );
-			}
+			RocketDetailLoader detailLoader = new RocketDetailLoader( activity, this );
+			detailLoader.execute( m_rocket.id );
 		}
+	}
 
-		@Override
-		public void rocketDetailFetchFailed( int rocketId )
-		{
-			Log.w( TAG, "Rocket Detail fetch completely failed for rocket id: " + rocketId );
-			m_rocketSummary.setText( R.string.ROCKETDETAIL_no_summary );
-		}
+	@Override
+	public void rocketDetailFetchFailed( int rocketId )
+	{
+		Log.w( TAG, "Rocket Detail fetch completely failed for rocket id: " + rocketId );
+		m_rocketSummary.setText( R.string.ROCKETDETAIL_no_summary );
 	}
 }

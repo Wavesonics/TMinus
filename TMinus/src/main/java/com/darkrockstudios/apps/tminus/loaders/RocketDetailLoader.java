@@ -13,6 +13,8 @@ import java.sql.SQLException;
 
 /**
  * Created by adam on 7/21/13.
+ * Dark Rock Studios
+ * darkrockstudios.com
  */
 public class RocketDetailLoader extends AsyncTask<Integer, Void, RocketDetail>
 {
@@ -27,7 +29,6 @@ public class RocketDetailLoader extends AsyncTask<Integer, Void, RocketDetail>
 		m_context = context;
 		m_listener = listener;
 	}
-
 
 	@Override
 	protected RocketDetail doInBackground( Integer[] ids )

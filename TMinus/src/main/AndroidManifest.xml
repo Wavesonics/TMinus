@@ -55,6 +55,7 @@
         <service android:name=".UpdateAlarmsService"/>
         <service android:name=".NotificationService"/>
         <service android:name=".LaunchUpdateService"/>
+        <service android:name=".RocketDetailUpdateService"/>
 
         <!-- Debug cert -->
         <meta-data

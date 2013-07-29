@@ -85,23 +85,26 @@ public class LocationDetailFragment extends DialogFragment
 				                                                     .findFragmentById( R.id.LOCATIONDETAIL_map );
 
 		GoogleMap map = mapFragment.getMap();
-		LatLng pos = new LatLng( 28.583333, -80.583056 );
+		if( map != null )
+		{
+			LatLng pos = new LatLng( 28.583333, -80.583056 );
 
-		MarkerOptions marker = new MarkerOptions();
-		marker.position( pos );
-		map.addMarker( marker );
+			MarkerOptions marker = new MarkerOptions();
+			marker.position( pos );
+			map.addMarker( marker );
 
-		//map.setMapType( GoogleMap.MAP_TYPE_HYBRID );
-		map.setMapType( GoogleMap.MAP_TYPE_SATELLITE );
+			//map.setMapType( GoogleMap.MAP_TYPE_HYBRID );
+			map.setMapType( GoogleMap.MAP_TYPE_SATELLITE );
 
-		// zoom, tilt, bearing
-		CameraPosition camPos = new CameraPosition( pos, 12.0f, 30f, 112.5f );
-		map.animateCamera( CameraUpdateFactory.newCameraPosition( camPos ) );
+			// zoom, tilt, bearing
+			CameraPosition camPos = new CameraPosition( pos, 12.0f, 30f, 112.5f );
+			map.animateCamera( CameraUpdateFactory.newCameraPosition( camPos ) );
 
-		UiSettings settings = map.getUiSettings();
-		settings.setCompassEnabled( false );
-		settings.setAllGesturesEnabled( true );
-		settings.setZoomControlsEnabled( false );
+			UiSettings settings = map.getUiSettings();
+			settings.setCompassEnabled( false );
+			settings.setAllGesturesEnabled( true );
+			settings.setZoomControlsEnabled( false );
+		}
 	}
 
 	@Override
