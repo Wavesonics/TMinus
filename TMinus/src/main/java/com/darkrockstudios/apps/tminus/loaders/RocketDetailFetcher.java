@@ -143,11 +143,11 @@ public class RocketDetailFetcher
 
 			if( m_imageLoadSuccess )
 			{
-				Log.i( TAG, "Wiki ARTICLE url retrieval successful" );
+				Log.i( TAG, "Wiki ARTICLE retrieval successful" );
 			}
 			else
 			{
-				Log.w( TAG, "Wiki ARTICLE url retrieval failed!" );
+				Log.w( TAG, "Wiki ARTICLE retrieval failed!" );
 			}
 			checkAllDone();
 		}

@@ -129,7 +129,10 @@ public class RocketDetailFragment extends DialogFragment implements Listener, Ro
 				ImageLoader imageLoader = new ImageLoader( TMinusApplication
 						                                           .getRequestQueue(), new DiskBitmapCache( m_dataDirectory, MAX_CACHE_SIZE ) );
 				m_rocketImage.setImageUrl( m_rocketDetail.imageUrl, imageLoader );
-				m_rocketSummary.setText( Html.fromHtml( m_rocketDetail.summary ) );
+				if( m_rocketDetail.summary != null )
+				{
+					m_rocketSummary.setText( Html.fromHtml( m_rocketDetail.summary ) );
+				}
 			}
 		}
 	}

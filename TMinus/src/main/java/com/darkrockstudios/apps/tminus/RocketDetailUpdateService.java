@@ -70,6 +70,8 @@ public class RocketDetailUpdateService extends Service implements RocketDetailFe
 		{
 			sendFailureBroadcast( id.getValue() );
 		}
+
+		Log.d( TAG, "RocketDetailUpdateService finished." );
 	}
 
 	@Override
@@ -133,6 +135,11 @@ public class RocketDetailUpdateService extends Service implements RocketDetailFe
 	{
 		m_inFlightUpdates.remove( new RocketId( rocketId ) );
 
+		if( m_inFlightUpdates.size() == 0 )
+		{
+			stopSelf();
+		}
+
 		Intent failureIntent = new Intent( ACTION_ROCKET_DETAIL_UPDATE_FAILED );
 		failureIntent.putExtra( EXTRA_ROCKET_ID, rocketId );
 
@@ -142,6 +149,11 @@ public class RocketDetailUpdateService extends Service implements RocketDetailFe
 	private void sendSuccessBroadcast( int rocketId )
 	{
 		m_inFlightUpdates.remove( new RocketId( rocketId ) );
+
+		if( m_inFlightUpdates.size() == 0 )
+		{
+			stopSelf();
+		}
 
 		Intent failureIntent = new Intent( ACTION_ROCKET_DETAIL_UPDATED );
 		failureIntent.putExtra( EXTRA_ROCKET_ID, rocketId );
