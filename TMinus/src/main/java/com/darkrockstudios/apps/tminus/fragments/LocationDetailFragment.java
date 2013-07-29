@@ -84,7 +84,6 @@ public class LocationDetailFragment extends DialogFragment
 	{
 		GoogleMapOptions options = new GoogleMapOptions();
 
-		options.zOrderOnTop( true );
 		options.useViewLifecycleInFragment( true );
 		options.compassEnabled( false );
 		options.zoomControlsEnabled( false );

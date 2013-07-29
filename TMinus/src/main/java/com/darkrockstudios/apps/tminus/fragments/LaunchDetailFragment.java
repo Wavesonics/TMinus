@@ -50,19 +50,22 @@ public class LaunchDetailFragment extends Fragment implements Listener, RocketDe
 {
 	public static final  String TAG                         = LaunchDetailFragment.class.getSimpleName();
 	public static final  String ARG_ITEM_ID                 = "item_id";
+	private static final String LOCATION_FRAGMENT_TAG       = "LocationFragmentTag";
+	private static final String ROCKET_FRAGMENT_TAG         = "RocketFragmentTag";
 	private static final long   DISPLAY_COUNTDOWN_THRESHOLD = TimeUnit.DAYS.toMillis( 2 );
-	private File                m_dataDirectory;
-	private ShareActionProvider m_shareActionProvider;
-	private Launch              m_launchItem;
-	private RocketDetail        m_rocketDetail;
-	private TimeReceiver        m_timeReceiver;
-	private NetworkImageView    m_rocketImage;
-	private View                m_contentView;
-	private View                m_progressBar;
-	private View                m_countDownContainer;
-	private View                m_rocketDetailButton;
-	private View                m_launchDetailButton;
-
+	private File                       m_dataDirectory;
+	private ShareActionProvider        m_shareActionProvider;
+	private Launch                     m_launchItem;
+	private RocketDetail               m_rocketDetail;
+	private TimeReceiver               m_timeReceiver;
+	private NetworkImageView           m_rocketImage;
+	private ViewGroup                  m_locationContainer;
+	private ViewGroup                  m_rocketContainer;
+	private View                       m_contentView;
+	private View                       m_progressBar;
+	private View                       m_countDownContainer;
+	private View                       m_rocketDetailButton;
+	private View                       m_launchDetailButton;
 	private RocketDetailUpdateReceiver m_rocketDetailUpdateReceiver;
 	private IntentFilter               m_rocketDetailUpdateIntentFilter;
 
@@ -147,7 +150,9 @@ public class LaunchDetailFragment extends Fragment implements Listener, RocketDe
 			m_countDownContainer.setVisibility( View.GONE );
 			m_rocketDetailButton = rootView.findViewById( R.id.LAUNCHDETAIL_rocket_detail_button );
 			m_launchDetailButton = rootView.findViewById( R.id.LAUNCHDETAIL_location_detail_button );
-			m_rocketImage = (NetworkImageView)rootView.findViewById( id.LAUNCHDETAIL_mission_image );
+			m_rocketImage = (NetworkImageView)rootView.findViewById( R.id.LAUNCHDETAIL_mission_image );
+			m_locationContainer = (ViewGroup)rootView.findViewById( id.LAUNCHDETAIL_location_container );
+			m_rocketContainer = (ViewGroup)rootView.findViewById( id.LAUNCHDETAIL_rocket_container );
 
 			loadLaunch();
 		}
@@ -264,7 +269,10 @@ public class LaunchDetailFragment extends Fragment implements Listener, RocketDe
 			windowLength.setText( Utilities.getFormattedTime( windowLengthMs ) );
 
 			final TextView rocketName = (TextView)rootView.findViewById( id.LAUNCHDETAIL_rocket_name );
-			rocketName.setText( m_launchItem.rocket.name );
+			if( rocketName != null )
+			{
+				rocketName.setText( m_launchItem.rocket.name );
+			}
 
 			if( m_rocketDetail != null )
 			{
@@ -366,14 +374,38 @@ public class LaunchDetailFragment extends Fragment implements Listener, RocketDe
 	public void launchLoaded( Launch launch )
 	{
 		m_launchItem = launch;
-		m_rocketDetailButton.setTag( m_launchItem.rocket );
-		m_launchDetailButton.setTag( m_launchItem.location );
+
+		if( m_rocketDetailButton != null )
+		{
+			m_rocketDetailButton.setTag( m_launchItem.rocket );
+		}
+
+		if( m_launchDetailButton != null )
+		{
+			m_launchDetailButton.setTag( m_launchItem.location );
+		}
 
 		loadRocketDetails();
 
 		updateViews();
 		updateShareIntent();
 		showContent();
+
+		if( m_locationContainer != null )
+		{
+			LocationDetailFragment locationDetailFragment = LocationDetailFragment
+					                                                .newInstance( m_launchItem.location.id );
+			getChildFragmentManager().beginTransaction()
+					.add( R.id.LAUNCHDETAIL_location_container, locationDetailFragment, LOCATION_FRAGMENT_TAG )
+					.commit();
+		}
+
+		if( m_rocketContainer != null )
+		{
+			RocketDetailFragment rocketDetailFragment = RocketDetailFragment.newInstance( m_launchItem.rocket.id );
+			getChildFragmentManager().beginTransaction()
+					.add( R.id.LAUNCHDETAIL_rocket_container, rocketDetailFragment, ROCKET_FRAGMENT_TAG ).commit();
+		}
 	}
 
 	private void loadRocketDetails()

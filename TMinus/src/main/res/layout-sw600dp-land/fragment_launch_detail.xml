@@ -1,0 +1,252 @@
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+    <ScrollView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:padding="@dimen/launch_detail_padding">
+
+        <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            <LinearLayout
+                    android:id="@+id/LAUNCHDETAIL_imminent_launch_container"
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/launch_detail_padding"
+                    android:background="@color/count_down_alert_background"
+                    android:padding="@dimen/launch_detail_padding">
+
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/LAUNCHDETAIL_imminent_launch"
+                        android:textStyle="bold|italic"
+                        android:textColor="@color/count_down_alert_text"
+                        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"/>
+
+                <Button
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/LAUNCHDETAIL_count_down_button"
+                        android:id="@+id/button"
+                        android:onClick="countDownClicked"
+                        android:layout_gravity="center"/>
+            </LinearLayout>
+
+            <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/content_view"
+                    android:layout_below="@id/LAUNCHDETAIL_imminent_launch_container">
+
+                <com.android.volley.toolbox.NetworkImageView
+                        android:layout_width="128dp"
+                        android:layout_height="128dp"
+                        android:id="@+id/LAUNCHDETAIL_mission_image"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentLeft="true"
+                        android:contentDescription="@string/LAUNCHDETAIL_launch_image_description"/>
+
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:text="Mission Name"
+                        android:id="@+id/LAUNCHDETAIL_mission_name"
+                        android:layout_alignParentTop="true"
+                        android:layout_toRightOf="@+id/LAUNCHDETAIL_mission_image"
+                        android:textStyle="bold"
+                        tools:ignore="HardcodedText"/>
+
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:text="Mission description"
+                        android:id="@+id/LAUNCHDETAIL_mission_description"
+                        android:layout_below="@+id/LAUNCHDETAIL_mission_name"
+                        android:layout_toRightOf="@+id/LAUNCHDETAIL_mission_image"
+                        android:textColor="@color/secondary_text"
+                        tools:ignore="HardcodedText"/>
+
+                <TableLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/LAUNCHDETAIL_mission_image"
+                        android:layout_alignLeft="@+id/LAUNCHDETAIL_mission_image"
+                        android:layout_marginTop="@dimen/launch_detail_padding"
+                        android:id="@+id/tableLayout">
+
+                    <TableRow
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingBottom="@dimen/launch_detail_padding"
+                            android:id="@+id/tableRow">
+
+                        <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textAppearance="?android:attr/textAppearanceMedium"
+                                android:text="@string/LAUNCHDETAIL_status"
+                                android:textStyle="bold"
+                                android:gravity="right"
+                                android:layout_marginRight="@dimen/launch_detail_padding"/>
+
+                        <TextView
+                                tools:ignore="HardcodedText"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textAppearance="?android:attr/textAppearanceMedium"
+                                android:text="GO"
+                                android:id="@+id/LAUNCHDETAIL_status"
+                                android:textColor="@color/secondary_text"
+                                android:layout_weight="1"/>
+                    </TableRow>
+
+                    <TableRow
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingBottom="@dimen/launch_detail_padding">
+
+                        <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textAppearance="?android:attr/textAppearanceMedium"
+                                android:text="@string/LAUNCHDETAIL_launch_window"
+                                android:textStyle="bold"
+                                android:gravity="right"
+                                android:layout_marginRight="@dimen/launch_detail_padding"/>
+
+                        <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textAppearance="?android:attr/textAppearanceMedium"
+                                android:text="MMM dd, yyyy HH:mm:ss zzz"
+                                android:id="@+id/LAUNCHDETAIL_launch_window"
+                                android:textColor="@color/secondary_text"
+                                tools:ignore="HardcodedText"
+                                android:layout_weight="1"/>
+                    </TableRow>
+
+                    <TableRow
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingBottom="@dimen/launch_detail_padding"
+                            >
+
+                        <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textAppearance="?android:attr/textAppearanceMedium"
+                                android:text="@string/LAUNCHDETAIL_launch_window_length"
+                                android:textStyle="bold"
+                                android:gravity="right"
+                                android:layout_marginRight="@dimen/launch_detail_padding"/>
+
+                        <TextView
+                                tools:ignore="HardcodedText"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textAppearance="?android:attr/textAppearanceMedium"
+                                android:text="10h 5m"
+                                android:id="@+id/LAUNCHDETAIL_window_length"
+                                android:textColor="@color/secondary_text"
+                                android:layout_weight="1"
+                                android:singleLine="false"/>
+                    </TableRow>
+
+                    <TableRow
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:paddingBottom="@dimen/launch_detail_padding">
+
+                        <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textAppearance="?android:attr/textAppearanceMedium"
+                                android:text="@string/LAUNCHDETAIL_location"
+                                android:textStyle="bold"
+                                android:gravity="right"
+                                android:layout_marginRight="@dimen/launch_detail_padding"/>
+
+                        <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textAppearance="?android:attr/textAppearanceMedium"
+                                android:text="Your Moms House"
+                                android:id="@+id/LAUNCHDETAIL_location"
+                                android:textColor="@color/secondary_text"
+                                tools:ignore="HardcodedText"
+                                android:layout_weight="1"/>
+                    </TableRow>
+
+                    <TableRow
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:paddingBottom="@dimen/launch_detail_padding">
+
+                        <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textAppearance="?android:attr/textAppearanceMedium"
+                                android:text="@string/LAUNCHDETAIL_count_down"
+                                android:textStyle="bold"
+                                android:gravity="right"
+                                android:layout_marginRight="@dimen/launch_detail_padding"/>
+
+                        <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textAppearance="?android:attr/textAppearanceMedium"
+                                android:text="5d 12h 24m"
+                                android:id="@+id/LAUNCHDETAIL_time_remaining"
+                                android:textColor="@color/secondary_text"
+                                android:layout_weight="1"
+                                tools:ignore="HardcodedText"
+                                />
+                    </TableRow>
+
+                </TableLayout>
+
+            </RelativeLayout>
+
+            <ProgressBar
+                    style="?android:attr/progressBarStyleLarge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/progressBar"
+                    android:indeterminate="true"
+                    android:layout_centerInParent="true"/>
+
+        </RelativeLayout>
+    </ScrollView>
+
+    <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="3">
+
+        <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:id="@+id/LAUNCHDETAIL_rocket_container" />
+
+        <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:id="@+id/LAUNCHDETAIL_location_container" />
+
+    </LinearLayout>
+
+</LinearLayout>

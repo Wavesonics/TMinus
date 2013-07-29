@@ -125,10 +125,14 @@ public class RocketDetailFragment extends DialogFragment implements Listener, Ro
 
 			if( m_rocketDetail != null )
 			{
-				final int MAX_CACHE_SIZE = 10 * 1024 * 1024;
-				ImageLoader imageLoader = new ImageLoader( TMinusApplication
-						                                           .getRequestQueue(), new DiskBitmapCache( m_dataDirectory, MAX_CACHE_SIZE ) );
-				m_rocketImage.setImageUrl( m_rocketDetail.imageUrl, imageLoader );
+				if( m_rocketImage != null )
+				{
+					final int MAX_CACHE_SIZE = 10 * 1024 * 1024;
+					ImageLoader imageLoader = new ImageLoader( TMinusApplication
+							                                           .getRequestQueue(), new DiskBitmapCache( m_dataDirectory, MAX_CACHE_SIZE ) );
+					m_rocketImage.setImageUrl( m_rocketDetail.imageUrl, imageLoader );
+				}
+
 				if( m_rocketDetail.summary != null )
 				{
 					m_rocketSummary.setText( Html.fromHtml( m_rocketDetail.summary ) );

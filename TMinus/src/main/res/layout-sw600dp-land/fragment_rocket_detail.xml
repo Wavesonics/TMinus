@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:id="@+id/ROCKETDETAIL_name"
+            android:layout_gravity="center"/>
+
+    <TextView
+            tools:ignore="HardcodedText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="configuration"
+            android:id="@+id/ROCKETDETAIL_configuration"
+            android:textColor="@color/secondary_text"
+            android:layout_below="@+id/ROCKETDETAIL_name"
+            android:layout_toRightOf="@+id/ROCKETDETAIL_rocket_image"/>
+
+    <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/scrollView"
+            android:padding="@dimen/rocket_detail_padding"
+            android:layout_below="@id/ROCKETDETAIL_rocket_image">
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/ROCKETDETAIL_loading_summary"
+                android:id="@+id/ROCKETDETAIL_details"
+                android:singleLine="false"/>
+    </ScrollView>
+
+</LinearLayout>
