@@ -5,7 +5,6 @@
       <module fileurl="file://$PROJECT_DIR$/TMinus/src/main/TMinus.iml" filepath="$PROJECT_DIR$/TMinus/src/main/TMinus.iml" />
       <module fileurl="file://$PROJECT_DIR$/TMinusProject.iml" filepath="$PROJECT_DIR$/TMinusProject.iml" />
       <module fileurl="file://$PROJECT_DIR$/LibraryProjects/google-play-services_lib/google-play-services_lib.iml" filepath="$PROJECT_DIR$/LibraryProjects/google-play-services_lib/google-play-services_lib.iml" />
-      <module fileurl="file://$PROJECT_DIR$/LibraryProjects/google-play-services_lib/google-play-services_lib.iml" filepath="$PROJECT_DIR$/LibraryProjects/google-play-services_lib/google-play-services_lib.iml" />
     </modules>
   </component>
 </project>
