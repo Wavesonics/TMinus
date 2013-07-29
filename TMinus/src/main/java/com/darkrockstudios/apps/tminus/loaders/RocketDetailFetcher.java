@@ -1,6 +1,5 @@
 package com.darkrockstudios.apps.tminus.loaders;
 
-import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
 
@@ -32,7 +31,7 @@ public class RocketDetailFetcher
 {
 	private static final String TAG = RocketDetailFetcher.class.getSimpleName();
 
-	private static void requestRocketImage( String articleTitle, IntermediateLoadListener listener, Activity activity )
+	private static void requestRocketImage( String articleTitle, IntermediateLoadListener listener, Context context )
 	{
 		Log.d( TAG, "Requesting Rocket Image..." );
 
@@ -45,13 +44,13 @@ public class RocketDetailFetcher
 
 		final String url = baseUrl + imageQuery + articleTitle;
 
-		WikiImageListener imageListener = new WikiImageListener( listener, activity );
+		WikiImageListener imageListener = new WikiImageListener( listener, context );
 		JsonObjectRequest request = new JsonObjectRequest( url, null, imageListener, imageListener );
-		request.setTag( activity );
+		request.setTag( context );
 		TMinusApplication.getRequestQueue().add( request );
 	}
 
-	private static void requestRocketArticle( String articleTitle, IntermediateLoadListener listener, Activity activity )
+	private static void requestRocketArticle( String articleTitle, IntermediateLoadListener listener, Context context )
 	{
 		Log.d( TAG, "Requesting Rocket Article..." );
 
@@ -60,13 +59,13 @@ public class RocketDetailFetcher
 
 		final String url = baseUrl + articleQuery + articleTitle;
 
-		WikiArticleListener articleListener = new WikiArticleListener( listener, activity );
+		WikiArticleListener articleListener = new WikiArticleListener( listener, context );
 		JsonObjectRequest request = new JsonObjectRequest( url, null, articleListener, articleListener );
-		request.setTag( activity );
+		request.setTag( context );
 		TMinusApplication.getRequestQueue().add( request );
 	}
 
-	public static void requestRocketDetails( Rocket rocket, RocketDetailFetchListener listener, Activity activity )
+	public static void requestRocketDetails( Rocket rocket, RocketDetailFetchListener listener, Context context )
 	{
 		Log.d( TAG, "Requesting Rocket Details..." );
 
@@ -75,8 +74,8 @@ public class RocketDetailFetcher
 		if( articleTitle != null )
 		{
 			IntermediateLoadListener intermediateLoadListener = new IntermediateLoadListener( rocket.id, listener );
-			requestRocketArticle( articleTitle, intermediateLoadListener, activity );
-			requestRocketImage( articleTitle, intermediateLoadListener, activity );
+			requestRocketArticle( articleTitle, intermediateLoadListener, context );
+			requestRocketImage( articleTitle, intermediateLoadListener, context );
 		}
 	}
 

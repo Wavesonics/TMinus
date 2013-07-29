@@ -81,7 +81,7 @@ public class LaunchUpdateService extends Service
 
 		requestLaunches();
 
-		return START_STICKY;
+		return START_NOT_STICKY;
 	}
 
 	@Override

@@ -295,7 +295,7 @@ public class LaunchListFragment extends ListFragment
 		public void onReceive( Context context, Intent intent )
 		{
 			final Activity activity = getActivity();
-			if( activity != null )
+			if( activity != null && isAdded() )
 			{
 				if( LaunchUpdateService.ACTION_LAUNCH_LIST_UPDATED.equals( intent.getAction() ) )
 				{

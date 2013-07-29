@@ -11,6 +11,7 @@ import android.preference.PreferenceManager;
 import android.provider.CalendarContract;
 import android.provider.CalendarContract.Events;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -20,13 +21,22 @@ import android.view.ViewGroup;
 import android.widget.ShareActionProvider;
 import android.widget.TextView;
 
+import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.NetworkImageView;
 import com.darkrockstudios.apps.tminus.R;
 import com.darkrockstudios.apps.tminus.R.id;
+import com.darkrockstudios.apps.tminus.RocketDetailUpdateService;
+import com.darkrockstudios.apps.tminus.TMinusApplication;
+import com.darkrockstudios.apps.tminus.database.RocketDetail;
 import com.darkrockstudios.apps.tminus.launchlibrary.Launch;
 import com.darkrockstudios.apps.tminus.loaders.LaunchLoader;
+import com.darkrockstudios.apps.tminus.loaders.LaunchLoader.Listener;
+import com.darkrockstudios.apps.tminus.loaders.RocketDetailLoader;
+import com.darkrockstudios.apps.tminus.misc.DiskBitmapCache;
 import com.darkrockstudios.apps.tminus.misc.Preferences;
 import com.darkrockstudios.apps.tminus.misc.Utilities;
 
+import java.io.File;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
@@ -36,19 +46,25 @@ import java.util.concurrent.TimeUnit;
  * in two-pane mode (on tablets) or a {@link com.darkrockstudios.apps.tminus.LaunchDetailActivity}
  * on handsets.
  */
-public class LaunchDetailFragment extends Fragment implements LaunchLoader.Listener
+public class LaunchDetailFragment extends Fragment implements Listener, RocketDetailLoader.Listener
 {
 	public static final  String TAG                         = LaunchDetailFragment.class.getSimpleName();
 	public static final  String ARG_ITEM_ID                 = "item_id";
 	private static final long   DISPLAY_COUNTDOWN_THRESHOLD = TimeUnit.DAYS.toMillis( 2 );
+	private File                m_dataDirectory;
 	private ShareActionProvider m_shareActionProvider;
 	private Launch              m_launchItem;
+	private RocketDetail        m_rocketDetail;
 	private TimeReceiver        m_timeReceiver;
+	private NetworkImageView    m_rocketImage;
 	private View                m_contentView;
 	private View                m_progressBar;
 	private View                m_countDownContainer;
 	private View                m_rocketDetailButton;
 	private View                m_launchDetailButton;
+
+	private RocketDetailUpdateReceiver m_rocketDetailUpdateReceiver;
+	private IntentFilter               m_rocketDetailUpdateIntentFilter;
 
 	/**
 	 * Mandatory empty constructor for the fragment manager to instantiate the
@@ -84,38 +100,37 @@ public class LaunchDetailFragment extends Fragment implements LaunchLoader.Liste
 	}
 
 	@Override
-	public void onStart()
+	public void onAttach( Activity activity )
 	{
-		super.onStart();
+		super.onAttach( activity );
+
+		String dataDirPath = activity.getApplicationInfo().dataDir;
+		m_dataDirectory = new File( dataDirPath );
 
 		m_timeReceiver = new TimeReceiver();
 		IntentFilter intentFilter = new IntentFilter( Intent.ACTION_TIME_TICK );
 
-		Activity activity = getActivity();
 		activity.registerReceiver( m_timeReceiver, intentFilter );
-	}
 
-	@Override
-	public void onStop()
-	{
-		super.onStop();
-
-		Activity activity = getActivity();
-		activity.unregisterReceiver( m_timeReceiver );
-
-		m_timeReceiver = null;
-	}
-
-	@Override
-	public void onAttach( Activity activity )
-	{
-		super.onAttach( activity );
+		m_rocketDetailUpdateReceiver = new RocketDetailUpdateReceiver();
+		m_rocketDetailUpdateIntentFilter = new IntentFilter();
+		m_rocketDetailUpdateIntentFilter.addAction( RocketDetailUpdateService.ACTION_ROCKET_DETAIL_UPDATED );
+		m_rocketDetailUpdateIntentFilter.addAction( RocketDetailUpdateService.ACTION_ROCKET_DETAIL_UPDATE_FAILED );
+		activity.registerReceiver( m_rocketDetailUpdateReceiver, m_rocketDetailUpdateIntentFilter );
 	}
 
 	@Override
 	public void onDetach()
 	{
 		super.onDetach();
+
+		Activity activity = getActivity();
+		activity.unregisterReceiver( m_timeReceiver );
+
+		m_timeReceiver = null;
+
+		activity.unregisterReceiver( m_rocketDetailUpdateReceiver );
+		m_rocketDetailUpdateReceiver = null;
 	}
 
 	@Override
@@ -132,6 +147,7 @@ public class LaunchDetailFragment extends Fragment implements LaunchLoader.Liste
 			m_countDownContainer.setVisibility( View.GONE );
 			m_rocketDetailButton = rootView.findViewById( R.id.LAUNCHDETAIL_rocket_detail_button );
 			m_launchDetailButton = rootView.findViewById( R.id.LAUNCHDETAIL_location_detail_button );
+			m_rocketImage = (NetworkImageView)rootView.findViewById( id.LAUNCHDETAIL_mission_image );
 
 			loadLaunch();
 		}
@@ -224,7 +240,7 @@ public class LaunchDetailFragment extends Fragment implements LaunchLoader.Liste
 
 	private void updateViews()
 	{
-		if( m_launchItem != null )
+		if( m_launchItem != null && isAdded() )
 		{
 			final View rootView = getView();
 
@@ -249,6 +265,14 @@ public class LaunchDetailFragment extends Fragment implements LaunchLoader.Liste
 
 			final TextView rocketName = (TextView)rootView.findViewById( id.LAUNCHDETAIL_rocket_name );
 			rocketName.setText( m_launchItem.rocket.name );
+
+			if( m_rocketDetail != null )
+			{
+				final int MAX_CACHE_SIZE = 10 * 1024 * 1024;
+				ImageLoader imageLoader = new ImageLoader( TMinusApplication
+						                                           .getRequestQueue(), new DiskBitmapCache( m_dataDirectory, MAX_CACHE_SIZE ) );
+				m_rocketImage.setImageUrl( m_rocketDetail.imageUrl, imageLoader );
+			}
 
 			updateTimeViews();
 			handleCountDownContainer();
@@ -345,9 +369,50 @@ public class LaunchDetailFragment extends Fragment implements LaunchLoader.Liste
 		m_rocketDetailButton.setTag( m_launchItem.rocket );
 		m_launchDetailButton.setTag( m_launchItem.location );
 
+		loadRocketDetails();
+
 		updateViews();
 		updateShareIntent();
 		showContent();
+	}
+
+	private void loadRocketDetails()
+	{
+		Activity activity = getActivity();
+		if( activity != null && m_launchItem != null )
+		{
+			RocketDetailLoader detailLoader = new RocketDetailLoader( activity, this );
+			detailLoader.execute( m_launchItem.rocket.id );
+		}
+	}
+
+	@Override
+	public void rocketDetailLoaded( RocketDetail rocketDetail )
+	{
+		m_rocketDetail = rocketDetail;
+
+		updateViews();
+	}
+
+	@Override
+	public void rocketDetailMissing( int rocketId )
+	{
+		final Activity activity = getActivity();
+		if( activity != null && m_launchItem != null )
+		{
+			fetchRocketDetails();
+		}
+	}
+
+	private void fetchRocketDetails()
+	{
+		final Activity activity = getActivity();
+		if( activity != null && m_launchItem != null )
+		{
+			Intent intent = new Intent( activity, RocketDetailUpdateService.class );
+			intent.putExtra( RocketDetailUpdateService.EXTRA_ROCKET_ID, m_launchItem.rocket.id );
+			activity.startService( intent );
+		}
 	}
 
 	private class TimeReceiver extends BroadcastReceiver
@@ -356,6 +421,48 @@ public class LaunchDetailFragment extends Fragment implements LaunchLoader.Liste
 		public void onReceive( Context context, Intent intent )
 		{
 			updateTimeViews();
+		}
+	}
+
+	private class RocketDetailUpdateReceiver extends BroadcastReceiver
+	{
+		@Override
+		public void onReceive( Context context, Intent intent )
+		{
+			final Activity activity = getActivity();
+			if( activity != null && isAdded() )
+			{
+				if( RocketDetailUpdateService.ACTION_ROCKET_DETAIL_UPDATED.equals( intent.getAction() ) )
+				{
+					Log.i( TAG, "Received Rocket Detail update SUCCESS broadcast, will update the UI now." );
+
+					final int rocketId = intent.getIntExtra( RocketDetailUpdateService.EXTRA_ROCKET_ID, -1 );
+					if( rocketId > 0 )
+					{
+						Log.i( TAG, "Rocket Detail fetch completely successfully for rocket id: " + rocketId );
+
+						RocketDetailLoader detailLoader = new RocketDetailLoader( activity, LaunchDetailFragment.this );
+						detailLoader.execute( rocketId );
+
+						activity.setProgressBarIndeterminateVisibility( false );
+					}
+
+				}
+				else if( RocketDetailUpdateService.ACTION_ROCKET_DETAIL_UPDATE_FAILED.equals( intent.getAction() ) )
+				{
+					Log.w( TAG, "Received Rocket Detail update FAILURE broadcast." );
+
+					final int rocketId = intent.getIntExtra( RocketDetailUpdateService.EXTRA_ROCKET_ID, -1 );
+					if( rocketId > 0 )
+					{
+						Log.w( TAG, "Rocket Detail fetch completely failed for rocket id: " + rocketId );
+					}
+
+					// TODO: set failure image here
+
+					activity.setProgressBarIndeterminateVisibility( false );
+				}
+			}
 		}
 	}
 }

@@ -44,13 +44,12 @@
                 android:id="@+id/content_view"
                 android:layout_below="@id/LAUNCHDETAIL_imminent_launch_container">
 
-            <ImageView
+            <com.android.volley.toolbox.NetworkImageView
                     android:layout_width="128dp"
                     android:layout_height="128dp"
                     android:id="@+id/LAUNCHDETAIL_mission_image"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentLeft="true"
-                    android:src="@drawable/rocket"
                     android:contentDescription="@string/LAUNCHDETAIL_launch_image_description"/>
 
             <TextView

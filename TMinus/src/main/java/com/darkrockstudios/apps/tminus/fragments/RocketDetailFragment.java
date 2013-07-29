@@ -3,6 +3,10 @@ package com.darkrockstudios.apps.tminus.fragments;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.text.Html;
@@ -11,15 +15,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 import com.darkrockstudios.apps.tminus.R;
+import com.darkrockstudios.apps.tminus.RocketDetailUpdateService;
 import com.darkrockstudios.apps.tminus.TMinusApplication;
 import com.darkrockstudios.apps.tminus.database.RocketDetail;
 import com.darkrockstudios.apps.tminus.launchlibrary.Rocket;
-import com.darkrockstudios.apps.tminus.loaders.RocketDetailFetcher;
-import com.darkrockstudios.apps.tminus.loaders.RocketDetailFetcher.RocketDetailFetchListener;
 import com.darkrockstudios.apps.tminus.loaders.RocketDetailLoader;
 import com.darkrockstudios.apps.tminus.loaders.RocketDetailLoader.Listener;
 import com.darkrockstudios.apps.tminus.loaders.RocketLoader;
@@ -33,17 +37,19 @@ import java.io.File;
  * Dark Rock Studios
  * darkrockstudios.com
  */
-public class RocketDetailFragment extends DialogFragment implements Listener, RocketLoadListener, RocketDetailFetchListener
+public class RocketDetailFragment extends DialogFragment implements Listener, RocketLoadListener
 {
 	public static final String TAG         = LaunchDetailFragment.class.getSimpleName();
 	public static final String ARG_ITEM_ID = "item_id";
-	private File             m_dataDirectory;
-	private Rocket           m_rocket;
-	private RocketDetail     m_rocketDetail;
-	private NetworkImageView m_rocketImage;
-	private TextView         m_rocketName;
-	private TextView         m_rocketConfiguration;
-	private TextView         m_rocketSummary;
+	private File                       m_dataDirectory;
+	private Rocket                     m_rocket;
+	private RocketDetail               m_rocketDetail;
+	private NetworkImageView           m_rocketImage;
+	private TextView                   m_rocketName;
+	private TextView                   m_rocketConfiguration;
+	private TextView                   m_rocketSummary;
+	private RocketDetailUpdateReceiver m_updateReceiver;
+	private IntentFilter               m_updateIntentFilter;
 
 	public RocketDetailFragment()
 	{
@@ -92,11 +98,27 @@ public class RocketDetailFragment extends DialogFragment implements Listener, Ro
 
 		String dataDirPath = activity.getApplicationInfo().dataDir;
 		m_dataDirectory = new File( dataDirPath );
+
+		m_updateReceiver = new RocketDetailUpdateReceiver();
+		m_updateIntentFilter = new IntentFilter();
+		m_updateIntentFilter.addAction( RocketDetailUpdateService.ACTION_ROCKET_DETAIL_UPDATED );
+		m_updateIntentFilter.addAction( RocketDetailUpdateService.ACTION_ROCKET_DETAIL_UPDATE_FAILED );
+		activity.registerReceiver( m_updateReceiver, m_updateIntentFilter );
+	}
+
+	@Override
+	public void onDetach()
+	{
+		super.onDetach();
+
+		Activity activity = getActivity();
+		activity.unregisterReceiver( m_updateReceiver );
+		m_updateReceiver = null;
 	}
 
 	private void updateViews()
 	{
-		if( m_rocket != null )
+		if( m_rocket != null && isAdded() )
 		{
 			m_rocketName.setText( m_rocket.name );
 			m_rocketConfiguration.setText( m_rocket.configuration );
@@ -171,27 +193,63 @@ public class RocketDetailFragment extends DialogFragment implements Listener, Ro
 		final Activity activity = getActivity();
 		if( activity != null && m_rocket != null )
 		{
-			RocketDetailFetcher.requestRocketDetails( m_rocket, this, activity );
+			fetchRocketDetails();
 		}
 	}
 
-	@Override
-	public void rocketDetailFetchSuccessful( int rocketId )
+	private void fetchRocketDetails()
 	{
-		Log.i( TAG, "Rocket Detail fetch completely successfully for rocket id: " + rocketId );
-
 		final Activity activity = getActivity();
 		if( activity != null && m_rocket != null )
 		{
-			RocketDetailLoader detailLoader = new RocketDetailLoader( activity, this );
-			detailLoader.execute( m_rocket.id );
+			Intent intent = new Intent( activity, RocketDetailUpdateService.class );
+			intent.putExtra( RocketDetailUpdateService.EXTRA_ROCKET_ID, m_rocket.id );
+			activity.startService( intent );
 		}
 	}
 
-	@Override
-	public void rocketDetailFetchFailed( int rocketId )
+	private class RocketDetailUpdateReceiver extends BroadcastReceiver
 	{
-		Log.w( TAG, "Rocket Detail fetch completely failed for rocket id: " + rocketId );
-		m_rocketSummary.setText( R.string.ROCKETDETAIL_no_summary );
+		@Override
+		public void onReceive( Context context, Intent intent )
+		{
+			final Activity activity = getActivity();
+			if( activity != null && isAdded() )
+			{
+				if( RocketDetailUpdateService.ACTION_ROCKET_DETAIL_UPDATED.equals( intent.getAction() ) )
+				{
+					Log.i( TAG, "Received Rocket Detail update SUCCESS broadcast, will update the UI now." );
+
+					final int rocketId = intent.getIntExtra( RocketDetailUpdateService.EXTRA_ROCKET_ID, -1 );
+					if( rocketId > 0 )
+					{
+						Log.i( TAG, "Rocket Detail fetch completely successfully for rocket id: " + rocketId );
+
+						RocketDetailLoader detailLoader = new RocketDetailLoader( activity, RocketDetailFragment.this );
+						detailLoader.execute( rocketId );
+
+						activity.setProgressBarIndeterminateVisibility( false );
+						Toast.makeText( activity, R.string.TOAST_launch_list_refresh_complete, Toast.LENGTH_SHORT )
+						     .show();
+					}
+
+				}
+				else if( RocketDetailUpdateService.ACTION_ROCKET_DETAIL_UPDATE_FAILED.equals( intent.getAction() ) )
+				{
+					Log.w( TAG, "Received Rocket Detail update FAILURE broadcast." );
+
+					final int rocketId = intent.getIntExtra( RocketDetailUpdateService.EXTRA_ROCKET_ID, -1 );
+					if( rocketId > 0 )
+					{
+						Log.w( TAG, "Rocket Detail fetch completely failed for rocket id: " + rocketId );
+					}
+
+					m_rocketSummary.setText( R.string.ROCKETDETAIL_no_summary );
+
+					//Toast.makeText( activity, R.string.TOAST_rocket_detail_update_failed, Toast.LENGTH_LONG ).show();
+					activity.setProgressBarIndeterminateVisibility( false );
+				}
+			}
+		}
 	}
 }
