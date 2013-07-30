@@ -37,18 +37,18 @@
     <style name="textAppearanceLargeAccent" parent="@android:style/TextAppearance">
         <item name="android:textColor">@color/accent_text</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:textSize">32dp</item>
+        <item name="android:textSize">32sp</item>
     </style>
 
     <style name="textAppearanceMediumAccent" parent="@android:style/TextAppearance">
         <item name="android:textColor">@color/accent_text</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:textSize">24dp</item>
+        <item name="android:textSize">24sp</item>
     </style>
 
     <style name="AppTheme.TextAppearanceLarge" parent="@android:style/TextAppearance">
         <item name="android:textColor">@color/primary_text</item>
-        <item name="android:textSize">20dp</item>
+        <item name="android:textSize">20sp</item>
     </style>
 
     <style name="AppTheme.TextAppearanceMedium" parent="@android:style/TextAppearance">
@@ -58,12 +58,12 @@
     <style name="AppTheme.TextAppearanceListItem" parent="@android:style/TextAppearance">
         <item name="android:textColor">@color/primary_text</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:textSize">20dp</item>
+        <item name="android:textSize">20sp</item>
     </style>
 
     <style name="AppTheme.TextAppearanceListItemSmall" parent="@android:style/TextAppearance">
         <item name="android:textColor">@color/secondary_text</item>
-        <item name="android:textSize">16dp</item>
+        <item name="android:textSize">16sp</item>
     </style>
 
     <style name="CountDownTheme" parent="android:Theme.Holo">
