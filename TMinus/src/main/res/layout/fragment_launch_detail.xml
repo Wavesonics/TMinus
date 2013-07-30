@@ -221,7 +221,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_span="2"
-                            android:textAppearance="?android:attr/textAppearanceLarge"
+                            android:textAppearance="@style/textAppearanceMediumAccent"
                             android:text="@string/LAUNCHDETAIL_launch_vehicle"
                             android:textStyle="bold"
                             android:layout_marginRight="@dimen/launch_detail_padding"/>
@@ -259,7 +259,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_span="2"
-                            android:textAppearance="?android:attr/textAppearanceLarge"
+                            android:textAppearance="@style/textAppearanceMediumAccent"
                             android:text="@string/LAUNCHDETAIL_launch_location"
                             android:textStyle="bold"
                             android:layout_marginRight="@dimen/launch_detail_padding"/>
@@ -270,22 +270,12 @@
                         android:layout_height="match_parent"
                         android:paddingBottom="@dimen/launch_detail_padding">
 
-                    <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textAppearance="?android:attr/textAppearanceMedium"
-                            android:text="Location Name"
-                            android:id="@+id/LAUNCHDETAIL_location_name"
-                            android:textColor="@color/secondary_text"/>
-
-                    <Button
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textAlignment="center"
-                            android:layout_weight="1"
-                            android:text="@string/LAUNCHDETAIL_location_detail_button"
-                            android:id="@+id/LAUNCHDETAIL_location_detail_button"
-                            android:onClick="locationDetailsClicked"/>
+                    <FrameLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="256dp"
+                            android:layout_span="2"
+                            android:id="@+id/LAUNCHDETAIL_location_container">
+                    </FrameLayout>
                 </TableRow>
 
             </TableLayout>

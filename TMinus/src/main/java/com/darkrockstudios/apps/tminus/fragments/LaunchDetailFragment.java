@@ -65,7 +65,6 @@ public class LaunchDetailFragment extends Fragment implements Listener, RocketDe
 	private View                       m_progressBar;
 	private View                       m_countDownContainer;
 	private View                       m_rocketDetailButton;
-	private View                       m_launchDetailButton;
 	private RocketDetailUpdateReceiver m_rocketDetailUpdateReceiver;
 	private IntentFilter               m_rocketDetailUpdateIntentFilter;
 
@@ -149,7 +148,6 @@ public class LaunchDetailFragment extends Fragment implements Listener, RocketDe
 			m_countDownContainer = rootView.findViewById( R.id.LAUNCHDETAIL_imminent_launch_container );
 			m_countDownContainer.setVisibility( View.GONE );
 			m_rocketDetailButton = rootView.findViewById( R.id.LAUNCHDETAIL_rocket_detail_button );
-			m_launchDetailButton = rootView.findViewById( R.id.LAUNCHDETAIL_location_detail_button );
 			m_rocketImage = (NetworkImageView)rootView.findViewById( R.id.LAUNCHDETAIL_mission_image );
 			m_locationContainer = (ViewGroup)rootView.findViewById( id.LAUNCHDETAIL_location_container );
 			m_rocketContainer = (ViewGroup)rootView.findViewById( id.LAUNCHDETAIL_rocket_container );
@@ -378,11 +376,6 @@ public class LaunchDetailFragment extends Fragment implements Listener, RocketDe
 		if( m_rocketDetailButton != null )
 		{
 			m_rocketDetailButton.setTag( m_launchItem.rocket );
-		}
-
-		if( m_launchDetailButton != null )
-		{
-			m_launchDetailButton.setTag( m_launchItem.location );
 		}
 
 		loadRocketDetails();
