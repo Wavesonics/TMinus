@@ -7,33 +7,37 @@
                 android:layout_height="match_parent">
 
     <TextView
+            android:text="@string/ROCKETDETAIL_launch_vehicle_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/textAppearanceLargeAccent"/>
+
+    <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:id="@+id/ROCKETDETAIL_name"
-            android:layout_gravity="center"/>
+            android:text="Rocket Name"/>
 
     <TextView
             tools:ignore="HardcodedText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="configuration"
             android:id="@+id/ROCKETDETAIL_configuration"
-            android:textColor="@color/secondary_text"
-            android:layout_below="@+id/ROCKETDETAIL_name"
-            android:layout_toRightOf="@+id/ROCKETDETAIL_rocket_image"/>
+            android:textColor="@color/secondary_text"/>
 
     <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/scrollView"
-            android:padding="@dimen/rocket_detail_padding"
-            android:layout_below="@id/ROCKETDETAIL_rocket_image">
+            android:padding="@dimen/rocket_detail_padding">
 
         <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="@string/ROCKETDETAIL_loading_summary"
                 android:id="@+id/ROCKETDETAIL_details"
                 android:singleLine="false"/>

@@ -22,7 +22,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="description"
-            android:textColor="@color/secondary_text"
             android:textAppearance="?android:attr/textAppearanceListItemSmall"
             android:ellipsize="end"
             android:singleLine="false"/>
@@ -31,9 +30,7 @@
             android:id="@+id/launch_list_item_net"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="right"
             android:text="July 24, 2013 00:00:00 GMT"
-            android:textColor="@color/secondary_text"
             android:textAppearance="?android:attr/textAppearanceListItemSmall"
             android:ellipsize="end"
             android:singleLine="true"/>

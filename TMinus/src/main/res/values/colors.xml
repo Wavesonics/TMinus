@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="secondary_text">#636363</color>
+    <color name="primary_background">#01121C</color>
+
+    <color name="actionbar_background">#344149</color>
+
+    <color name="primary_text">#FFFFFF</color>
+    <color name="secondary_text">#A0A5EC</color>
+    <color name="accent_text">#BED015</color>
+
+    <color name="secondary_background">#33FFFFFF</color>
+
     <color name="count_down">#FFECB236</color>
     <color name="count_down_actionbar">#66d18b46</color>
     <color name="count_down_alert_text">#ffec330b</color>
