@@ -275,6 +275,11 @@
                             android:layout_height="256dp"
                             android:layout_span="2"
                             android:id="@+id/LAUNCHDETAIL_location_container">
+
+                        <!-- TODO: This is an awful awful hack for which I will surly be punished: http://stackoverflow.com/a/17705806/1366 -->
+                        <SurfaceView
+                                android:layout_width="0dp"
+                                android:layout_height="0dp"/>
                     </FrameLayout>
                 </TableRow>
 

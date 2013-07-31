@@ -22,6 +22,8 @@
         <item name="android:textAppearanceMedium">@style/AppTheme.TextAppearanceMedium</item>
         <item name="android:textAppearanceListItem">@style/AppTheme.TextAppearanceListItem</item>
         <item name="android:textAppearanceListItemSmall">@style/AppTheme.TextAppearanceListItemSmall</item>
+        <item name="android:dividerHorizontal">@drawable/divider_horizontal_repeat</item>
+        <item name="android:dividerVertical">@drawable/divider_vertical_repeat</item>
     </style>
 
     <style name="AppTheme.ActionBar" parent="@android:style/Widget.Holo.ActionBar">

@@ -22,6 +22,7 @@ import com.google.android.gms.maps.GoogleMapOptions;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.Dao;
 
@@ -84,22 +85,16 @@ public class LocationDetailFragment extends DialogFragment
 	{
 		GoogleMapOptions options = new GoogleMapOptions();
 
-		options.useViewLifecycleInFragment( true );
+		//options.useViewLifecycleInFragment( true );
 		options.compassEnabled( false );
 		options.zoomControlsEnabled( false );
 		options.mapType( GoogleMap.MAP_TYPE_SATELLITE );
 
-		LatLng pos = new LatLng( 28.583333, -80.583056 );
+		LatLng pos = getLocation();
 		CameraPosition camPos = new CameraPosition( pos, 15.0f, 30f, 112.5f );
 		options.camera( camPos );
 
 		SupportMapFragment mapFragment = SupportMapFragment.newInstance( options );
-
-		/*
-			MarkerOptions marker = new MarkerOptions();
-			marker.position( pos );
-			map.addMarker( marker );
-		 */
 
 		return mapFragment;
 	}
@@ -121,6 +116,20 @@ public class LocationDetailFragment extends DialogFragment
 		}
 	}
 
+	@Override
+	public void onResume()
+	{
+		super.onResume();
+
+		LatLng pos = getLocation();
+
+		SupportMapFragment mapFragment = (SupportMapFragment)getChildFragmentManager().findFragmentByTag( MAP_FRAGMENT_TAG );
+		GoogleMap map = mapFragment.getMap();
+		MarkerOptions marker = new MarkerOptions();
+		marker.position( pos );
+		map.addMarker( marker );
+	}
+
 	public void updateViews()
 	{
 		if( m_location != null )
@@ -138,6 +147,12 @@ public class LocationDetailFragment extends DialogFragment
 			LocationLoader locationLoader = new LocationLoader();
 			locationLoader.execute( locationId );
 		}
+	}
+
+	private LatLng getLocation()
+	{
+		LatLng pos = new LatLng( 28.583333, -80.583056 );
+		return pos;
 	}
 
 	public int getLocationId()

@@ -3,7 +3,9 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:divider="?android:attr/dividerHorizontal"
+        android:showDividers="middle">
 
     <ScrollView
             android:layout_width="0dp"
@@ -234,7 +236,9 @@
             android:orientation="vertical"
             android:layout_width="0dp"
             android:layout_height="fill_parent"
-            android:layout_weight="4">
+            android:layout_weight="4"
+            android:divider="?android:attr/dividerVertical"
+            android:showDividers="middle">
 
         <FrameLayout
                 android:layout_width="match_parent"
@@ -248,7 +252,13 @@
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:id="@+id/LAUNCHDETAIL_location_container"
-                android:layout_margin="@dimen/launch_detail_padding"/>
+                android:layout_margin="@dimen/launch_detail_padding">
+            <!-- TODO: This is an awful awful hack for which I will surly be punished: http://stackoverflow.com/a/17705806/1366
+                       This prevents a momentary flicker when swapping the fragment in -->
+            <SurfaceView
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"/>
+        </FrameLayout>
 
     </LinearLayout>
 

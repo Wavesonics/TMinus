@@ -18,17 +18,16 @@ import android.widget.Toast;
 
 import com.darkrockstudios.apps.tminus.LaunchUpdateService;
 import com.darkrockstudios.apps.tminus.R;
-import com.darkrockstudios.apps.tminus.R.id;
 import com.darkrockstudios.apps.tminus.R.layout;
 import com.darkrockstudios.apps.tminus.database.DatabaseHelper;
 import com.darkrockstudios.apps.tminus.launchlibrary.Launch;
-import com.darkrockstudios.apps.tminus.misc.Utilities;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.PreparedQuery;
 import com.j256.ormlite.stmt.QueryBuilder;
 
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 /**
@@ -279,11 +278,20 @@ public class LaunchListFragment extends ListFragment
 			final TextView titleView = (TextView)view.findViewById( R.id.launch_list_item_title );
 			titleView.setText( launch.name );
 
-			final TextView descriptionView = (TextView)view.findViewById( id.launch_list_item_description );
+			final TextView descriptionView = (TextView)view.findViewById( R.id.launch_list_item_description );
 			descriptionView.setText( launch.mission.description );
 
-			final TextView netView = (TextView)view.findViewById( id.launch_list_item_net );
-			netView.setText( Utilities.getDateText( launch.net ) );
+			final TextView netView1 = (TextView)view.findViewById( R.id.launch_list_item_net_1 );
+			final TextView netView2 = (TextView)view.findViewById( R.id.launch_list_item_net_2 );
+			final TextView netView3 = (TextView)view.findViewById( R.id.launch_list_item_net_3 );
+
+			SimpleDateFormat monthDay = new SimpleDateFormat( "MMM dd" );
+			SimpleDateFormat year = new SimpleDateFormat( "yyyy" );
+			SimpleDateFormat time = new SimpleDateFormat( "HH:mm" );
+
+			netView1.setText( monthDay.format( launch.net ) );
+			netView2.setText( year.format( launch.net ) );
+			netView3.setText( time.format( launch.net ) );
 
 			return view;
 		}

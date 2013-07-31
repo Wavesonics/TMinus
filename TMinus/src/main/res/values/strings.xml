@@ -81,5 +81,6 @@
         far off they are
     </string>
     <string name="ROCKETDETAIL_launch_vehicle_title">Launch Vehicle</string>
+    <string name="LAUNCHLIST_item_hours">HOURS</string>
 
 </resources>
