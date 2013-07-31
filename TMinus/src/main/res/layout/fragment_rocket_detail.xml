@@ -20,7 +20,6 @@
             android:layout_height="144dp"
             android:id="@+id/ROCKETDETAIL_rocket_image"
             android:layout_gravity="left|center_vertical"
-            android:src="@drawable/rocket"
             android:layout_margin="@dimen/rocket_detail_padding"
             android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"/>
