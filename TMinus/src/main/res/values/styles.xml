@@ -24,6 +24,7 @@
         <item name="android:textAppearanceListItemSmall">@style/AppTheme.TextAppearanceListItemSmall</item>
         <item name="android:dividerHorizontal">@drawable/divider_horizontal_repeat</item>
         <item name="android:dividerVertical">@drawable/divider_vertical_repeat</item>
+        <item name="android:buttonStyle">@style/AppTheme.ButtonStyle</item>
     </style>
 
     <style name="AppTheme.ActionBar" parent="@android:style/Widget.Holo.ActionBar">
@@ -68,12 +69,12 @@
         <item name="android:textSize">16sp</item>
     </style>
 
+    <style name="AppTheme.ButtonStyle" parent="android:Widget.Holo.Button">
+        <item name="android:textColor">@color/primary_text</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
     <style name="CountDownTheme" parent="android:Theme.Holo">
-        <!--
-            Theme customizations available in newer API levels can go in
-            res/values-vXX/styles.xml, while customizations related to
-            backward-compatibility can go here.
-        -->
         <item name="android:windowBackground">@android:color/black</item>
         <item name="android:actionBarStyle">@style/CountDownTheme.ActionBar</item>
     </style>

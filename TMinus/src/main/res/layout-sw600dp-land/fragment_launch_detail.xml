@@ -64,7 +64,7 @@
                 <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:textAppearance="@style/textAppearanceLargeAccent"
                         android:text="Mission Name"
                         android:id="@+id/LAUNCHDETAIL_mission_name"
                         android:layout_alignParentTop="true"
@@ -74,7 +74,7 @@
                 <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
                         android:text="Mission description"
                         android:id="@+id/LAUNCHDETAIL_mission_description"
                         android:layout_below="@+id/LAUNCHDETAIL_mission_name"

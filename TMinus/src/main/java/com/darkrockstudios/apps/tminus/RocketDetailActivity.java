@@ -2,6 +2,9 @@ package com.darkrockstudios.apps.tminus;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.Window;
 
 import com.darkrockstudios.apps.tminus.fragments.RocketDetailFragment;
@@ -49,5 +52,37 @@ public class RocketDetailActivity extends DatabaseActivity
 		}
 
 		return rocketId;
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu( Menu menu )
+	{
+		getMenuInflater().inflate( R.menu.settings, menu );
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected( MenuItem item )
+	{
+		boolean handled;
+
+		switch( item.getItemId() )
+		{
+			case android.R.id.home:
+				NavUtils.navigateUpFromSameTask(this);
+				handled = true;
+				break;
+			case R.id.action_settings:
+			{
+				Intent intent = new Intent( this, SettingsActivity.class );
+				startActivity( intent );
+				handled = true;
+			}
+			break;
+			default:
+				handled = super.onOptionsItemSelected( item );
+		}
+
+		return handled;
 	}
 }

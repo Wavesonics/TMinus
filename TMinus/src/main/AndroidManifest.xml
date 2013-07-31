@@ -53,7 +53,12 @@
                 android:theme="@android:style/Theme.Holo"/>
         <activity
                 android:name=".RocketDetailActivity"
-                android:label="@string/title_activity_rocket_detail"/>
+                android:label="@string/title_activity_rocket_detail"
+                android:parentActivityName=".LaunchListActivity">
+            <meta-data
+                    android:name="android.support.PARENT_ACTIVITY"
+                    android:value=".LaunchListActivity"/>
+        </activity>
         <activity
                 android:name=".LocationDetailActivity"
                 android:label="@string/title_activity_location_detail"/>

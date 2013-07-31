@@ -38,47 +38,42 @@
                     android:layout_gravity="center"/>
         </LinearLayout>
 
-        <RelativeLayout
+        <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:orientation="vertical"
                 android:id="@+id/content_view"
                 android:layout_below="@id/LAUNCHDETAIL_imminent_launch_container">
 
             <com.android.volley.toolbox.NetworkImageView
-                    android:layout_width="128dp"
-                    android:layout_height="128dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="300dp"
+                    android:scaleType="centerCrop"
                     android:id="@+id/LAUNCHDETAIL_mission_image"
-                    android:layout_alignParentTop="true"
-                    android:layout_alignParentLeft="true"
                     android:contentDescription="@string/LAUNCHDETAIL_launch_image_description"/>
 
             <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textAppearance="@style/textAppearanceLargeAccent"
                     android:text="Mission Name"
                     android:id="@+id/LAUNCHDETAIL_mission_name"
-                    android:layout_alignParentTop="true"
-                    android:layout_toRightOf="@+id/LAUNCHDETAIL_mission_image"
                     android:textStyle="bold"
-                    tools:ignore="HardcodedText"/>
+                    tools:ignore="HardcodedText"
+                    android:layout_marginTop="@dimen/launch_detail_padding"/>
 
             <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
                     android:text="Mission description"
                     android:id="@+id/LAUNCHDETAIL_mission_description"
-                    android:layout_below="@+id/LAUNCHDETAIL_mission_name"
-                    android:layout_toRightOf="@+id/LAUNCHDETAIL_mission_image"
                     android:textColor="@color/secondary_text"
                     tools:ignore="HardcodedText"/>
 
             <TableLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/LAUNCHDETAIL_mission_image"
-                    android:layout_alignLeft="@+id/LAUNCHDETAIL_mission_image"
                     android:layout_marginTop="@dimen/launch_detail_padding"
                     android:id="@+id/tableLayout">
 
@@ -241,7 +236,7 @@
                             android:textColor="@color/secondary_text"/>
 
                     <Button
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="@string/LAUNCHDETAIL_rocket_detail_button"
@@ -285,7 +280,7 @@
 
             </TableLayout>
 
-        </RelativeLayout>
+        </LinearLayout>
 
         <ProgressBar
                 style="?android:attr/progressBarStyleLarge"

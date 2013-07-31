@@ -55,7 +55,7 @@ public class LaunchDetailActivity extends DatabaseActivity
 		switch( item.getItemId() )
 		{
 			case android.R.id.home:
-				NavUtils.navigateUpTo( this, new Intent( this, LaunchListActivity.class ) );
+				NavUtils.navigateUpFromSameTask(this);
 				handled = true;
 				break;
 			case R.id.action_settings:
