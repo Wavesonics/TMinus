@@ -31,6 +31,8 @@ public class RocketDetailFetcher
 {
 	private static final String TAG = RocketDetailFetcher.class.getSimpleName();
 
+	private static final Pattern WIKI_ARTICLE_PATTERN = Pattern.compile( "^http[s]?://[a-z]{2}.wikipedia.org/wiki/([a-zA-Z0-9-_\\(\\)]+)/?(?:\\?.*)?$" );
+
 	private static void requestRocketImage( String articleTitle, IntermediateLoadListener listener, Context context )
 	{
 		Log.d( TAG, "Requesting Rocket Image..." );
@@ -67,23 +69,47 @@ public class RocketDetailFetcher
 
 	public static void requestRocketDetails( Rocket rocket, RocketDetailFetchListener listener, Context context )
 	{
-		Log.d( TAG, "Requesting Rocket Details..." );
-
 		String articleTitle = extractArticleTitle( rocket );
 
 		if( articleTitle != null )
 		{
+			Log.d( TAG, "Requesting Rocket Details from wiki article: " + articleTitle );
 			IntermediateLoadListener intermediateLoadListener = new IntermediateLoadListener( rocket.id, listener );
 			requestRocketArticle( articleTitle, intermediateLoadListener, context );
 			requestRocketImage( articleTitle, intermediateLoadListener, context );
+		}
+		else
+		{
+			Log.d( TAG, "Could not extract Wiki article for rocket." );
+			if( rocket != null )
+			{
+				Log.d( TAG, "Rocket: " + rocket.name );
+				Log.d( TAG, "WikiURL: " + (rocket.wikiURL != null ? rocket.wikiURL : "null") );
+			}
 		}
 	}
 
 	private static String extractArticleTitle( Rocket rocket )
 	{
-		// TODO: Implement actual Wiki URL parsing here to determine article title
-		//rocket.wikiURL;
-		return "Falcon_9";
+		final String articleTitle;
+		if( rocket != null && rocket.wikiURL != null && !rocket.wikiURL.isEmpty() )
+		{
+			Matcher matcher = WIKI_ARTICLE_PATTERN.matcher( rocket.wikiURL );
+			if( matcher.matches() && matcher.groupCount() == 1 )
+			{
+				articleTitle = matcher.group( 1 );
+			}
+			else
+			{
+				articleTitle = null;
+			}
+		}
+		else
+		{
+			articleTitle = null;
+		}
+
+		return articleTitle;
 	}
 
 	public static interface RocketDetailFetchListener
@@ -141,7 +167,7 @@ public class RocketDetailFetcher
 			m_articleLoadFinished = true;
 			m_articleLoadSuccess = success;
 
-			if( m_imageLoadSuccess )
+			if( m_articleLoadSuccess )
 			{
 				Log.i( TAG, "Wiki ARTICLE retrieval successful" );
 			}
@@ -173,12 +199,15 @@ public class RocketDetailFetcher
 
 	private static class WikiArticleListener implements Response.Listener<JSONObject>, ErrorListener
 	{
-		private static final Pattern COMMENT_PATTERN = Pattern.compile( "\\<\\!--(.*?)--\\>" );
-		private static final Pattern LINK_PATTERN    = Pattern.compile( "\\[\\[(.*?:)?(.*?)(\\|.*?)?\\]\\]" );
-		private static final Pattern FILE_PATTERN    = Pattern.compile( "\\[\\[File:(.*?)\\]\\]" );
-		private static final Pattern CONVERT_PATTERN = Pattern.compile( "\\{\\{convert\\|([0-9]+)\\|([a-zA-Z]+)\\}\\}" );
-		private static final Pattern BOLD_PATTERN    = Pattern.compile( "'''(.+?)'''" );
-		private static final Pattern ITALICS_PATTERN = Pattern.compile( "''(.+?)''" );
+		private static final Pattern COMMENT_PATTERN      = Pattern.compile( "\\<\\!--(.*?)--\\>" );
+		private static final Pattern GENERAL_LINK_PATTERN = Pattern.compile( "\\[\\[(.*?:)?(.*?)(\\|.*?)?\\]\\]" );
+		private static final Pattern SIMPLE_LINK_PATTERN  = Pattern.compile( "\\[\\[([^|]*?)\\]\\]" );
+		private static final Pattern ASSET_PATTERN        = Pattern.compile( "\\[\\[[a-zA-Z]+:(.*?)\\]\\]" );
+		private static final Pattern REF_PATTERN          = Pattern.compile( "(<ref>.*?</ref>)" );
+		private static final Pattern CITE_PATTERN          = Pattern.compile( "(\\{\\{cite.*?\\}\\})" );
+		private static final Pattern CONVERT_PATTERN      = Pattern.compile( "\\{\\{convert\\|([0-9]+)\\|([a-zA-Z]+)\\}\\}" );
+		private static final Pattern BOLD_PATTERN         = Pattern.compile( "'''(.+?)'''" );
+		private static final Pattern ITALICS_PATTERN      = Pattern.compile( "''(.+?)''" );
 
 		final private Context                  m_context;
 		final private IntermediateLoadListener m_listener;
@@ -266,22 +295,34 @@ public class RocketDetailFetcher
 		{
 			// Unescape the wikitext
 			String articleText = wikiText.replace( "\\\"", "\"" );
+			articleText = articleText.replace( "\\/", "/" );
 
-			articleText = removeInfoBox( articleText );
+			articleText = removeInfoBoxes( articleText );
 
 			// Use our regex patterns to clean out the wiki syntax and replace it with mostly plain text
 			// or simple HTML for formatting
-			Matcher matcher = COMMENT_PATTERN.matcher( articleText );
+			Matcher matcher;
+
+			matcher = COMMENT_PATTERN.matcher( articleText );
 			articleText = matcher.replaceAll( "" );
 
-			matcher = FILE_PATTERN.matcher( articleText );
+			matcher = REF_PATTERN.matcher( articleText );
 			articleText = matcher.replaceAll( "" );
 
-			matcher = LINK_PATTERN.matcher( articleText );
-			articleText = matcher.replaceAll( "$2" );
+			matcher = CITE_PATTERN.matcher( articleText );
+			articleText = matcher.replaceAll( "" );
 
 			matcher = CONVERT_PATTERN.matcher( articleText );
 			articleText = matcher.replaceAll( "$1 $2" );
+
+			matcher = ASSET_PATTERN.matcher( articleText );
+			articleText = matcher.replaceAll( "" );
+
+			matcher = SIMPLE_LINK_PATTERN.matcher( articleText );
+			articleText = matcher.replaceAll( "$1" );
+
+			matcher = GENERAL_LINK_PATTERN.matcher( articleText );
+			articleText = matcher.replaceAll( "$2" );
 
 			matcher = BOLD_PATTERN.matcher( articleText );
 			articleText = matcher.replaceAll( "<strong>$1</strong>" );
@@ -296,32 +337,58 @@ public class RocketDetailFetcher
 			return articleText;
 		}
 
+		private String removeInfoBoxes( final String articleText )
+		{
+			String articleToClean;
+			String cleanedArticle = articleText;
+
+			do
+			{
+				articleToClean = cleanedArticle;
+				cleanedArticle = removeInfoBox( articleToClean );
+			} while( articleToClean.length() != cleanedArticle.length() );
+
+			return cleanedArticle;
+		}
+
 		private String removeInfoBox( final String articleText )
 		{
+			final String cleanedArticle;
+
 			// Find the end of the Infobox
 			final String infoBox = "{{Infobox";
 			final String openBracket = "{{";
 			final String closeBracket = "}}";
-			int curPos = articleText.indexOf( infoBox ) + infoBox.length();
-			int openBrackets = 1;
-			while( openBrackets > 0 )
+			int curPos = articleText.indexOf( infoBox );
+			if( curPos > -1 )
 			{
-				int nextOpen = articleText.indexOf( openBracket, curPos );
-				int nextClose = articleText.indexOf( closeBracket, curPos );
-				if( nextOpen < nextClose )
+				curPos += infoBox.length();
+				int openBrackets = 1;
+				while( openBrackets > 0 )
 				{
-					curPos = nextOpen + openBracket.length();
-					++openBrackets;
+					int nextOpen = articleText.indexOf( openBracket, curPos );
+					int nextClose = articleText.indexOf( closeBracket, curPos );
+					if( nextOpen < nextClose )
+					{
+						curPos = nextOpen + openBracket.length();
+						++openBrackets;
+					}
+					else
+					{
+						curPos = nextClose + closeBracket.length();
+						--openBrackets;
+					}
 				}
-				else
-				{
-					curPos = nextClose + closeBracket.length();
-					--openBrackets;
-				}
+
+				// Grab everything immediately after the Infobox
+				cleanedArticle = articleText.substring( curPos, articleText.length() );
+			}
+			else
+			{
+				cleanedArticle = articleText;
 			}
 
-			// Grab everything immediately after the Infobox
-			return articleText.substring( curPos, articleText.length() );
+			return cleanedArticle;
 		}
 	}
 

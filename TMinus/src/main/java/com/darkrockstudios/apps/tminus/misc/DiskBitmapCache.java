@@ -19,7 +19,6 @@ import java.nio.ByteBuffer;
  */
 public class DiskBitmapCache extends DiskBasedCache implements ImageLoader.ImageCache
 {
-
 	public DiskBitmapCache( File rootDirectory, int maxCacheSizeInBytes )
 	{
 		super( rootDirectory, maxCacheSizeInBytes );

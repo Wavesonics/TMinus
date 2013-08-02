@@ -28,7 +28,6 @@ import com.darkrockstudios.apps.tminus.loaders.RocketDetailLoader;
 import com.darkrockstudios.apps.tminus.loaders.RocketDetailLoader.Listener;
 import com.darkrockstudios.apps.tminus.loaders.RocketLoader;
 import com.darkrockstudios.apps.tminus.loaders.RocketLoader.RocketLoadListener;
-import com.darkrockstudios.apps.tminus.misc.DiskBitmapCache;
 
 import java.io.File;
 
@@ -127,9 +126,8 @@ public class RocketDetailFragment extends DialogFragment implements Listener, Ro
 			{
 				if( m_rocketImage != null )
 				{
-					final int MAX_CACHE_SIZE = 10 * 1024 * 1024;
 					ImageLoader imageLoader = new ImageLoader( TMinusApplication
-							                                           .getRequestQueue(), new DiskBitmapCache( m_dataDirectory, MAX_CACHE_SIZE ) );
+							                                           .getRequestQueue(),  TMinusApplication.getBitmapCache() );
 					m_rocketImage.setImageUrl( m_rocketDetail.imageUrl, imageLoader );
 				}
 

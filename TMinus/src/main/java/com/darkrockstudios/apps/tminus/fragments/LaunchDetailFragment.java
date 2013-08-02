@@ -32,7 +32,6 @@ import com.darkrockstudios.apps.tminus.launchlibrary.Launch;
 import com.darkrockstudios.apps.tminus.loaders.LaunchLoader;
 import com.darkrockstudios.apps.tminus.loaders.LaunchLoader.Listener;
 import com.darkrockstudios.apps.tminus.loaders.RocketDetailLoader;
-import com.darkrockstudios.apps.tminus.misc.DiskBitmapCache;
 import com.darkrockstudios.apps.tminus.misc.Preferences;
 import com.darkrockstudios.apps.tminus.misc.Utilities;
 
@@ -151,6 +150,10 @@ public class LaunchDetailFragment extends Fragment implements Listener, RocketDe
 			m_rocketImage = (NetworkImageView)rootView.findViewById( R.id.LAUNCHDETAIL_mission_image );
 			m_locationContainer = (ViewGroup)rootView.findViewById( id.LAUNCHDETAIL_location_container );
 			m_rocketContainer = (ViewGroup)rootView.findViewById( id.LAUNCHDETAIL_rocket_container );
+
+			m_rocketImage.setImageResource( R.drawable.launch_detail_no_rocket_image );
+			m_rocketImage.setErrorImageResId( R.drawable.launch_detail_no_rocket_image );
+			m_rocketImage.setDefaultImageResId( R.drawable.launch_detail_no_rocket_image );
 
 			loadLaunch();
 		}
@@ -272,11 +275,9 @@ public class LaunchDetailFragment extends Fragment implements Listener, RocketDe
 				rocketName.setText( m_launchItem.rocket.name );
 			}
 
-			if( m_rocketDetail != null )
+			if( m_rocketDetail != null && m_rocketDetail.imageUrl != null )
 			{
-				final int MAX_CACHE_SIZE = 10 * 1024 * 1024;
-				ImageLoader imageLoader = new ImageLoader( TMinusApplication
-						                                           .getRequestQueue(), new DiskBitmapCache( m_dataDirectory, MAX_CACHE_SIZE ) );
+				ImageLoader imageLoader = new ImageLoader( TMinusApplication.getRequestQueue(), TMinusApplication.getBitmapCache() );
 				m_rocketImage.setImageUrl( m_rocketDetail.imageUrl, imageLoader );
 			}
 

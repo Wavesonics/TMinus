@@ -62,6 +62,14 @@
                     tools:ignore="HardcodedText"
                     android:layout_marginTop="@dimen/launch_detail_padding"/>
 
+
+            <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="5dp"
+                    android:id="@+id/imageView"
+                    android:src="@drawable/header_divider"
+                    android:scaleType="fitXY"/>
+
             <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
