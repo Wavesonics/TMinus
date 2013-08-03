@@ -16,6 +16,8 @@ import com.darkrockstudios.apps.tminus.database.DatabaseHelper;
 import com.darkrockstudios.apps.tminus.launchlibrary.Location;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMapOptions;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -37,6 +39,8 @@ public class LocationDetailFragment extends DialogFragment
 	public static final  String TAG              = LocationDetailFragment.class.getSimpleName();
 	public static final  String ARG_ITEM_ID      = "item_id";
 	private static final String MAP_FRAGMENT_TAG = "MapFragment";
+	private static final float  LOCATION_ZOOM    = 15.0f;
+	private static final LatLng DEFAULT_LOCATION = new LatLng( 37.523506, -77.412109 );
 	private Location    m_location;
 	private FrameLayout m_mapContainer;
 
@@ -72,7 +76,8 @@ public class LocationDetailFragment extends DialogFragment
 			m_mapContainer = (FrameLayout)rootView.findViewById( R.id.LOCATIONDETAIL_map_container );
 
 			SupportMapFragment mapFragment = createMap();
-			getChildFragmentManager().beginTransaction().add( R.id.LOCATIONDETAIL_map_container, mapFragment, MAP_FRAGMENT_TAG ).commit();
+			getChildFragmentManager().beginTransaction()
+					.add( R.id.LOCATIONDETAIL_map_container, mapFragment, MAP_FRAGMENT_TAG ).commit();
 		}
 
 		return rootView;
@@ -82,18 +87,39 @@ public class LocationDetailFragment extends DialogFragment
 	{
 		GoogleMapOptions options = new GoogleMapOptions();
 
-		//options.useViewLifecycleInFragment( true );
+		options.useViewLifecycleInFragment( true );
 		options.compassEnabled( false );
 		options.zoomControlsEnabled( false );
 		options.mapType( GoogleMap.MAP_TYPE_SATELLITE );
 
-		LatLng pos = getLocation();
-		CameraPosition camPos = new CameraPosition( pos, 15.0f, 30f, 112.5f );
+
+		CameraPosition camPos = new CameraPosition( getLocation(), getLocationZoom(), 30f, 112.5f );
 		options.camera( camPos );
 
 		SupportMapFragment mapFragment = SupportMapFragment.newInstance( options );
 
 		return mapFragment;
+	}
+
+	private void updateMap()
+	{
+		final LatLng pos = getLocation();
+
+		SupportMapFragment mapFragment = (SupportMapFragment)getChildFragmentManager()
+				                                                     .findFragmentByTag( MAP_FRAGMENT_TAG );
+		GoogleMap map = mapFragment.getMap();
+		if( map != null )
+		{
+			CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom( pos, getLocationZoom() );
+			map.moveCamera( cameraUpdate );
+
+			if( pos != DEFAULT_LOCATION )
+			{
+				MarkerOptions marker = new MarkerOptions();
+				marker.position( pos );
+				map.addMarker( marker );
+			}
+		}
 	}
 
 	@Override
@@ -118,23 +144,14 @@ public class LocationDetailFragment extends DialogFragment
 	{
 		super.onResume();
 
-		LatLng pos = getLocation();
-
-		SupportMapFragment mapFragment = (SupportMapFragment)getChildFragmentManager().findFragmentByTag( MAP_FRAGMENT_TAG );
-		GoogleMap map = mapFragment.getMap();
-		if( map != null )
-		{
-			MarkerOptions marker = new MarkerOptions();
-			marker.position( pos );
-			map.addMarker( marker );
-		}
+		updateMap();
 	}
 
 	public void updateViews()
 	{
 		if( m_location != null )
 		{
-
+			updateMap();
 		}
 	}
 
@@ -149,9 +166,35 @@ public class LocationDetailFragment extends DialogFragment
 		}
 	}
 
+	private float getLocationZoom()
+	{
+		LatLng pos = getLocation();
+		final float zoom;
+		if( pos == DEFAULT_LOCATION )
+		{
+			zoom = 0.0f;
+		}
+		else
+		{
+			zoom = LOCATION_ZOOM;
+		}
+
+		return zoom;
+	}
+
 	private LatLng getLocation()
 	{
-		LatLng pos = new LatLng( 28.583333, -80.583056 );
+		final LatLng pos;
+
+		if( m_location != null && m_location.longitude != null && m_location.latitude != null )
+		{
+			pos = new LatLng( m_location.latitude, m_location.longitude );
+		}
+		else
+		{
+			pos = DEFAULT_LOCATION;
+		}
+
 		return pos;
 	}
 
