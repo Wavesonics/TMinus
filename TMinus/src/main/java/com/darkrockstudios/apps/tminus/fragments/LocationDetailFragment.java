@@ -10,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.TextView;
 
 import com.darkrockstudios.apps.tminus.R;
 import com.darkrockstudios.apps.tminus.database.DatabaseHelper;
@@ -39,7 +38,6 @@ public class LocationDetailFragment extends DialogFragment
 	public static final  String ARG_ITEM_ID      = "item_id";
 	private static final String MAP_FRAGMENT_TAG = "MapFragment";
 	private Location    m_location;
-	private TextView    m_name;
 	private FrameLayout m_mapContainer;
 
 	public LocationDetailFragment()
@@ -71,7 +69,6 @@ public class LocationDetailFragment extends DialogFragment
 
 		if( rootView != null )
 		{
-			m_name = (TextView)rootView.findViewById( R.id.LOCATIONDETAIL_name );
 			m_mapContainer = (FrameLayout)rootView.findViewById( R.id.LOCATIONDETAIL_map_container );
 
 			SupportMapFragment mapFragment = createMap();
@@ -125,16 +122,19 @@ public class LocationDetailFragment extends DialogFragment
 
 		SupportMapFragment mapFragment = (SupportMapFragment)getChildFragmentManager().findFragmentByTag( MAP_FRAGMENT_TAG );
 		GoogleMap map = mapFragment.getMap();
-		MarkerOptions marker = new MarkerOptions();
-		marker.position( pos );
-		map.addMarker( marker );
+		if( map != null )
+		{
+			MarkerOptions marker = new MarkerOptions();
+			marker.position( pos );
+			map.addMarker( marker );
+		}
 	}
 
 	public void updateViews()
 	{
 		if( m_location != null )
 		{
-			m_name.setText( m_location.name );
+
 		}
 	}
 

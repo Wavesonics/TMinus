@@ -22,13 +22,15 @@
     <string name="NOTIFICATION_reminder_summary">%1$s\n\nNET: %2$s\nFrom: %3$s</string>
     <string name="NOTIFICATION_launch_imminent_title">Launch Imminent!</string>
     <string name="NOTIFICATION_launch_imminent_summary">%1$s\nLaunch has entered it\'s terminal count.\n\nNET:
-        %2$s\nFrom: %3$s
-    </string>
+        %2$s\nFrom: %3$s</string>
+
+    <string name="LAUNCHLIST_item_hours">HOURS</string>
+
     <string name="LAUNCHDETAIL_status">Status:</string>
     <string name="LAUNCHDETAIL_launch_window">Launch:</string>
     <string name="LAUNCHDETAIL_launch_window_length">Window:</string>
     <string name="LAUNCHDETAIL_location">Location:</string>
-    <string name="LAUNCHDETAIL_count_down">T Minus:</string>
+    <string name="LAUNCHDETAIL_count_down">TMinus</string>
     <string name="LAUNCHDETAIL_count_down_button">Count Down</string>
     <string name="LAUNCHDETAIL_launch_image_description">Picture of the rocket</string>
     <string name="LAUNCHDETAIL_imminent_launch">This rocket is launching soon, go to the count down!</string>
@@ -36,10 +38,13 @@
     <string name="LAUNCHDETAIL_rocket_detail_button">Details</string>
     <string name="LAUNCHDETAIL_launch_location">Launch Location</string>
     <string name="LAUNCHDETAIL_location_detail_button">Details</string>
+    <string name="LAUNCHDETAIL_details_header">Details</string>
+    <string name="LAUNCHDETAIL_net_hours">HOURS</string>
 
     <string name="ROCKETDETAIL_title">Rocket Detail</string>
     <string name="ROCKETDETAIL_loading_summary">Loading rocket summary…</string>
     <string name="ROCKETDETAIL_no_summary">No summary available.</string>
+    <string name="ROCKETDETAIL_launch_vehicle_title">Launch Vehicle</string>
 
     <string name="LOCATIONDETAIL_title">Location Detail</string>
 
@@ -80,7 +85,5 @@
     <string name="PREF_always_show_count_down_summary">Display the Count Down button for all Launches regardless of how
         far off they are
     </string>
-    <string name="ROCKETDETAIL_launch_vehicle_title">Launch Vehicle</string>
-    <string name="LAUNCHLIST_item_hours">HOURS</string>
 
 </resources>

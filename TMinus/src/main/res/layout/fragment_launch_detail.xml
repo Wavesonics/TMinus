@@ -47,7 +47,7 @@
 
             <com.android.volley.toolbox.NetworkImageView
                     android:layout_width="match_parent"
-                    android:layout_height="300dp"
+                    android:layout_height="320dp"
                     android:scaleType="centerCrop"
                     android:id="@+id/LAUNCHDETAIL_mission_image"
                     android:contentDescription="@string/LAUNCHDETAIL_launch_image_description"/>
@@ -66,9 +66,9 @@
             <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="5dp"
-                    android:id="@+id/imageView"
                     android:src="@drawable/header_divider"
-                    android:scaleType="fitXY"/>
+                    android:scaleType="fitXY"
+                    android:layout_marginBottom="@dimen/launch_detail_padding"/>
 
             <TextView
                     android:layout_width="wrap_content"
@@ -76,217 +76,253 @@
                     android:textAppearance="?android:attr/textAppearanceLarge"
                     android:text="Mission description"
                     android:id="@+id/LAUNCHDETAIL_mission_description"
-                    android:textColor="@color/secondary_text"
                     tools:ignore="HardcodedText"/>
 
-            <TableLayout
+            <TextView
+                    tools:ignore="HardcodedText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/textAppearanceLargeAccent"
+                    android:text="@string/LAUNCHDETAIL_details_header"
+                    android:textStyle="bold"
+                    android:layout_marginTop="@dimen/launch_detail_padding"/>
+
+            <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="5dp"
+                    android:src="@drawable/header_divider"
+                    android:scaleType="fitXY"
+                    android:layout_marginBottom="@dimen/launch_detail_padding"
+                    android:id="@+id/imageView"/>
+
+            <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent">
+
+                <TextView
+                        tools:ignore="HardcodedText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:text="@string/LAUNCHDETAIL_status"
+                        android:layout_weight="1"/>
+
+                <TextView
+                        tools:ignore="HardcodedText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:textStyle="bold"
+                        android:textColor="@color/accent_text"
+                        android:text="GO"
+                        android:id="@+id/LAUNCHDETAIL_status"
+                        android:layout_weight="1"/>
+
+                <TextView
+                        tools:ignore="HardcodedText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:text="@string/LAUNCHDETAIL_launch_window_length"
+                        android:layout_weight="1"/>
+
+                <TextView
+                        tools:ignore="HardcodedText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:textStyle="bold"
+                        android:textColor="@color/accent_text"
+                        android:text="0d 0h 0m"
+                        android:id="@+id/LAUNCHDETAIL_window_length"
+                        android:layout_weight="1"/>
+            </LinearLayout>
+
+            <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/launch_detail_padding"
-                    android:id="@+id/tableLayout">
+                    android:gravity="bottom">
 
-                <TableRow
+                <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/imageView3"
+                        android:src="@drawable/ic_launch_detail_time"
+                        android:layout_marginBottom="@dimen/launch_detail_row_icon_bottom_padding"
+                        android:layout_marginLeft="@dimen/launch_detail_row_icon_left_padding"/>
+
+                <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:paddingBottom="@dimen/launch_detail_padding"
-                        android:id="@+id/tableRow">
+                        android:orientation="horizontal"
+                        android:id="@+id/linearLayout"
+                        android:gravity="right">
 
                     <TextView
+                            android:id="@+id/launch_detail_net_1"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textAppearance="?android:attr/textAppearanceMedium"
-                            android:text="@string/LAUNCHDETAIL_status"
                             android:textStyle="bold"
-                            android:gravity="right"
-                            android:layout_marginRight="@dimen/launch_detail_padding"/>
+                            android:textColor="@color/accent_text"
+                            android:text="Dec 25"
+                            android:textAppearance="?android:attr/textAppearanceMedium"/>
 
                     <TextView
                             tools:ignore="HardcodedText"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textAppearance="?android:attr/textAppearanceMedium"
-                            android:text="GO"
-                            android:id="@+id/LAUNCHDETAIL_status"
-                            android:textColor="@color/secondary_text"
-                            android:layout_weight="1"/>
-                </TableRow>
+                            android:text=", "
+                            android:textAppearance="?android:attr/textAppearanceMedium"/>
 
-                <TableRow
-                        android:layout_width="match_parent"
+                    <TextView
+                            android:id="@+id/launch_detail_net_2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="2013"
+                            android:textAppearance="?android:attr/textAppearanceMedium"
+                            android:singleLine="true"/>
+
+                    <TextView
+                            tools:ignore="HardcodedText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text=" "
+                            android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+                    <TextView
+                            android:id="@+id/launch_detail_net_3"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="12:00"
+                            android:textAppearance="?android:attr/textAppearanceMedium"
+                            android:singleLine="true"/>
+
+                    <TextView
+                            tools:ignore="HardcodedText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text=" "
+                            android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+                    <TextView
+                            android:id="@+id/textView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/LAUNCHDETAIL_net_hours"
+                            android:textStyle="bold"
+                            android:textAppearance="?android:attr/textAppearanceMedium"
+                            android:singleLine="true"/>
+                </LinearLayout>
+            </LinearLayout>
+
+            <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="5dp"
+                    android:src="@drawable/header_divider"
+                    android:scaleType="fitXY"
+                    />
+
+            <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent">
+
+                <TextView
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:paddingBottom="@dimen/launch_detail_padding">
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:text="@string/LAUNCHDETAIL_count_down"
+                        android:layout_weight="1"/>
 
-                    <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textAppearance="?android:attr/textAppearanceMedium"
-                            android:text="@string/LAUNCHDETAIL_launch_window"
-                            android:textStyle="bold"
-                            android:gravity="right"
-                            android:layout_marginRight="@dimen/launch_detail_padding"/>
-
-                    <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textAppearance="?android:attr/textAppearanceMedium"
-                            android:text="MMM dd, yyyy HH:mm:ss zzz"
-                            android:id="@+id/LAUNCHDETAIL_launch_window"
-                            android:textColor="@color/secondary_text"
-                            tools:ignore="HardcodedText"
-                            android:layout_weight="1"/>
-                </TableRow>
-
-                <TableRow
-                        android:layout_width="match_parent"
+                <TextView
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:paddingBottom="@dimen/launch_detail_padding"
-                        >
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:text="5d 12h 24m"
+                        android:id="@+id/LAUNCHDETAIL_time_remaining"
+                        android:layout_weight="1"
+                        android:textColor="@color/accent_text"
+                        tools:ignore="HardcodedText"/>
+            </LinearLayout>
 
-                    <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textAppearance="?android:attr/textAppearanceMedium"
-                            android:text="@string/LAUNCHDETAIL_launch_window_length"
-                            android:textStyle="bold"
-                            android:gravity="right"
-                            android:layout_marginRight="@dimen/launch_detail_padding"/>
+            <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:layout_marginTop="@dimen/launch_detail_padding"
+                    android:gravity="bottom">
 
-                    <TextView
-                            tools:ignore="HardcodedText"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textAppearance="?android:attr/textAppearanceMedium"
-                            android:text="10h 5m"
-                            android:id="@+id/LAUNCHDETAIL_window_length"
-                            android:textColor="@color/secondary_text"
-                            android:layout_weight="1"
-                            android:singleLine="false"/>
-                </TableRow>
+                <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_launch_detail_location"
+                        android:layout_marginBottom="@dimen/launch_detail_row_icon_bottom_padding"
+                        android:layout_marginLeft="@dimen/launch_detail_row_icon_left_padding"/>
 
-                <TableRow
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:paddingBottom="@dimen/launch_detail_padding">
+                <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:text="Location Name"
+                        android:textColor="@color/accent_text"
+                        android:layout_weight="1"
+                        android:gravity="right"
+                        android:id="@+id/LAUNCHDETAIL_location"/>
+            </LinearLayout>
 
-                    <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textAppearance="?android:attr/textAppearanceMedium"
-                            android:text="@string/LAUNCHDETAIL_location"
-                            android:textStyle="bold"
-                            android:gravity="right"
-                            android:layout_marginRight="@dimen/launch_detail_padding"/>
+            <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="5dp"
+                    android:src="@drawable/header_divider"
+                    android:scaleType="fitXY"/>
 
-                    <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textAppearance="?android:attr/textAppearanceMedium"
-                            android:text="Your Moms House"
-                            android:id="@+id/LAUNCHDETAIL_location"
-                            android:textColor="@color/secondary_text"
-                            tools:ignore="HardcodedText"
-                            android:layout_weight="1"/>
-                </TableRow>
+            <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="256dp"
+                    android:layout_marginTop="@dimen/launch_detail_padding"
+                    android:id="@+id/LAUNCHDETAIL_location_container">
 
-                <TableRow
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:paddingBottom="@dimen/launch_detail_padding">
+                <!-- TODO: This is an awful awful hack for which I will surly be punished: http://stackoverflow.com/a/17705806/1366 -->
+                <SurfaceView
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"/>
+            </FrameLayout>
 
-                    <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textAppearance="?android:attr/textAppearanceMedium"
-                            android:text="@string/LAUNCHDETAIL_count_down"
-                            android:textStyle="bold"
-                            android:gravity="right"
-                            android:layout_marginRight="@dimen/launch_detail_padding"/>
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/launch_detail_padding"
+                    android:textAppearance="@style/textAppearanceLargeAccent"
+                    android:text="@string/LAUNCHDETAIL_launch_vehicle"
+                    android:textStyle="bold"
+                    android:layout_marginRight="@dimen/launch_detail_padding"/>
 
-                    <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textAppearance="?android:attr/textAppearanceMedium"
-                            android:text="5d 12h 24m"
-                            android:id="@+id/LAUNCHDETAIL_time_remaining"
-                            android:textColor="@color/secondary_text"
-                            android:layout_weight="1"
-                            tools:ignore="HardcodedText"
-                            />
-                </TableRow>
+            <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="5dp"
+                    android:src="@drawable/header_divider"
+                    android:scaleType="fitXY"/>
 
-                <TableRow
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:paddingTop="@dimen/launch_detail_padding"
-                        android:paddingBottom="@dimen/launch_detail_padding">
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="@dimen/launch_detail_padding">
 
-                    <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_span="2"
-                            android:textAppearance="@style/textAppearanceMediumAccent"
-                            android:text="@string/LAUNCHDETAIL_launch_vehicle"
-                            android:textStyle="bold"
-                            android:layout_marginRight="@dimen/launch_detail_padding"/>
-                </TableRow>
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:text="Rocket Name"
+                        android:id="@+id/LAUNCHDETAIL_rocket_name"
+                        android:textColor="@color/secondary_text"/>
 
-                <TableRow
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:paddingBottom="@dimen/launch_detail_padding">
-
-                    <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textAppearance="?android:attr/textAppearanceMedium"
-                            android:text="Rocket Name"
-                            android:id="@+id/LAUNCHDETAIL_rocket_name"
-                            android:textColor="@color/secondary_text"/>
-
-                    <Button
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="@string/LAUNCHDETAIL_rocket_detail_button"
-                            android:id="@+id/LAUNCHDETAIL_rocket_detail_button"
-                            android:onClick="rocketDetailsClicked"/>
-                </TableRow>
-
-                <TableRow
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:paddingTop="@dimen/launch_detail_padding"
-                        android:paddingBottom="@dimen/launch_detail_padding">
-
-                    <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_span="2"
-                            android:textAppearance="@style/textAppearanceMediumAccent"
-                            android:text="@string/LAUNCHDETAIL_launch_location"
-                            android:textStyle="bold"
-                            android:layout_marginRight="@dimen/launch_detail_padding"/>
-                </TableRow>
-
-                <TableRow
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:paddingBottom="@dimen/launch_detail_padding">
-
-                    <FrameLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="256dp"
-                            android:layout_span="2"
-                            android:id="@+id/LAUNCHDETAIL_location_container">
-
-                        <!-- TODO: This is an awful awful hack for which I will surly be punished: http://stackoverflow.com/a/17705806/1366 -->
-                        <SurfaceView
-                                android:layout_width="0dp"
-                                android:layout_height="0dp"/>
-                    </FrameLayout>
-                </TableRow>
-
-            </TableLayout>
+                <Button
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/LAUNCHDETAIL_rocket_detail_button"
+                        android:id="@+id/LAUNCHDETAIL_rocket_detail_button"
+                        android:onClick="rocketDetailsClicked"/>
+            </LinearLayout>
 
         </LinearLayout>
 
@@ -296,7 +332,8 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/progressBar"
                 android:indeterminate="true"
-                android:layout_centerInParent="true"/>
+                android:layout_centerInParent="true"
+                android:visibility="gone"/>
 
     </RelativeLayout>
 </ScrollView>

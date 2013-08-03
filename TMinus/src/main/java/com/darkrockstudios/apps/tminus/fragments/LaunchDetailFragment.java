@@ -36,6 +36,7 @@ import com.darkrockstudios.apps.tminus.misc.Preferences;
 import com.darkrockstudios.apps.tminus.misc.Utilities;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
@@ -259,9 +260,6 @@ public class LaunchDetailFragment extends Fragment implements Listener, RocketDe
 			final TextView status = (TextView)rootView.findViewById( R.id.LAUNCHDETAIL_status );
 			status.setText( Utilities.getStatusText( m_launchItem, rootView.getContext() ) );
 
-			final TextView launchWindow = (TextView)rootView.findViewById( R.id.LAUNCHDETAIL_launch_window );
-			launchWindow.setText( Utilities.getDateText( m_launchItem.windowstart ) );
-
 			final TextView location = (TextView)rootView.findViewById( R.id.LAUNCHDETAIL_location );
 			location.setText( m_launchItem.location.name );
 
@@ -280,6 +278,18 @@ public class LaunchDetailFragment extends Fragment implements Listener, RocketDe
 				ImageLoader imageLoader = new ImageLoader( TMinusApplication.getRequestQueue(), TMinusApplication.getBitmapCache() );
 				m_rocketImage.setImageUrl( m_rocketDetail.imageUrl, imageLoader );
 			}
+
+			final TextView netView1 = (TextView)rootView.findViewById( R.id.launch_detail_net_1 );
+			final TextView netView2 = (TextView)rootView.findViewById( R.id.launch_detail_net_2 );
+			final TextView netView3 = (TextView)rootView.findViewById( R.id.launch_detail_net_3 );
+
+			SimpleDateFormat monthDay = new SimpleDateFormat( "MMM dd" );
+			SimpleDateFormat year = new SimpleDateFormat( "yyyy" );
+			SimpleDateFormat time = new SimpleDateFormat( "HH:mm" );
+
+			netView1.setText( monthDay.format( m_launchItem.net ) );
+			netView2.setText( year.format( m_launchItem.net ) );
+			netView3.setText( time.format( m_launchItem.net ) );
 
 			updateTimeViews();
 			handleCountDownContainer();
