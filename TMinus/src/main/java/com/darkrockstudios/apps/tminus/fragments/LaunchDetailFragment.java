@@ -229,18 +229,20 @@ public class LaunchDetailFragment extends Fragment implements Listener, RocketDe
 
 	private void showContent()
 	{
-		if( m_contentView != null && m_progressBar != null )
+		if( m_contentView != null && m_rocketImage != null && m_progressBar != null )
 		{
 			m_contentView.setVisibility( View.VISIBLE );
+			m_rocketImage.setVisibility( View.VISIBLE );
 			m_progressBar.setVisibility( View.GONE );
 		}
 	}
 
 	private void showLoading()
 	{
-		if( m_contentView != null && m_progressBar != null )
+		if( m_contentView != null && m_rocketImage != null && m_progressBar != null )
 		{
 			m_contentView.setVisibility( View.GONE );
+			m_rocketImage.setVisibility( View.GONE );
 			m_progressBar.setVisibility( View.VISIBLE );
 		}
 	}

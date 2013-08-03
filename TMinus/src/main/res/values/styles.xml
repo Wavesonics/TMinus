@@ -25,6 +25,7 @@
         <item name="android:dividerHorizontal">@drawable/divider_horizontal_repeat</item>
         <item name="android:dividerVertical">@drawable/divider_vertical_repeat</item>
         <item name="android:buttonStyle">@style/AppTheme.ButtonStyle</item>
+        <item name="android:cacheColorHint">@color/scroll_hint</item>
     </style>
 
     <style name="AppTheme.ActionBar" parent="@android:style/Widget.Holo.ActionBar">

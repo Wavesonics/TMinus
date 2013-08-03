@@ -10,13 +10,14 @@
     <ScrollView
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="2"
-            android:background="@color/secondary_background"
-            android:padding="@dimen/launch_detail_padding">
+            android:layout_weight="2">
 
-        <RelativeLayout
+        <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:divider="?android:attr/dividerVertical"
+                android:showDividers="middle"
+                android:orientation="vertical">
 
             <LinearLayout
                     android:id="@+id/LAUNCHDETAIL_imminent_launch_container"
@@ -24,8 +25,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/launch_detail_padding"
-                    android:background="@color/count_down_alert_background"
-                    android:padding="@dimen/launch_detail_padding">
+                    android:background="@color/count_down_alert_background">
 
                 <TextView
                         android:layout_width="wrap_content"
@@ -44,19 +44,22 @@
                         android:layout_gravity="center"/>
             </LinearLayout>
 
+            <com.android.volley.toolbox.NetworkImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="300dp"
+                    android:layout_margin="@dimen/launch_detail_rocket_image_padding"
+                    android:scaleType="centerCrop"
+                    android:id="@+id/LAUNCHDETAIL_mission_image"
+                    android:contentDescription="@string/LAUNCHDETAIL_launch_image_description"/>
+
+
             <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:padding="@dimen/launch_detail_padding"
                     android:orientation="vertical"
                     android:id="@+id/content_view"
-                    android:layout_below="@id/LAUNCHDETAIL_imminent_launch_container">
-
-                <com.android.volley.toolbox.NetworkImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="300dp"
-                        android:scaleType="centerCrop"
-                        android:id="@+id/LAUNCHDETAIL_mission_image"
-                        android:contentDescription="@string/LAUNCHDETAIL_launch_image_description"/>
+                    android:background="@color/secondary_background">
 
                 <TextView
                         android:layout_width="wrap_content"
@@ -65,8 +68,7 @@
                         android:text="Mission Name"
                         android:id="@+id/LAUNCHDETAIL_mission_name"
                         android:textStyle="bold"
-                        tools:ignore="HardcodedText"
-                        android:layout_marginTop="@dimen/launch_detail_padding"/>
+                        tools:ignore="HardcodedText"/>
 
 
                 <ImageView
@@ -285,14 +287,14 @@
 
             <ProgressBar
                     style="?android:attr/progressBarStyleLarge"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/progressBar"
                     android:indeterminate="true"
-                    android:layout_centerInParent="true"
+                    android:layout_gravity="center"
                     android:visibility="gone"/>
 
-        </RelativeLayout>
+        </LinearLayout>
 
     </ScrollView>
 
