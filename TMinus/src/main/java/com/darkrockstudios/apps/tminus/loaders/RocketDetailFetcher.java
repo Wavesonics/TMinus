@@ -42,7 +42,7 @@ public class RocketDetailFetcher
 		// prop=pageimages
 
 		final String baseUrl = "http://en.wikipedia.org";
-		final String imageQuery = "/w/api.php?action=query&prop=pageimages&format=json&piprop=thumbnail%7Cname&pithumbsize=512&pilimit=1&indexpageids=&titles=";
+		final String imageQuery = "/w/api.php?action=query&prop=pageimages&format=json&piprop=thumbnail%7Cname&pithumbsize=512&pilimit=1&indexpageids=&redirects=&titles=";
 
 		final String url = baseUrl + imageQuery + articleTitle;
 
@@ -57,7 +57,7 @@ public class RocketDetailFetcher
 		Log.d( TAG, "Requesting Rocket Article..." );
 
 		final String baseUrl = "http://en.wikipedia.org";
-		final String articleQuery = "/w/api.php?action=parse&format=json&prop=wikitext&section=0&contentformat=text%2Fx-wiki&contentmodel=wikitext&page=";
+		final String articleQuery = "/w/api.php?action=parse&format=json&prop=wikitext&section=0&contentformat=text%2Fx-wiki&contentmodel=wikitext&redirects=&page=";
 
 		final String url = baseUrl + articleQuery + articleTitle;
 
@@ -411,6 +411,7 @@ public class RocketDetailFetcher
 			{
 				try
 				{
+					Log.d( TAG, response.toString() );
 					JSONObject parse = response.getJSONObject( "query" );
 					JSONArray pageIdsArray = parse.getJSONArray( "pageids" );
 
