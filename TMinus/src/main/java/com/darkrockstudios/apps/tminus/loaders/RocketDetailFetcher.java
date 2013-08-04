@@ -19,6 +19,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.sql.SQLException;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -297,7 +298,7 @@ public class RocketDetailFetcher
 			String articleText = wikiText.replace( "\\\"", "\"" );
 			articleText = articleText.replace( "\\/", "/" );
 
-			articleText = removeInfoBoxes( articleText );
+			articleText = removeInfoBox( articleText );
 
 			// Use our regex patterns to clean out the wiki syntax and replace it with mostly plain text
 			// or simple HTML for formatting
@@ -337,20 +338,6 @@ public class RocketDetailFetcher
 			return articleText;
 		}
 
-		private String removeInfoBoxes( final String articleText )
-		{
-			String articleToClean;
-			String cleanedArticle = articleText;
-
-			do
-			{
-				articleToClean = cleanedArticle;
-				cleanedArticle = removeInfoBox( articleToClean );
-			} while( articleToClean.length() != cleanedArticle.length() );
-
-			return cleanedArticle;
-		}
-
 		private String removeInfoBox( final String articleText )
 		{
 			final String cleanedArticle;
@@ -359,7 +346,8 @@ public class RocketDetailFetcher
 			final String infoBox = "{{Infobox";
 			final String openBracket = "{{";
 			final String closeBracket = "}}";
-			int curPos = articleText.indexOf( infoBox );
+			final Locale locale = Locale.ENGLISH;
+			int curPos = articleText.toLowerCase( locale ).indexOf( infoBox.toLowerCase( locale ) );
 			if( curPos > -1 )
 			{
 				curPos += infoBox.length();
