@@ -16,6 +16,7 @@ import com.darkrockstudios.apps.tminus.database.DatabaseHelper;
 import com.darkrockstudios.apps.tminus.fragments.LaunchDetailFragment;
 import com.darkrockstudios.apps.tminus.launchlibrary.Launch;
 import com.darkrockstudios.apps.tminus.misc.Preferences;
+import com.darkrockstudios.apps.tminus.misc.TminusUri;
 import com.darkrockstudios.apps.tminus.misc.Utilities;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.Dao;
@@ -48,7 +49,7 @@ public class NotificationService extends WakefulIntentService
 	@Override
 	protected void doWakefulWork( Intent intent )
 	{
-		Log.d( TAG, "Notification alarm:" );
+		Log.d( TAG, "Notification alarm" );
 
 		final int launchId = intent.getIntExtra( EXTRA_LAUNCH_ID, -1 );
 		final int notificationType = intent.getIntExtra( EXTRA_NOTIFICATION_TYPE, -1 );
@@ -98,6 +99,7 @@ public class NotificationService extends WakefulIntentService
 				                  .bigText( summary ) );
 
 		Intent launchDetailIntent = new Intent( this, LaunchDetailActivity.class );
+		launchDetailIntent.setData( TminusUri.buildLaunchDetail( launch.id ) );
 		launchDetailIntent.putExtra( LaunchDetailFragment.ARG_ITEM_ID, launch.id );
 
 		PendingIntent pendingIntent = PendingIntent.getActivity( this, 0, launchDetailIntent, 0 );
@@ -135,6 +137,7 @@ public class NotificationService extends WakefulIntentService
 		builder.setStyle( new NotificationCompat.BigTextStyle().bigText( summary ) );
 
 		Intent launchDetailIntent = new Intent( this, CountDownActivity.class );
+		launchDetailIntent.setData( TminusUri.buildLaunchCountDown( launch.id ) );
 		launchDetailIntent.putExtra( CountDownActivity.ARG_ITEM_ID, launch.id );
 
 		PendingIntent pendingIntent = PendingIntent.getActivity( this, 0, launchDetailIntent, 0 );

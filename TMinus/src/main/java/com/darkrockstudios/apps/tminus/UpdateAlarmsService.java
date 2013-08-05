@@ -12,6 +12,7 @@ import com.commonsware.cwac.wakeful.WakefulIntentService;
 import com.darkrockstudios.apps.tminus.database.DatabaseHelper;
 import com.darkrockstudios.apps.tminus.launchlibrary.Launch;
 import com.darkrockstudios.apps.tminus.misc.Preferences;
+import com.darkrockstudios.apps.tminus.misc.TminusUri;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.PreparedQuery;
@@ -37,21 +38,20 @@ public class UpdateAlarmsService extends WakefulIntentService
 		super( UpdateAlarmsService.class.getSimpleName() );
 	}
 
-	public static int getUniqueRequestCode( Launch launch, int notificationType )
-	{
-		return launch.id * 10 + notificationType;
-	}
-
 	public static void cancelAlarmsForLaunch( Launch launch, Context context )
 	{
 		final AlarmManager alarmManager = (AlarmManager)context.getSystemService( Context.ALARM_SERVICE );
 
-		final Intent serviceIntent = new Intent( context, NotificationService.class );
+		final Intent reminderIntent = new Intent( context, NotificationService.class );
+		reminderIntent.setData( TminusUri.buildLaunchReminderNotification( launch.id ) );
+
+		final Intent imminentIntent = new Intent( context, NotificationService.class );
+		reminderIntent.setData( TminusUri.buildLaunchImminentNotification( launch.id ) );
 
 		final PendingIntent pendingIntentReminder = PendingIntent
-				                                            .getService( context, getUniqueRequestCode( launch, NotificationService.EXTRA_NOTIFICATION_TYPE_REMINDER ), serviceIntent, 0 );
+				                                            .getService( context, 0, reminderIntent, 0 );
 		final PendingIntent pendingIntentLaunchImminent = PendingIntent
-				                                                  .getService( context, getUniqueRequestCode( launch, NotificationService.EXTRA_NOTIFICATION_TYPE_LAUNCH_IMMINENT ), serviceIntent, 0 );
+				                                                  .getService( context, 0, imminentIntent, 0 );
 
 		alarmManager.cancel( pendingIntentReminder );
 		alarmManager.cancel( pendingIntentLaunchImminent );
@@ -145,12 +145,14 @@ public class UpdateAlarmsService extends WakefulIntentService
 	private void setReminderAlarm( Launch launch, AlarmManager alarmManager )
 	{
 		Intent serviceIntent = new Intent( this, NotificationService.class );
+		serviceIntent.setData( TminusUri.buildLaunchReminderNotification( launch.id ) );
 		serviceIntent.putExtra( NotificationService.EXTRA_LAUNCH_ID, launch.id );
+
 		serviceIntent
 				.putExtra( NotificationService.EXTRA_NOTIFICATION_TYPE, NotificationService.EXTRA_NOTIFICATION_TYPE_REMINDER );
 
 		PendingIntent pendingIntent = PendingIntent
-				                              .getService( this, getUniqueRequestCode( launch, NotificationService.EXTRA_NOTIFICATION_TYPE_REMINDER ), serviceIntent, 0 );
+				                              .getService( this, 0, serviceIntent, 0 );
 
 		final long dayBefore = launch.net.getTime() - TimeUnit.DAYS.toMillis( 1 );
 		// Don't set alarms for the past
@@ -167,12 +169,13 @@ public class UpdateAlarmsService extends WakefulIntentService
 	private void setImminentLaunchAlarm( Launch launch, AlarmManager alarmManager )
 	{
 		Intent serviceIntent = new Intent( this, NotificationService.class );
+		serviceIntent.setData( TminusUri.buildLaunchImminentNotification( launch.id ) );
 		serviceIntent.putExtra( NotificationService.EXTRA_LAUNCH_ID, launch.id );
 		serviceIntent
 				.putExtra( NotificationService.EXTRA_NOTIFICATION_TYPE, NotificationService.EXTRA_NOTIFICATION_TYPE_LAUNCH_IMMINENT );
 
 		PendingIntent pendingIntent = PendingIntent
-				                              .getService( this, getUniqueRequestCode( launch, NotificationService.EXTRA_NOTIFICATION_TYPE_LAUNCH_IMMINENT ), serviceIntent, 0 );
+				                              .getService( this, 0, serviceIntent, 0 );
 
 		long triggerTime = launch.net.getTime() - TimeUnit.MINUTES.toMillis( 10 );
 		if( new Date( triggerTime ).after( new Date() ) )
