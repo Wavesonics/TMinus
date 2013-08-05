@@ -6,9 +6,11 @@ import android.animation.ValueAnimator;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.support.v4.app.NavUtils;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,6 +21,7 @@ import android.widget.TextView;
 import com.darkrockstudios.apps.tminus.R.id;
 import com.darkrockstudios.apps.tminus.launchlibrary.Launch;
 import com.darkrockstudios.apps.tminus.loaders.LaunchLoader;
+import com.darkrockstudios.apps.tminus.misc.Preferences;
 import com.darkrockstudios.apps.tminus.misc.Utilities;
 
 import java.text.DecimalFormat;
@@ -42,10 +45,17 @@ public class CountDownActivity extends Activity implements LaunchLoader.Listener
 	protected void onCreate( Bundle savedInstanceState )
 	{
 		super.onCreate( savedInstanceState );
-		getWindow().addFlags( WindowManager.LayoutParams.FLAG_FULLSCREEN );
 		getWindow().addFlags( WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON );
 		getWindow().addFlags( WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED );
 		getWindow().addFlags( WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD );
+
+		final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences( this );
+		if( preferences.getBoolean( Preferences.KEY_FULLSCREEN_COUNT_DOWN, true ) )
+		{
+			getWindow().addFlags( WindowManager.LayoutParams.FLAG_FULLSCREEN );
+			getActionBar().hide();
+		}
+
 		setContentView( R.layout.activity_count_down );
 
 		m_handler = new Handler();
@@ -59,8 +69,6 @@ public class CountDownActivity extends Activity implements LaunchLoader.Listener
 		m_statusView.setTypeface( typeface );
 
 		loadLaunch();
-
-		getActionBar().hide();
 	}
 
 	@Override
@@ -112,16 +120,23 @@ public class CountDownActivity extends Activity implements LaunchLoader.Listener
 	{
 		WindowManager.LayoutParams attrs = getWindow().getAttributes();
 
+		final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences( this );
+
 		ActionBar actionBar = getActionBar();
-		if( actionBar.isShowing() )
+		if( actionBar != null )
 		{
-			actionBar.hide();
-			attrs.flags |= WindowManager.LayoutParams.FLAG_FULLSCREEN;
-		}
-		else
-		{
-			actionBar.show();
-			attrs.flags &= ~WindowManager.LayoutParams.FLAG_FULLSCREEN;
+			if( actionBar.isShowing() )
+			{
+				actionBar.hide();
+				attrs.flags |= WindowManager.LayoutParams.FLAG_FULLSCREEN;
+				preferences.edit().putBoolean( Preferences.KEY_FULLSCREEN_COUNT_DOWN, true ).apply();
+			}
+			else
+			{
+				actionBar.show();
+				attrs.flags &= ~WindowManager.LayoutParams.FLAG_FULLSCREEN;
+				preferences.edit().putBoolean( Preferences.KEY_FULLSCREEN_COUNT_DOWN, false ).apply();
+			}
 		}
 
 		getWindow().setAttributes( attrs );
