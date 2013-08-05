@@ -78,6 +78,7 @@ public class CountDownActivity extends Activity implements LaunchLoader.Listener
 
 		if( m_launch != null )
 		{
+			updateLaunched();
 			updateTimer();
 			startTimer();
 		}
@@ -114,6 +115,15 @@ public class CountDownActivity extends Activity implements LaunchLoader.Listener
 		}
 
 		return handled;
+	}
+
+	private void updateLaunched()
+	{
+		final long millis = m_endTime - System.currentTimeMillis();
+		if( millis < 0 )
+		{
+			m_launched = true;
+		}
 	}
 
 	public void screenTouched( View view )
