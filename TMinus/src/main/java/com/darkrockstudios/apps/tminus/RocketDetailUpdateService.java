@@ -20,41 +20,11 @@ import java.util.Vector;
  */
 public class RocketDetailUpdateService extends Service implements RocketDetailFetchListener, RocketLoadListener
 {
-	private static final String TAG = RocketDetailUpdateService.class.getSimpleName();
-
-	public static final String ACTION_ROCKET_DETAIL_UPDATE_FAILED = "com.darkrockstudios.apps.tminus.ROCKET_DETAIL_UPDATE_FAILED";
-	public static final String ACTION_ROCKET_DETAIL_UPDATED       = "com.darkrockstudios.apps.tminus.ROCKET_DETAIL_UPDATED";
-
-	public static final String EXTRA_ROCKET_ID = "rocket_id";
-
+	public static final  String ACTION_ROCKET_DETAIL_UPDATE_FAILED = "com.darkrockstudios.apps.tminus.ROCKET_DETAIL_UPDATE_FAILED";
+	public static final  String ACTION_ROCKET_DETAIL_UPDATED       = "com.darkrockstudios.apps.tminus.ROCKET_DETAIL_UPDATED";
+	public static final  String EXTRA_ROCKET_ID                    = "rocket_id";
+	private static final String TAG                                = RocketDetailUpdateService.class.getSimpleName();
 	private Vector<RocketId> m_inFlightUpdates;
-
-	private static class RocketId
-	{
-		private final int m_value;
-
-		public RocketId( int id )
-		{
-			m_value = id;
-		}
-
-		public int getValue()
-		{
-			return m_value;
-		}
-
-		@Override
-		public boolean equals( Object that )
-		{
-			if( this == that )
-				return true;
-			if( !(that instanceof RocketId) )
-				return false;
-
-			final RocketId thatId = (RocketId)that;
-			return getValue() == thatId.getValue();
-		}
-	}
 
 	@Override
 	public void onCreate()
@@ -84,11 +54,12 @@ public class RocketDetailUpdateService extends Service implements RocketDetailFe
 			int rocketId = intent.getIntExtra( EXTRA_ROCKET_ID, -1 );
 			if( rocketId > 0 )
 			{
+				final RocketId rocketidObj = new RocketId( rocketId );
 				// If we don't already have an update in flight for this, kick it off
-				if( !m_inFlightUpdates.contains( rocketId ) )
+				if( !m_inFlightUpdates.contains( rocketidObj ) )
 				{
 					Log.d( TAG, "Starting Rocket Detail update for rocket: " + rocketId );
-					m_inFlightUpdates.add( new RocketId( rocketId ) );
+					m_inFlightUpdates.add( rocketidObj );
 					RocketLoader rocketLoader = new RocketLoader( this, this );
 					rocketLoader.execute( rocketId );
 				}
@@ -159,5 +130,32 @@ public class RocketDetailUpdateService extends Service implements RocketDetailFe
 		failureIntent.putExtra( EXTRA_ROCKET_ID, rocketId );
 
 		sendBroadcast( failureIntent );
+	}
+
+	private static class RocketId
+	{
+		private final int m_value;
+
+		public RocketId( int id )
+		{
+			m_value = id;
+		}
+
+		public int getValue()
+		{
+			return m_value;
+		}
+
+		@Override
+		public boolean equals( Object that )
+		{
+			if( this == that )
+				return true;
+			if( !(that instanceof RocketId) )
+				return false;
+
+			final RocketId thatId = (RocketId)that;
+			return getValue() == thatId.getValue();
+		}
 	}
 }
