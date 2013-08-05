@@ -115,17 +115,20 @@ public class LocationDetailFragment extends DialogFragment
 
 		SupportMapFragment mapFragment = (SupportMapFragment)getChildFragmentManager()
 				                                                     .findFragmentByTag( MAP_FRAGMENT_TAG );
-		GoogleMap map = mapFragment.getMap();
-		if( map != null )
+		if( mapFragment != null )
 		{
-			CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom( pos, getLocationZoom() );
-			map.moveCamera( cameraUpdate );
-
-			if( pos != DEFAULT_LOCATION )
+			GoogleMap map = mapFragment.getMap();
+			if( map != null )
 			{
-				MarkerOptions marker = new MarkerOptions();
-				marker.position( pos );
-				map.addMarker( marker );
+				CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom( pos, getLocationZoom() );
+				map.moveCamera( cameraUpdate );
+
+				if( pos != DEFAULT_LOCATION )
+				{
+					MarkerOptions marker = new MarkerOptions();
+					marker.position( pos );
+					map.addMarker( marker );
+				}
 			}
 		}
 	}
