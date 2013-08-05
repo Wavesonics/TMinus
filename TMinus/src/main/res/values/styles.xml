@@ -16,7 +16,7 @@
     <!-- Application theme. -->
     <style name="AppTheme" parent="AppBaseTheme">
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
-        <item name="android:windowBackground">@color/primary_background</item>
+        <item name="android:windowBackground">@drawable/window_background</item>
         <item name="android:actionBarStyle">@style/AppTheme.ActionBar</item>
         <item name="android:textAppearanceLarge">@style/AppTheme.TextAppearanceLarge</item>
         <item name="android:textAppearanceMedium">@style/AppTheme.TextAppearanceMedium</item>
