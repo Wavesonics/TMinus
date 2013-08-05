@@ -129,10 +129,10 @@ public class LocationDetailFragment extends DialogFragment
 
 		if( activity != null )
 		{
-			int googlePlayServicesAvailable = GooglePlayServicesUtil.isGooglePlayServicesAvailable( activity );
+			final int googlePlayServicesAvailable = GooglePlayServicesUtil.isGooglePlayServicesAvailable( activity );
 			if( googlePlayServicesAvailable != ConnectionResult.SUCCESS )
 			{
-				// TODO: Tell the user whats up and allow them to fix it
+				GooglePlayServicesUtil.getErrorDialog(googlePlayServicesAvailable, activity, 0).show();
 			}
 
 			loadLocation();
