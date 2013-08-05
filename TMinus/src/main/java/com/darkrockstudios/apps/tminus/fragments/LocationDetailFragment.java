@@ -36,11 +36,12 @@ import java.sql.SQLException;
  */
 public class LocationDetailFragment extends DialogFragment
 {
-	public static final  String TAG              = LocationDetailFragment.class.getSimpleName();
-	public static final  String ARG_ITEM_ID      = "item_id";
-	private static final String MAP_FRAGMENT_TAG = "MapFragment";
-	private static final float  LOCATION_ZOOM    = 15.0f;
-	private static final LatLng DEFAULT_LOCATION = new LatLng( 37.523506, -77.412109 );
+	public static final  String TAG                     = LocationDetailFragment.class.getSimpleName();
+	public static final  String ARG_ITEM_ID             = "item_id";
+	public static final  String ARG_MAP_CONTROL_ENABLED = "map_control_enabled";
+	private static final String MAP_FRAGMENT_TAG        = "MapFragment";
+	private static final float  LOCATION_ZOOM           = 15.0f;
+	private static final LatLng DEFAULT_LOCATION        = new LatLng( 37.523506, -77.412109 );
 	private Location    m_location;
 	private FrameLayout m_mapContainer;
 
@@ -48,12 +49,13 @@ public class LocationDetailFragment extends DialogFragment
 	{
 	}
 
-	public static LocationDetailFragment newInstance( int locationId )
+	public static LocationDetailFragment newInstance( int locationId, boolean mapControlsEnabled )
 	{
 		LocationDetailFragment locationDetailFragment = new LocationDetailFragment();
 
 		Bundle arguments = new Bundle();
 		arguments.putInt( ARG_ITEM_ID, locationId );
+		arguments.putBoolean( ARG_MAP_CONTROL_ENABLED, mapControlsEnabled );
 		locationDetailFragment.setArguments( arguments );
 
 		return locationDetailFragment;
@@ -90,8 +92,14 @@ public class LocationDetailFragment extends DialogFragment
 		options.useViewLifecycleInFragment( true );
 		options.compassEnabled( false );
 		options.zoomControlsEnabled( false );
-		options.mapType( GoogleMap.MAP_TYPE_SATELLITE );
 
+		final boolean mapControlEnabled = geMapControlsEnabled();
+		options.zoomGesturesEnabled( mapControlEnabled );
+		options.scrollGesturesEnabled( mapControlEnabled );
+		options.rotateGesturesEnabled( mapControlEnabled );
+		options.tiltGesturesEnabled( mapControlEnabled );
+
+		options.mapType( GoogleMap.MAP_TYPE_SATELLITE );
 
 		CameraPosition camPos = new CameraPosition( getLocation(), getLocationZoom(), 30f, 112.5f );
 		options.camera( camPos );
@@ -196,6 +204,19 @@ public class LocationDetailFragment extends DialogFragment
 		}
 
 		return pos;
+	}
+
+	public boolean geMapControlsEnabled()
+	{
+		boolean mapControlsEnabled = false;
+
+		final Bundle arguments = getArguments();
+		if( arguments != null && arguments.containsKey( ARG_MAP_CONTROL_ENABLED ) )
+		{
+			mapControlsEnabled = arguments.getBoolean( ARG_MAP_CONTROL_ENABLED );
+		}
+
+		return mapControlsEnabled;
 	}
 
 	public int getLocationId()

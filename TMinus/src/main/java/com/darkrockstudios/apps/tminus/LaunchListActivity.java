@@ -169,7 +169,7 @@ public class LaunchListActivity extends DatabaseActivity
 	{
 		Location location = (Location)v.getTag();
 
-		LocationDetailFragment locationDetailFragment = LocationDetailFragment.newInstance( location.id );
+		LocationDetailFragment locationDetailFragment = LocationDetailFragment.newInstance( location.id, true );
 		locationDetailFragment.show( getSupportFragmentManager(), "dialog" );
 	}
 }

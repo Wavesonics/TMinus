@@ -30,7 +30,7 @@ public class LocationDetailActivity extends DatabaseActivity
 			{
 				// Create the detail fragment and add it to the activity
 				// using a fragment transaction.
-				LocationDetailFragment locationDetailFragment = LocationDetailFragment.newInstance( m_locationId );
+				LocationDetailFragment locationDetailFragment = LocationDetailFragment.newInstance( m_locationId, true );
 				getSupportFragmentManager().beginTransaction()
 						.add( R.id.location_detail_container, locationDetailFragment, FRAGMENT_TAG )
 						.commit();

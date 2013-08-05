@@ -51,15 +51,15 @@ public class RocketDetailUpdateService extends Service implements RocketDetailFe
 
 		if( intent != null )
 		{
-			int rocketId = intent.getIntExtra( EXTRA_ROCKET_ID, -1 );
+			final int rocketId = intent.getIntExtra( EXTRA_ROCKET_ID, -1 );
 			if( rocketId > 0 )
 			{
-				final RocketId rocketidObj = new RocketId( rocketId );
+				final RocketId rocketIdObj = new RocketId( rocketId );
 				// If we don't already have an update in flight for this, kick it off
-				if( !m_inFlightUpdates.contains( rocketidObj ) )
+				if( !m_inFlightUpdates.contains( rocketIdObj ) )
 				{
 					Log.d( TAG, "Starting Rocket Detail update for rocket: " + rocketId );
-					m_inFlightUpdates.add( rocketidObj );
+					m_inFlightUpdates.add( rocketIdObj );
 					RocketLoader rocketLoader = new RocketLoader( this, this );
 					rocketLoader.execute( rocketId );
 				}

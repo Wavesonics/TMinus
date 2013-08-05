@@ -396,10 +396,13 @@ public class LaunchDetailFragment extends Fragment implements Listener, RocketDe
 		updateShareIntent();
 		showContent();
 
+		// TODO: Better tablet layout detection
+		final boolean isTabletLayout = (m_rocketContainer != null);
+
 		if( m_locationContainer != null )
 		{
 			LocationDetailFragment locationDetailFragment = LocationDetailFragment
-					                                                .newInstance( m_launchItem.location.id );
+					                                                .newInstance( m_launchItem.location.id, isTabletLayout );
 			getChildFragmentManager().beginTransaction()
 					.add( R.id.LAUNCHDETAIL_location_container, locationDetailFragment, LOCATION_FRAGMENT_TAG )
 					.commit();
