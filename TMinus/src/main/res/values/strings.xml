@@ -50,6 +50,8 @@
 
     <string name="TOAST_launch_list_refresh_complete">Launch List updated</string>
     <string name="TOAST_launch_list_refresh_failed">Launch List update failed</string>
+    <string name="TOAST_rocket_detail_update_complete">Rocket details updated</string>
+    <string name="TOAST_rocket_detail_update_failed">Rocket details update failed</string>
 
     <string name="COUNTDOWN_launch_status">Status: %s</string>
     <string name="COUNTDOWN_launch_status_green">GO</string>

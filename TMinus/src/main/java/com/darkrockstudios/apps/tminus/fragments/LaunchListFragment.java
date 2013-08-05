@@ -14,7 +14,6 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.darkrockstudios.apps.tminus.LaunchUpdateService;
 import com.darkrockstudios.apps.tminus.R;
@@ -29,6 +28,9 @@ import com.j256.ormlite.stmt.QueryBuilder;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.List;
+
+import de.keyboardsurfer.android.widget.crouton.Crouton;
+import de.keyboardsurfer.android.widget.crouton.Style;
 
 /**
  * A list fragment representing a list of Launches. This fragment
@@ -312,13 +314,13 @@ public class LaunchListFragment extends ListFragment
 					reloadData();
 
 					activity.setProgressBarIndeterminateVisibility( false );
-					Toast.makeText( activity, R.string.TOAST_launch_list_refresh_complete, Toast.LENGTH_SHORT ).show();
+					Crouton.makeText( activity, R.string.TOAST_launch_list_refresh_complete, Style.CONFIRM ).show();
 				}
 				else if( LaunchUpdateService.ACTION_LAUNCH_LIST_UPDATE_FAILED.equals( intent.getAction() ) )
 				{
 					Log.d( TAG, "Received Launch List update FAILURE broadcast." );
 
-					Toast.makeText( activity, R.string.TOAST_launch_list_refresh_failed, Toast.LENGTH_LONG ).show();
+					Crouton.makeText( activity, R.string.TOAST_launch_list_refresh_failed, Style.ALERT ).show();
 					activity.setProgressBarIndeterminateVisibility( false );
 				}
 			}

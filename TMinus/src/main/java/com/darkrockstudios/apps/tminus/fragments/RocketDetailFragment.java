@@ -15,11 +15,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 import com.darkrockstudios.apps.tminus.R;
+import com.darkrockstudios.apps.tminus.R.string;
 import com.darkrockstudios.apps.tminus.RocketDetailUpdateService;
 import com.darkrockstudios.apps.tminus.TMinusApplication;
 import com.darkrockstudios.apps.tminus.database.RocketDetail;
@@ -30,6 +30,9 @@ import com.darkrockstudios.apps.tminus.loaders.RocketLoader;
 import com.darkrockstudios.apps.tminus.loaders.RocketLoader.RocketLoadListener;
 
 import java.io.File;
+
+import de.keyboardsurfer.android.widget.crouton.Crouton;
+import de.keyboardsurfer.android.widget.crouton.Style;
 
 /**
  * Created by Adam on 7/14/13.
@@ -234,10 +237,9 @@ public class RocketDetailFragment extends DialogFragment implements Listener, Ro
 						detailLoader.execute( rocketId );
 
 						activity.setProgressBarIndeterminateVisibility( false );
-						Toast.makeText( activity, R.string.TOAST_launch_list_refresh_complete, Toast.LENGTH_SHORT )
+						Crouton.makeText( activity, string.TOAST_rocket_detail_update_complete, Style.CONFIRM )
 						     .show();
 					}
-
 				}
 				else if( RocketDetailUpdateService.ACTION_ROCKET_DETAIL_UPDATE_FAILED.equals( intent.getAction() ) )
 				{
@@ -251,7 +253,7 @@ public class RocketDetailFragment extends DialogFragment implements Listener, Ro
 
 					m_rocketSummary.setText( R.string.ROCKETDETAIL_no_summary );
 
-					//Toast.makeText( activity, R.string.TOAST_rocket_detail_update_failed, Toast.LENGTH_LONG ).show();
+					Crouton.makeText( activity, R.string.TOAST_rocket_detail_update_failed, Style.ALERT ).show();
 					activity.setProgressBarIndeterminateVisibility( false );
 				}
 			}
