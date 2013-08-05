@@ -87,5 +87,6 @@
     <string name="PREF_always_show_count_down_summary">Display the Count Down button for all Launches regardless of how
         far off they are
     </string>
+    <string name="LOCATIONDETAIL_location_label">Location</string>
 
 </resources>
