@@ -9,7 +9,7 @@
     <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textAppearance="@style/textAppearanceLargeAccent"
             android:id="@+id/ROCKETDETAIL_name"
             android:layout_gravity="center"
             android:layout_alignTop="@+id/ROCKETDETAIL_rocket_image"
