@@ -26,6 +26,7 @@
         <item name="android:dividerVertical">@drawable/divider_vertical_repeat</item>
         <item name="android:buttonStyle">@style/AppTheme.ButtonStyle</item>
         <item name="android:cacheColorHint">@color/scroll_hint</item>
+        <item name="android:listViewStyle">@style/AppTheme.ListView</item>
     </style>
 
     <style name="AppTheme.ActionBar" parent="@android:style/Widget.Holo.ActionBar">
@@ -36,6 +37,10 @@
 
     <style name="AppTheme.ActionBar.TitleTextStyle" parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Title">
         <item name="android:textColor">@color/primary_text</item>
+    </style>
+
+    <style name="AppTheme.ListView" parent="@android:style/Widget.ListView">
+
     </style>
 
     <style name="textAppearanceLargeAccent" parent="@android:style/TextAppearance">
