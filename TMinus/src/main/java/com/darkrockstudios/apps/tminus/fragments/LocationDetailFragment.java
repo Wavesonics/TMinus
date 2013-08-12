@@ -101,7 +101,7 @@ public class LocationDetailFragment extends DialogFragment
 
 		options.mapType( GoogleMap.MAP_TYPE_SATELLITE );
 
-		CameraPosition camPos = new CameraPosition( getLocation(), getLocationZoom(), 30f, 112.5f );
+		CameraPosition camPos = new CameraPosition( getLocation(), 0.0f, 30f, 0.0f );
 		options.camera( camPos );
 
 		SupportMapFragment mapFragment = SupportMapFragment.newInstance( options );
@@ -120,7 +120,7 @@ public class LocationDetailFragment extends DialogFragment
 			GoogleMap map = mapFragment.getMap();
 			if( map != null )
 			{
-				CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom( pos, getLocationZoom() );
+				CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom( pos, 0.0f );
 				map.moveCamera( cameraUpdate );
 
 				if( pos != DEFAULT_LOCATION )

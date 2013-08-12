@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="RepeatImageView">
+        <attr name="tileAxis" format="enum">
+            <enum name="xy" value="0"/>
+            <enum name="x" value="1"/>
+            <enum name="y" value="2"/>
+        </attr>
+    </declare-styleable>
+</resources>
