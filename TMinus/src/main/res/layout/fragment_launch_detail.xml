@@ -52,6 +52,16 @@
                     android:id="@+id/LAUNCHDETAIL_mission_image"
                     android:contentDescription="@string/LAUNCHDETAIL_launch_image_description"/>
 
+
+            <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:id="@+id/imageView2"
+                    android:src="@drawable/divider_vertical_repeat"
+                    android:scaleType="fitXY"
+                    android:layout_marginTop="@dimen/launch_detail_padding"
+                    tools:ignore="ContentDescription"/>
+
             <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -68,7 +78,8 @@
                     android:layout_height="5dp"
                     android:src="@drawable/header_divider"
                     android:scaleType="fitXY"
-                    android:layout_marginBottom="@dimen/launch_detail_padding"/>
+                    android:layout_marginBottom="@dimen/launch_detail_spacing"
+                    tools:ignore="ContentDescription"/>
 
             <TextView
                     android:layout_width="wrap_content"
@@ -92,12 +103,13 @@
                     android:layout_height="5dp"
                     android:src="@drawable/header_divider"
                     android:scaleType="fitXY"
-                    android:layout_marginBottom="@dimen/launch_detail_padding"
-                    android:id="@+id/imageView"/>
+                    android:layout_marginBottom="@dimen/launch_detail_spacing"
+                    android:id="@+id/imageView"
+                    tools:ignore="ContentDescription"/>
 
             <LinearLayout
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent">
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
                 <TextView
                         tools:ignore="HardcodedText"
@@ -221,11 +233,12 @@
                     android:layout_height="5dp"
                     android:src="@drawable/header_divider"
                     android:scaleType="fitXY"
-                    />
+                    android:layout_marginBottom="@dimen/launch_detail_spacing"
+                    tools:ignore="ContentDescription"/>
 
             <LinearLayout
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent">
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
                 <TextView
                         android:layout_width="wrap_content"
@@ -246,8 +259,8 @@
             </LinearLayout>
 
             <LinearLayout
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:layout_marginTop="@dimen/launch_detail_padding"
                     android:gravity="bottom">
 
@@ -273,12 +286,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="5dp"
                     android:src="@drawable/header_divider"
-                    android:scaleType="fitXY"/>
+                    android:scaleType="fitXY"
+                    tools:ignore="ContentDescription"/>
 
             <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="256dp"
-                    android:layout_marginTop="@dimen/launch_detail_padding"
+                    android:layout_marginTop="@dimen/launch_detail_spacing"
                     android:id="@+id/LAUNCHDETAIL_location_container">
 
                 <!-- TODO: This is an awful awful hack for which I will surly be punished: http://stackoverflow.com/a/17705806/1366 -->
@@ -300,12 +314,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="5dp"
                     android:src="@drawable/header_divider"
-                    android:scaleType="fitXY"/>
+                    android:layout_marginBottom="@dimen/launch_detail_spacing"
+                    android:scaleType="fitXY"
+                    tools:ignore="ContentDescription"/>
 
             <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginTop="@dimen/launch_detail_padding">
+                    android:layout_height="match_parent">
 
                 <TextView
                         android:layout_width="wrap_content"
@@ -313,7 +328,8 @@
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         android:text="Rocket Name"
                         android:id="@+id/LAUNCHDETAIL_rocket_name"
-                        android:textColor="@color/secondary_text"/>
+                        android:textColor="@color/secondary_text"
+                        tools:ignore="HardcodedText"/>
 
                 <Button
                         android:layout_width="0dp"

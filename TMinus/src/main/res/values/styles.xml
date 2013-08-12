@@ -40,7 +40,7 @@
     </style>
 
     <style name="AppTheme.ListView" parent="@android:style/Widget.ListView">
-
+        <item name="android:listSelector">@drawable/list_item_selector</item>
     </style>
 
     <style name="textAppearanceLargeAccent" parent="@android:style/TextAppearance">

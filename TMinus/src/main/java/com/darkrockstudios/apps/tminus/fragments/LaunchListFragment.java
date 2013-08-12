@@ -64,7 +64,6 @@ public class LaunchListFragment extends ListFragment
 	private ArrayAdapter<Launch> m_adapter;
 	private Callbacks m_callbacks         = s_dummyCallbacks;
 	private int       m_activatedPosition = ListView.INVALID_POSITION;
-	private IntentFilter         m_updateIntentFilter;
 	private LaunchUpdateReceiver m_updateReceiver;
 
 	/**
@@ -88,8 +87,8 @@ public class LaunchListFragment extends ListFragment
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 	                         Bundle savedInstanceState) {
-		View view = inflater.inflate( layout.fragment_launch_list, null);
-		return view;
+
+		return inflater.inflate( layout.fragment_launch_list, null);
 	}
 
 	@Override
@@ -127,7 +126,7 @@ public class LaunchListFragment extends ListFragment
 
 		m_updateReceiver = new LaunchUpdateReceiver();
 
-		m_updateIntentFilter = new IntentFilter();
+		IntentFilter m_updateIntentFilter = new IntentFilter();
 		m_updateIntentFilter.addAction( LaunchUpdateService.ACTION_LAUNCH_LIST_UPDATED );
 		m_updateIntentFilter.addAction( LaunchUpdateService.ACTION_LAUNCH_LIST_UPDATE_FAILED );
 		activity.registerReceiver( m_updateReceiver, m_updateIntentFilter );
