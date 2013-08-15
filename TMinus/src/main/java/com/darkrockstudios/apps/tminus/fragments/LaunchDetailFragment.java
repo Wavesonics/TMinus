@@ -35,7 +35,6 @@ import com.darkrockstudios.apps.tminus.loaders.RocketDetailLoader;
 import com.darkrockstudios.apps.tminus.misc.Preferences;
 import com.darkrockstudios.apps.tminus.misc.Utilities;
 
-import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
@@ -53,7 +52,6 @@ public class LaunchDetailFragment extends Fragment implements Listener, RocketDe
 	private static final String LOCATION_FRAGMENT_TAG       = "LocationFragmentTag";
 	private static final String ROCKET_FRAGMENT_TAG         = "RocketFragmentTag";
 	private static final long   DISPLAY_COUNTDOWN_THRESHOLD = TimeUnit.DAYS.toMillis( 2 );
-	private File                       m_dataDirectory;
 	private ShareActionProvider        m_shareActionProvider;
 	private Launch                     m_launchItem;
 	private RocketDetail               m_rocketDetail;
@@ -66,7 +64,6 @@ public class LaunchDetailFragment extends Fragment implements Listener, RocketDe
 	private View                       m_countDownContainer;
 	private View                       m_rocketDetailButton;
 	private RocketDetailUpdateReceiver m_rocketDetailUpdateReceiver;
-	private IntentFilter               m_rocketDetailUpdateIntentFilter;
 
 	/**
 	 * Mandatory empty constructor for the fragment manager to instantiate the
@@ -106,16 +103,13 @@ public class LaunchDetailFragment extends Fragment implements Listener, RocketDe
 	{
 		super.onAttach( activity );
 
-		String dataDirPath = activity.getApplicationInfo().dataDir;
-		m_dataDirectory = new File( dataDirPath );
-
 		m_timeReceiver = new TimeReceiver();
 		IntentFilter intentFilter = new IntentFilter( Intent.ACTION_TIME_TICK );
 
 		activity.registerReceiver( m_timeReceiver, intentFilter );
 
 		m_rocketDetailUpdateReceiver = new RocketDetailUpdateReceiver();
-		m_rocketDetailUpdateIntentFilter = new IntentFilter();
+		IntentFilter m_rocketDetailUpdateIntentFilter = new IntentFilter();
 		m_rocketDetailUpdateIntentFilter.addAction( RocketDetailUpdateService.ACTION_ROCKET_DETAIL_UPDATED );
 		m_rocketDetailUpdateIntentFilter.addAction( RocketDetailUpdateService.ACTION_ROCKET_DETAIL_UPDATE_FAILED );
 		activity.registerReceiver( m_rocketDetailUpdateReceiver, m_rocketDetailUpdateIntentFilter );
