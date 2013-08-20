@@ -9,7 +9,7 @@
                   android:layout_width="wrap_content"
                   android:layout_height="wrap_content"
                   android:layout_alignParentLeft="true"
-                  android:layout_toLeftOf="@+id/LAUNCHLIST_country_flag"
+                  android:layout_toLeftOf="@+id/LAUNCHLIST_type_icon"
                   android:padding="@dimen/launch_list_row_padding"
                   android:orientation="vertical"
                   android:gravity="left">
@@ -22,7 +22,8 @@
                 android:gravity="center_vertical"
                 android:textAppearance="?android:attr/textAppearanceListItem"
                 android:singleLine="false"
-                android:ellipsize="end"/>
+                android:ellipsize="end"
+                android:drawableLeft="@drawable/flag_us"/>
 
         <TextView
                 android:id="@+id/launch_list_item_description"
@@ -95,26 +96,19 @@
     </LinearLayout>
 
     <ImageView
-            android:id="@+id/LAUNCHLIST_country_flag"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:src="@drawable/flag_us" />
-
-    <ImageView
             android:id="@+id/LAUNCHLIST_type_icon"
+            android:layout_margin="@dimen/launch_detail_padding"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
             android:layout_alignParentRight="true"
-            android:layout_below="@id/LAUNCHLIST_country_flag"
-            android:layout_above="@+id/LAUNCHLIST_footer"
-            android:src="@drawable/ic_launch_type_robotic_explore" />
+            android:src="@drawable/ic_launch_type_astrophysics" />
 
     <ImageView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/LAUNCHLIST_detail_container"
-            android:id="@id/LAUNCHLIST_footer"
+            android:id="@+id/LAUNCHLIST_footer"
             android:src="@drawable/row_item_footer"
             android:scaleType="fitXY"/>
 </RelativeLayout>

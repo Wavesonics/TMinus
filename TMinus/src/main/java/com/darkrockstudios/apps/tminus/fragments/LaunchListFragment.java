@@ -12,7 +12,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -288,6 +287,9 @@ public class LaunchListFragment extends ListFragment
 			final TextView titleView = (TextView)view.findViewById( R.id.launch_list_item_title );
 			titleView.setText( launch.name );
 
+			int flagResourceId = Utilities.getFlagResource( launch.location.locInfo.countrycode );
+			titleView.setCompoundDrawablesWithIntrinsicBounds( flagResourceId, 0, 0, 0 );
+
 			final TextView descriptionView = (TextView)view.findViewById( R.id.launch_list_item_description );
 			descriptionView.setText( launch.mission.description );
 
@@ -302,10 +304,6 @@ public class LaunchListFragment extends ListFragment
 			netView1.setText( monthDay.format( launch.net ) );
 			netView2.setText( year.format( launch.net ) );
 			netView3.setText( time.format( launch.net ) );
-
-			final ImageView countryFlagView = (ImageView)view.findViewById( R.id.LAUNCHLIST_country_flag );
-			int flagResourceId = Utilities.getFlagResource( launch.location.locInfo.countrycode );
-			countryFlagView.setImageResource( flagResourceId );
 
 			return view;
 		}

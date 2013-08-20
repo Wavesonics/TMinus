@@ -118,4 +118,13 @@ public class Utilities
 
 		return resourceId;
 	}
+
+	public static int getLaunchTypeResource( int type )
+	{
+		int resourceId = R.drawable.ic_launch_type_astrophysics;
+
+
+
+		return resourceId;
+	}
 }
