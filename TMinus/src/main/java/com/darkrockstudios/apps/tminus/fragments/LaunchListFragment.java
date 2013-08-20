@@ -88,7 +88,7 @@ public class LaunchListFragment extends ListFragment
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 	                         Bundle savedInstanceState) {
 
-		return inflater.inflate( layout.fragment_launch_list, null);
+		return inflater.inflate( R.layout.fragment_launch_list, null);
 	}
 
 	@Override

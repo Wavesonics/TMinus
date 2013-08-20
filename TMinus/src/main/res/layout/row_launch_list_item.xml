@@ -1,96 +1,120 @@
 <?xml version="1.0" encoding="utf-8"?>
 
- <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:padding="@dimen/launch_list_row_padding"
-              android:orientation="vertical"
-              android:gravity="left">
-
-    <TextView
-            android:id="@+id/launch_list_item_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Launch Name"
-            android:gravity="center_vertical"
-            android:textAppearance="?android:attr/textAppearanceListItem"
-            android:singleLine="false"
-            android:ellipsize="end"/>
-
-    <TextView
-            android:id="@+id/launch_list_item_description"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="description"
-            android:textAppearance="?android:attr/textAppearanceListItemSmall"
-            android:ellipsize="end"
-            android:singleLine="false"/>
-
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
     <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:orientation="horizontal">
+                  android:id="@+id/LAUNCHLIST_detail_container"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:layout_alignParentLeft="true"
+                  android:layout_toLeftOf="@+id/LAUNCHLIST_country_flag"
+                  android:padding="@dimen/launch_list_row_padding"
+                  android:orientation="vertical"
+                  android:gravity="left">
 
         <TextView
-                android:id="@+id/launch_list_item_net_1"
+                android:id="@+id/launch_list_item_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textStyle="bold"
-                android:text="Dec 25"
-                android:textAppearance="?android:attr/textAppearanceListItemSmall"/>
+                android:text="Launch Name"
+                android:gravity="center_vertical"
+                android:textAppearance="?android:attr/textAppearanceListItem"
+                android:singleLine="false"
+                android:ellipsize="end"/>
 
         <TextView
+                android:id="@+id/launch_list_item_description"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text=", "
+                android:text="description"
                 android:textAppearance="?android:attr/textAppearanceListItemSmall"
-                tools:ignore="HardcodedText"/>
+                android:ellipsize="end"
+                android:singleLine="false"/>
 
-        <TextView
-                android:id="@+id/launch_list_item_net_2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="2013"
-                android:textAppearance="?android:attr/textAppearanceListItemSmall"
-                android:singleLine="true"/>
+        <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:orientation="horizontal">
 
-        <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textStyle="bold"
-                android:text="/"
-                android:textAppearance="?android:attr/textAppearanceListItemSmall"
-                tools:ignore="HardcodedText"/>
+            <TextView
+                    android:id="@+id/launch_list_item_net_1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textStyle="bold"
+                    android:text="Dec 25"
+                    android:textAppearance="?android:attr/textAppearanceListItemSmall"/>
 
-        <TextView
-                android:id="@+id/launch_list_item_net_3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="12:00"
-                android:textAppearance="?android:attr/textAppearanceListItemSmall"
-                android:textStyle="bold"
-                android:textColor="@color/accent_text"
-                android:singleLine="true"/>
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=", "
+                    android:textAppearance="?android:attr/textAppearanceListItemSmall"
+                    tools:ignore="HardcodedText"/>
 
-        <TextView
-                android:id="@+id/launch_list_item_net_3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/LAUNCHLIST_item_hours"
-                android:textStyle="italic"
-                android:textSize="10sp"
-                android:textColor="@color/accent_text"
-                android:textAppearance="?android:attr/textAppearanceListItemSmall"
+            <TextView
+                    android:id="@+id/launch_list_item_net_2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="2013"
+                    android:textAppearance="?android:attr/textAppearanceListItemSmall"
+                    android:singleLine="true"/>
 
-                android:singleLine="true"/>
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textStyle="bold"
+                    android:text="/"
+                    android:textAppearance="?android:attr/textAppearanceListItemSmall"
+                    tools:ignore="HardcodedText"/>
+
+            <TextView
+                    android:id="@+id/launch_list_item_net_3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="12:00"
+                    android:textAppearance="?android:attr/textAppearanceListItemSmall"
+                    android:textStyle="bold"
+                    android:textColor="@color/accent_text"
+                    android:singleLine="true"/>
+
+            <TextView
+                    android:id="@id/launch_list_item_net_3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/LAUNCHLIST_item_hours"
+                    android:textStyle="italic"
+                    android:textSize="10sp"
+                    android:textColor="@color/accent_text"
+                    android:textAppearance="?android:attr/textAppearanceListItemSmall"
+
+                    android:singleLine="true"/>
+        </LinearLayout>
+
     </LinearLayout>
+
+    <ImageView
+            android:id="@+id/LAUNCHLIST_country_flag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/flag_us" />
+
+    <ImageView
+            android:id="@+id/LAUNCHLIST_type_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/LAUNCHLIST_country_flag"
+            android:layout_above="@+id/LAUNCHLIST_footer"
+            android:src="@drawable/ic_launch_type_robotic_explore" />
 
     <ImageView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/imageView"
+            android:layout_below="@id/LAUNCHLIST_detail_container"
+            android:id="@id/LAUNCHLIST_footer"
             android:src="@drawable/row_item_footer"
             android:scaleType="fitXY"/>
-
-</LinearLayout>
+</RelativeLayout>
