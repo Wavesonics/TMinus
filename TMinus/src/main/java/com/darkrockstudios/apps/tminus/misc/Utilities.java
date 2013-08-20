@@ -66,4 +66,56 @@ public class Utilities
 		final SimpleDateFormat formatter = new SimpleDateFormat( DATE_FORMAT );
 		return formatter.format( date );
 	}
+
+	// Takes in the ISO 3166-1 alpha-3 country code
+	public static int getFlagResource( String countryCode )
+	{
+		int resourceId = R.drawable.flag_unknown;
+
+		if( countryCode != null && countryCode.trim().length() > 0 )
+		{
+			if( countryCode.equalsIgnoreCase( "AUS" ) )
+			{
+				resourceId = R.drawable.flag_au;
+			}
+			else if( countryCode.equalsIgnoreCase( "BRA" ) )
+			{
+				resourceId = R.drawable.flag_br;
+			}
+			else if( countryCode.equalsIgnoreCase( "CHN" ) )
+			{
+				resourceId = R.drawable.flag_cn;
+			}
+			else if( countryCode.equalsIgnoreCase( "GBR" ) )
+			{
+				resourceId = R.drawable.flag_gb;
+			}
+			else if( countryCode.equalsIgnoreCase( "IND" ) )
+			{
+				resourceId = R.drawable.flag_in;
+			}
+			else if( countryCode.equalsIgnoreCase( "JPN" ) )
+			{
+				resourceId = R.drawable.flag_jp;
+			}
+			else if( countryCode.equalsIgnoreCase( "KAZ" ) )
+			{
+				resourceId = R.drawable.flag_kz;
+			}
+			else if( countryCode.equalsIgnoreCase( "RUS" ) )
+			{
+				resourceId = R.drawable.flag_ru;
+			}
+			else if( countryCode.equalsIgnoreCase( "USA" ) )
+			{
+				resourceId = R.drawable.flag_us;
+			}
+			else if( countryCode.equalsIgnoreCase( "UNK" ) )
+			{
+				resourceId = R.drawable.flag_unknown;
+			}
+		}
+
+		return resourceId;
+	}
 }

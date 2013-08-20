@@ -11,6 +11,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.darkrockstudios.apps.tminus.launchlibrary.Launch;
+import com.darkrockstudios.apps.tminus.launchlibrary.LocInfo;
 import com.darkrockstudios.apps.tminus.launchlibrary.Location;
 import com.darkrockstudios.apps.tminus.launchlibrary.Mission;
 import com.darkrockstudios.apps.tminus.launchlibrary.Rocket;
@@ -27,14 +28,15 @@ import java.sql.SQLException;
  */
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper
 {
-	private static final String                 TAG              = DatabaseHelper.class.getSimpleName();
-	private static final String                 DATABASE_NAME    = "TMinus.db";
-	private static final int                    DATABASE_VERSION = 4;
-	private              Dao<Launch, Integer>   m_launchDao      = null;
-	private              Dao<Location, Integer> m_locationDao    = null;
-	private              Dao<Mission, Integer>  m_missionDao     = null;
-	private              Dao<Rocket, Integer>   m_rocketDao      = null;
-    private              Dao<RocketDetail, Integer>   m_rocketDetailDao      = null;
+	private static final String                     TAG               = DatabaseHelper.class.getSimpleName();
+	private static final String                     DATABASE_NAME     = "TMinus.db";
+	private static final int                        DATABASE_VERSION  = 5;
+	private              Dao<Launch, Integer>       m_launchDao       = null;
+	private              Dao<LocInfo, Integer>      m_locInfoDao      = null;
+	private              Dao<Location, Integer>     m_locationDao     = null;
+	private              Dao<Mission, Integer>      m_missionDao      = null;
+	private              Dao<Rocket, Integer>       m_rocketDao       = null;
+	private              Dao<RocketDetail, Integer> m_rocketDetailDao = null;
 
 	public DatabaseHelper( Context context )
 	{
@@ -48,10 +50,11 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper
 		{
 			Log.i( TAG, "Creating Database Tables..." );
 			TableUtils.createTable( connectionSource, Launch.class );
+			TableUtils.createTable( connectionSource, LocInfo.class );
 			TableUtils.createTable( connectionSource, Location.class );
 			TableUtils.createTable( connectionSource, Mission.class );
 			TableUtils.createTable( connectionSource, Rocket.class );
-            TableUtils.createTable( connectionSource, RocketDetail.class );
+			TableUtils.createTable( connectionSource, RocketDetail.class );
 		}
 		catch( SQLException e )
 		{
@@ -67,10 +70,11 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper
 		{
 			Log.i( DatabaseHelper.class.getName(), "Upgrading Database Tables..." );
 			TableUtils.dropTable( connectionSource, Launch.class, true );
+			TableUtils.dropTable( connectionSource, LocInfo.class, true );
 			TableUtils.dropTable( connectionSource, Location.class, true );
 			TableUtils.dropTable( connectionSource, Mission.class, true );
 			TableUtils.dropTable( connectionSource, Rocket.class, true );
-            TableUtils.dropTable( connectionSource, RocketDetail.class, true );
+			TableUtils.dropTable( connectionSource, RocketDetail.class, true );
 			// after we drop the old databases, we create the new ones
 			onCreate( db, connectionSource );
 		}
@@ -99,6 +103,15 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper
 		return m_locationDao;
 	}
 
+	public Dao<LocInfo, Integer> getLocInfoDao() throws SQLException
+	{
+		if( m_locInfoDao == null )
+		{
+			m_locInfoDao = getDao( LocInfo.class );
+		}
+		return m_locInfoDao;
+	}
+
 	public Dao<Mission, Integer> getMissionDao() throws SQLException
 	{
 		if( m_missionDao == null )
@@ -117,14 +130,14 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper
 		return m_rocketDao;
 	}
 
-    public Dao<RocketDetail, Integer> getRocketDetailDao() throws SQLException
-    {
-        if( m_rocketDetailDao == null )
-        {
-            m_rocketDetailDao = getDao( RocketDetail.class );
-        }
-        return m_rocketDetailDao;
-    }
+	public Dao<RocketDetail, Integer> getRocketDetailDao() throws SQLException
+	{
+		if( m_rocketDetailDao == null )
+		{
+			m_rocketDetailDao = getDao( RocketDetail.class );
+		}
+		return m_rocketDetailDao;
+	}
 
 	@Override
 	public void close()
@@ -134,6 +147,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper
 		m_locationDao = null;
 		m_missionDao = null;
 		m_rocketDao = null;
-        m_rocketDetailDao = null;
+		m_rocketDetailDao = null;
 	}
 }

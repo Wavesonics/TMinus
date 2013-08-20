@@ -16,6 +16,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.darkrockstudios.apps.tminus.database.DatabaseHelper;
 import com.darkrockstudios.apps.tminus.launchlibrary.Launch;
 import com.darkrockstudios.apps.tminus.launchlibrary.LaunchLibraryGson;
+import com.darkrockstudios.apps.tminus.launchlibrary.LocInfo;
 import com.darkrockstudios.apps.tminus.launchlibrary.Location;
 import com.darkrockstudios.apps.tminus.launchlibrary.Mission;
 import com.darkrockstudios.apps.tminus.launchlibrary.Rocket;
@@ -173,6 +174,7 @@ public class LaunchUpdateService extends Service
 				try
 				{
 					final Dao<Launch, Integer> launchDao = databaseHelper.getLaunchDao();
+					final Dao<LocInfo, Integer> locInfoDao = databaseHelper.getLocInfoDao();
 					final Dao<Location, Integer> locationDao = databaseHelper.getLocationDao();
 					final Dao<Mission, Integer> missionDao = databaseHelper.getMissionDao();
 					final Dao<Rocket, Integer> rocketDao = databaseHelper.getRocketDao();
@@ -200,6 +202,8 @@ public class LaunchUpdateService extends Service
 													                                      .cancelAlarmsForLaunch( launch, LaunchUpdateService.this );
 										                                      }
 
+										                                      locInfoDao
+												                                      .createOrUpdate( launch.location.locInfo );
 										                                      locationDao
 												                                      .createOrUpdate( launch.location );
 										                                      missionDao

@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -20,6 +21,7 @@ import com.darkrockstudios.apps.tminus.R;
 import com.darkrockstudios.apps.tminus.R.layout;
 import com.darkrockstudios.apps.tminus.database.DatabaseHelper;
 import com.darkrockstudios.apps.tminus.launchlibrary.Launch;
+import com.darkrockstudios.apps.tminus.misc.Utilities;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.PreparedQuery;
@@ -300,6 +302,10 @@ public class LaunchListFragment extends ListFragment
 			netView1.setText( monthDay.format( launch.net ) );
 			netView2.setText( year.format( launch.net ) );
 			netView3.setText( time.format( launch.net ) );
+
+			final ImageView countryFlagView = (ImageView)view.findViewById( R.id.LAUNCHLIST_country_flag );
+			int flagResourceId = Utilities.getFlagResource( launch.location.locInfo.countrycode );
+			countryFlagView.setImageResource( flagResourceId );
 
 			return view;
 		}

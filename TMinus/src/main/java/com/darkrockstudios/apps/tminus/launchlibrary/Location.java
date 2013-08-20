@@ -25,8 +25,8 @@ public class Location implements Serializable
 	@DatabaseField
 	public boolean retired;
 
-	@DatabaseField
-	public int locationid;
+	@DatabaseField(foreign = true, foreignAutoCreate = true, foreignAutoRefresh = true)
+	public LocInfo locInfo;
 
 	@DatabaseField(canBeNull = true)
 	public Double longitude;
