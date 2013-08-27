@@ -13,14 +13,27 @@ repositories {
 }
 
 dependencies {
-    compile files('libs/android-support-v13.jar')
-    compile files('libs/gson-2.2.4.jar')
-    compile files('libs/ormlite-core-4.45.jar')
-    compile files('libs/ormlite-android-4.45.jar')
+    // Google Play Services
+    compile 'com.google.android.gms:play-services:3.2.25'
+
+    // Support Libraries
+    compile 'com.android.support:support-v4:18.0.0'
+    compile 'com.android.support:appcompat-v7:18.0.0'
+    compile 'com.android.support:gridlayout-v7:18.0.0'
+    compile 'com.android.support:support-v13:18.0.0'
+
+    compile 'com.google.code.gson:gson:2.2.4'
+
+    compile ('de.keyboardsurfer.android.widget:crouton:1.8.1') {
+        exclude module: 'support-v4'
+        compile 'com.android.support:support-v4:13.0.0'
+    }
+
+    compile 'com.j256.ormlite:ormlite-core:4.46'
+    compile 'com.j256.ormlite:ormlite-android:4.46'
+
     compile files('libs/volley.jar')
     compile files('libs/CWAC-WakefulIntentService.jar')
-    compile files('libs/crouton-1.8.1.jar')
-    compile project(':LibraryProjects:google-play-services_lib')
 }
 
 android {

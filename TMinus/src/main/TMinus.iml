@@ -10,6 +10,7 @@
         <option name="ALLOW_USER_CONFIGURATION" value="false" />
         <option name="MANIFEST_FILE_RELATIVE_PATH" value="/src/main/AndroidManifest.xml" />
         <option name="RES_FOLDER_RELATIVE_PATH" value="/src/main/res" />
+        <option name="RES_FOLDERS_RELATIVE_PATH" value="file://$MODULE_DIR$/res" />
         <option name="ASSETS_FOLDER_RELATIVE_PATH" value="/src/main/assets" />
       </configuration>
     </facet>
@@ -68,13 +69,16 @@
     </content>
     <orderEntry type="jdk" jdkName="Android 4.3 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" exported="" name="gson-2.2.4" level="project" />
-    <orderEntry type="library" exported="" name="ormlite-android-4.45" level="project" />
-    <orderEntry type="library" exported="" name="ormlite-core-4.45" level="project" />
     <orderEntry type="library" exported="" name="volley" level="project" />
     <orderEntry type="library" exported="" name="CWAC-WakefulIntentService" level="project" />
-    <orderEntry type="library" exported="" name="android-support-v13" level="project" />
-    <orderEntry type="module" module-name="google-play-services_lib" exported="" />
+    <orderEntry type="library" exported="" name="support-v4-18.0.0" level="project" />
+    <orderEntry type="library" exported="" name="support-v13-18.0.0" level="project" />
+    <orderEntry type="library" exported="" name="ormlite-core-4.46" level="project" />
+    <orderEntry type="library" exported="" name="ormlite-android-4.46" level="project" />
+    <orderEntry type="library" exported="" name="gson-2.2.4" level="project" />
+    <orderEntry type="library" exported="" name="ComGoogleAndroidGmsPlayServices3225.aar" level="project" />
+    <orderEntry type="library" exported="" name="ComAndroidSupportAppcompatV71800.aar" level="project" />
+    <orderEntry type="library" exported="" name="ComAndroidSupportGridlayoutV71800.aar" level="project" />
     <orderEntry type="library" exported="" name="crouton-1.8.1" level="project" />
   </component>
 </module>

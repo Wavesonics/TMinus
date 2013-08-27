@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="ormlite-core-4.45">
-    <CLASSES>
-      <root url="jar://$PROJECT_DIR$/TMinus/libs/ormlite-core-4.45.jar!/" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>
