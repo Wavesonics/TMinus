@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -304,6 +305,9 @@ public class LaunchListFragment extends ListFragment
 			netView1.setText( monthDay.format( launch.net ) );
 			netView2.setText( year.format( launch.net ) );
 			netView3.setText( time.format( launch.net ) );
+
+			final ImageView typeIcon = (ImageView) view.findViewById(R.id.LAUNCHLIST_type_icon);
+			typeIcon.setImageResource( Utilities.getLaunchTypeResource( launch.mission.type ) );
 
 			return view;
 		}
