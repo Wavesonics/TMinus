@@ -60,7 +60,6 @@
       <excludeFolder url="file://$MODULE_DIR$/../../build/bundles" />
       <excludeFolder url="file://$MODULE_DIR$/../../build/classes" />
       <excludeFolder url="file://$MODULE_DIR$/../../build/dependency-cache" />
-      <excludeFolder url="file://$MODULE_DIR$/../../build/exploded-bundles" />
       <excludeFolder url="file://$MODULE_DIR$/../../build/incremental" />
       <excludeFolder url="file://$MODULE_DIR$/../../build/libs" />
       <excludeFolder url="file://$MODULE_DIR$/../../build/manifests" />
@@ -69,17 +68,17 @@
     </content>
     <orderEntry type="jdk" jdkName="Android 4.3 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" exported="" name="volley" level="project" />
-    <orderEntry type="library" exported="" name="CWAC-WakefulIntentService" level="project" />
     <orderEntry type="library" exported="" name="support-v4-18.0.0" level="project" />
-    <orderEntry type="library" exported="" name="support-v13-18.0.0" level="project" />
-    <orderEntry type="library" exported="" name="ormlite-core-4.46" level="project" />
-    <orderEntry type="library" exported="" name="ormlite-android-4.46" level="project" />
-    <orderEntry type="library" exported="" name="gson-2.2.4" level="project" />
-    <orderEntry type="library" exported="" name="ComGoogleAndroidGmsPlayServices3225.aar" level="project" />
-    <orderEntry type="library" exported="" name="ComAndroidSupportAppcompatV71800.aar" level="project" />
-    <orderEntry type="library" exported="" name="ComAndroidSupportGridlayoutV71800.aar" level="project" />
     <orderEntry type="library" exported="" name="crouton-1.8.1" level="project" />
+    <orderEntry type="library" exported="" name="ComAndroidSupportAppcompatV71800.aar" level="project" />
+    <orderEntry type="library" exported="" name="ComGoogleAndroidGmsPlayServices3225.aar" level="project" />
+    <orderEntry type="library" exported="" name="gson-2.2.4" level="project" />
+    <orderEntry type="library" exported="" name="ormlite-core-4.46" level="project" />
+    <orderEntry type="library" exported="" name="ComAndroidSupportGridlayoutV71800.aar" level="project" />
+    <orderEntry type="library" exported="" name="volley" level="project" />
+    <orderEntry type="library" exported="" name="support-v13-18.0.0" level="project" />
+    <orderEntry type="library" exported="" name="CWAC-WakefulIntentService" level="project" />
+    <orderEntry type="library" exported="" name="ormlite-android-4.46" level="project" />
   </component>
 </module>
 

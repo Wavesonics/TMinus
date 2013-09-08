@@ -10,10 +10,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 
 import com.darkrockstudios.apps.tminus.R;
 import com.darkrockstudios.apps.tminus.database.DatabaseHelper;
 import com.darkrockstudios.apps.tminus.launchlibrary.Location;
+import com.darkrockstudios.apps.tminus.misc.Utilities;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.maps.CameraUpdate;
@@ -36,7 +38,8 @@ import java.sql.SQLException;
  */
 public class LocationDetailFragment extends DialogFragment
 {
-	public static final  String TAG                     = LocationDetailFragment.class.getSimpleName();
+	public static final  String TAG                     =
+			LocationDetailFragment.class.getSimpleName();
 	public static final  String ARG_ITEM_ID             = "item_id";
 	public static final  String ARG_MAP_CONTROL_ENABLED = "map_control_enabled";
 	private static final String MAP_FRAGMENT_TAG        = "MapFragment";
@@ -44,6 +47,7 @@ public class LocationDetailFragment extends DialogFragment
 	private static final LatLng DEFAULT_LOCATION        = new LatLng( 37.523506, -77.412109 );
 	private Location    m_location;
 	private FrameLayout m_mapContainer;
+	private TextView    m_locationName;
 
 	public LocationDetailFragment()
 	{
@@ -75,11 +79,17 @@ public class LocationDetailFragment extends DialogFragment
 
 		if( rootView != null )
 		{
-			m_mapContainer = (FrameLayout)rootView.findViewById( R.id.LOCATIONDETAIL_map_container );
+			m_mapContainer =
+					(FrameLayout) rootView.findViewById( R.id.LOCATIONDETAIL_map_container );
+
+			m_locationName =
+					(TextView) rootView.findViewById( R.id.LOCATIONDETAIL_location_name );
+
 
 			SupportMapFragment mapFragment = createMap();
 			getChildFragmentManager().beginTransaction()
-					.add( R.id.LOCATIONDETAIL_map_container, mapFragment, MAP_FRAGMENT_TAG ).commit();
+					.add( R.id.LOCATIONDETAIL_map_container, mapFragment, MAP_FRAGMENT_TAG )
+					.commit();
 		}
 
 		return rootView;
@@ -113,8 +123,8 @@ public class LocationDetailFragment extends DialogFragment
 	{
 		final LatLng pos = getLocation();
 
-		SupportMapFragment mapFragment = (SupportMapFragment)getChildFragmentManager()
-				                                                     .findFragmentByTag( MAP_FRAGMENT_TAG );
+		SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager()
+				.findFragmentByTag( MAP_FRAGMENT_TAG );
 		if( mapFragment != null )
 		{
 			GoogleMap map = mapFragment.getMap();
@@ -140,10 +150,12 @@ public class LocationDetailFragment extends DialogFragment
 
 		if( activity != null )
 		{
-			final int googlePlayServicesAvailable = GooglePlayServicesUtil.isGooglePlayServicesAvailable( activity );
+			final int googlePlayServicesAvailable =
+					GooglePlayServicesUtil.isGooglePlayServicesAvailable( activity );
 			if( googlePlayServicesAvailable != ConnectionResult.SUCCESS )
 			{
-				GooglePlayServicesUtil.getErrorDialog(googlePlayServicesAvailable, activity, 0).show();
+				GooglePlayServicesUtil.getErrorDialog( googlePlayServicesAvailable, activity, 0 )
+				                      .show();
 			}
 
 			loadLocation();
@@ -163,6 +175,13 @@ public class LocationDetailFragment extends DialogFragment
 		if( m_location != null )
 		{
 			updateMap();
+
+			if( m_locationName != null )
+			{
+				int flagResourceId = Utilities
+						.getFlagResource( m_location.locInfo.countrycode );
+				m_locationName.setCompoundDrawablesWithIntrinsicBounds( flagResourceId, 0, 0, 0 );
+			}
 		}
 	}
 
@@ -245,7 +264,8 @@ public class LocationDetailFragment extends DialogFragment
 			Activity activity = getActivity();
 			if( activity != null )
 			{
-				final DatabaseHelper databaseHelper = OpenHelperManager.getHelper( activity, DatabaseHelper.class );
+				final DatabaseHelper databaseHelper =
+						OpenHelperManager.getHelper( activity, DatabaseHelper.class );
 				if( databaseHelper != null )
 				{
 					try

@@ -22,6 +22,8 @@ import com.darkrockstudios.apps.tminus.launchlibrary.Mission;
 import com.darkrockstudios.apps.tminus.launchlibrary.Rocket;
 import com.darkrockstudios.apps.tminus.misc.Preferences;
 import com.google.gson.Gson;
+import com.google.gson.JsonParseException;
+import com.google.gson.JsonSyntaxException;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.misc.TransactionManager;
@@ -31,6 +33,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.util.Date;
 import java.util.concurrent.Callable;
 
@@ -182,46 +185,57 @@ public class LaunchUpdateService extends Service
 					final JSONArray launchListArray = launchListObj.getJSONArray( "launch" );
 					for( int ii = 0; ii < launchListArray.length(); ++ii )
 					{
-						final JSONObject launchObj = launchListArray.getJSONObject( ii );
-						if( launchObj != null )
+						try
 						{
-							final Launch launch = gson.fromJson( launchObj.toString(), Launch.class );
-
-							try
+							final JSONObject launchObj = launchListArray.getJSONObject( ii );
+							if( launchObj != null )
 							{
-								TransactionManager.callInTransaction( databaseHelper.getConnectionSource(),
-								                                      new Callable<Void>()
-								                                      {
-									                                      public Void call() throws Exception
+								final Launch launch = gson.fromJson( launchObj.toString(), Launch.class );
+
+								try
+								{
+									TransactionManager.callInTransaction( databaseHelper.getConnectionSource(),
+									                                      new Callable<Void>()
 									                                      {
-										                                      // If the launch already exists, cancel any alarms for it
-										                                      if( launchDao.idExists( launchDao
-												                                                              .extractId( launch ) ) )
+										                                      public Void call() throws Exception
 										                                      {
-											                                      UpdateAlarmsService
-													                                      .cancelAlarmsForLaunch( launch, LaunchUpdateService.this );
+											                                      // If the launch already exists, cancel any alarms for it
+											                                      if( launchDao.idExists( launchDao
+													                                                              .extractId( launch ) ) )
+											                                      {
+												                                      UpdateAlarmsService
+														                                      .cancelAlarmsForLaunch( launch, LaunchUpdateService.this );
+											                                      }
+
+											                                      locInfoDao
+													                                      .createOrUpdate( launch.location.locInfo );
+											                                      locationDao
+													                                      .createOrUpdate( launch.location );
+											                                      missionDao
+													                                      .createOrUpdate( launch.mission );
+											                                      rocketDao
+													                                      .createOrUpdate( launch.rocket );
+
+											                                      // This must be run after all the others are created so the IDs of the child objects can be set
+											                                      launchDao.createOrUpdate( launch );
+
+											                                      return null;
 										                                      }
-
-										                                      locInfoDao
-												                                      .createOrUpdate( launch.location.locInfo );
-										                                      locationDao
-												                                      .createOrUpdate( launch.location );
-										                                      missionDao
-												                                      .createOrUpdate( launch.mission );
-										                                      rocketDao
-												                                      .createOrUpdate( launch.rocket );
-
-										                                      // This must be run after all the others are created so the IDs of the child objects can be set
-										                                      launchDao.createOrUpdate( launch );
-
-										                                      return null;
-									                                      }
-								                                      } );
+									                                      } );
+								}
+								catch( SQLException e )
+								{
+									Log.w( TAG, e.getMessage() );
+								}
 							}
-							catch( SQLException e )
-							{
-								Log.w( TAG, e.getMessage() );
-							}
+						}
+						catch( JsonSyntaxException e )
+						{
+							e.printStackTrace();
+						}
+						catch( JsonParseException e )
+						{
+							e.printStackTrace();
 						}
 					}
 

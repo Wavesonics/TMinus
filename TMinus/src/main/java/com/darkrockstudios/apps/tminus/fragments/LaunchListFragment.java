@@ -288,9 +288,6 @@ public class LaunchListFragment extends ListFragment
 			final TextView titleView = (TextView)view.findViewById( R.id.launch_list_item_title );
 			titleView.setText( launch.name );
 
-			int flagResourceId = Utilities.getFlagResource( launch.location.locInfo.countrycode );
-			titleView.setCompoundDrawablesWithIntrinsicBounds( flagResourceId, 0, 0, 0 );
-
 			final TextView descriptionView = (TextView)view.findViewById( R.id.launch_list_item_description );
 			descriptionView.setText( launch.mission.description );
 

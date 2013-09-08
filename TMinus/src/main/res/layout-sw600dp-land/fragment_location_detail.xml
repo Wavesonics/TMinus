@@ -22,6 +22,7 @@
             android:layout_height="wrap_content"
             android:textAppearance="@style/textAppearanceLargeAccent"
             android:text="@string/LOCATIONDETAIL_location_label"
+            android:drawableLeft="@drawable/flag_us"
             android:layout_alignTop="@id/LOCATIONDETAIL_earth"/>
 
     <ImageView

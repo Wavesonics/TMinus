@@ -278,8 +278,9 @@
                         android:text="Location Name"
                         android:textColor="@color/accent_text"
                         android:layout_weight="1"
-                        android:gravity="right"
-                        android:id="@+id/LAUNCHDETAIL_location"/>
+                        android:gravity="right|center_vertical"
+                        android:id="@+id/LAUNCHDETAIL_location"
+                        android:drawableRight="@drawable/flag_us"/>
             </LinearLayout>
 
             <ImageView

@@ -257,6 +257,9 @@ public class LaunchDetailFragment extends Fragment implements Listener, RocketDe
 
 			final TextView location = (TextView)rootView.findViewById( R.id.LAUNCHDETAIL_location );
 			location.setText( m_launchItem.location.name );
+			int flagResourceId = Utilities
+					.getFlagResource(m_launchItem.location.locInfo.countrycode);
+			location.setCompoundDrawablesWithIntrinsicBounds( 0, 0, flagResourceId, 0 );
 
 			final TextView windowLength = (TextView)rootView.findViewById( R.id.LAUNCHDETAIL_window_length );
 			final long windowLengthMs = m_launchItem.windowend.getTime() - m_launchItem.windowstart.getTime();
