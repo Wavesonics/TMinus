@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.darkrockstudios.apps.tminus.R;
 import com.darkrockstudios.apps.tminus.launchlibrary.Launch;
+import com.darkrockstudios.apps.tminus.launchlibrary.Mission;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -118,6 +119,21 @@ public class Utilities
 		}
 
 		return resourceId;
+	}
+
+	public static int getLaunchTypeResource(Mission mission)
+	{
+		final int type;
+		if( mission != null )
+		{
+			type = mission.type;
+		}
+		else
+		{
+			type = 9;
+		}
+
+		return getLaunchTypeResource(type);
 	}
 
 	public static int getLaunchTypeResource(int type)

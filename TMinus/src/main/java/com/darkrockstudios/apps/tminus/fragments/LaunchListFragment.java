@@ -289,7 +289,14 @@ public class LaunchListFragment extends ListFragment
 			titleView.setText( launch.name );
 
 			final TextView descriptionView = (TextView)view.findViewById( R.id.launch_list_item_description );
-			descriptionView.setText( launch.mission.description );
+			if( launch.mission != null )
+			{
+				descriptionView.setText( launch.mission.description );
+			}
+			else
+			{
+				descriptionView.setText( R.string.LAUNCHLIST_no_mission_details );
+			}
 
 			final TextView netView1 = (TextView)view.findViewById( R.id.launch_list_item_net_1 );
 			final TextView netView2 = (TextView)view.findViewById( R.id.launch_list_item_net_2 );
@@ -304,7 +311,7 @@ public class LaunchListFragment extends ListFragment
 			netView3.setText( time.format( launch.net ) );
 
 			final ImageView typeIcon = (ImageView) view.findViewById(R.id.LAUNCHLIST_type_icon);
-			typeIcon.setImageResource( Utilities.getLaunchTypeResource( launch.mission.type ) );
+			typeIcon.setImageResource( Utilities.getLaunchTypeResource( launch.mission ) );
 
 			return view;
 		}

@@ -250,7 +250,14 @@ public class LaunchDetailFragment extends Fragment implements Listener, RocketDe
 			name.setText( m_launchItem.name );
 
 			final TextView description = (TextView)rootView.findViewById( R.id.LAUNCHDETAIL_mission_description );
-			description.setText( m_launchItem.mission.description );
+			if( m_launchItem.mission != null )
+			{
+				description.setText( m_launchItem.mission.description );
+			}
+			else
+			{
+				description.setText( R.string.LAUNCHDETAIL_no_mission_details );
+			}
 
 			final TextView status = (TextView)rootView.findViewById( R.id.LAUNCHDETAIL_status );
 			status.setText( Utilities.getStatusText( m_launchItem, rootView.getContext() ) );
@@ -369,9 +376,17 @@ public class LaunchDetailFragment extends Fragment implements Listener, RocketDe
 
 		if( m_launchItem != null )
 		{
-			body += m_launchItem.mission.description + "\n\n";
-			body += "Location: " + m_launchItem.location.name + "\n\n";
-			body += "Expected Launch Time: " + m_launchItem.net + "\n\n";
+			final String missionDescription;
+			if( m_launchItem.mission != null )
+			{
+				missionDescription = m_launchItem.mission.description;
+			}
+			else
+			{
+				missionDescription = getString( R.string.LAUNCHDETAIL_share_no_mission );
+			}
+
+			body = getString( R.string.LAUNCHDETAIL_share_details, missionDescription, m_launchItem.location.name, m_launchItem.net );
 		}
 
 		return body;

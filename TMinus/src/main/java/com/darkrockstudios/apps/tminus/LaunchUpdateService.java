@@ -33,7 +33,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.sql.SQLException;
-import java.text.ParseException;
 import java.util.Date;
 import java.util.concurrent.Callable;
 
@@ -211,8 +210,13 @@ public class LaunchUpdateService extends Service
 													                                      .createOrUpdate( launch.location.locInfo );
 											                                      locationDao
 													                                      .createOrUpdate( launch.location );
-											                                      missionDao
-													                                      .createOrUpdate( launch.mission );
+
+											                                      if( launch.mission != null )
+											                                      {
+												                                      missionDao
+														                                      .createOrUpdate( launch.mission );
+											                                      }
+
 											                                      rocketDao
 													                                      .createOrUpdate( launch.rocket );
 

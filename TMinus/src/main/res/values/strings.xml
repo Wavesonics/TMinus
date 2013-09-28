@@ -25,12 +25,14 @@
         %2$s\nFrom: %3$s</string>
 
     <string name="LAUNCHLIST_item_hours">HOURS</string>
+    <string name="LAUNCHLIST_no_mission_details">No mission details available</string>
 
     <string name="LAUNCHDETAIL_status">Status:</string>
     <string name="LAUNCHDETAIL_launch_window">Launch:</string>
     <string name="LAUNCHDETAIL_launch_window_length">Window:</string>
     <string name="LAUNCHDETAIL_location">Location:</string>
     <string name="LAUNCHDETAIL_count_down">TMinus</string>
+    <string name="LAUNCHDETAIL_no_mission_details">No mission details available</string>
     <string name="LAUNCHDETAIL_count_down_button">Count Down</string>
     <string name="LAUNCHDETAIL_launch_image_description">Picture of the rocket</string>
     <string name="LAUNCHDETAIL_imminent_launch">This rocket is launching soon, go to the count down!</string>
@@ -40,6 +42,9 @@
     <string name="LAUNCHDETAIL_location_detail_button">Details</string>
     <string name="LAUNCHDETAIL_details_header">Details</string>
     <string name="LAUNCHDETAIL_net_hours">HOURS</string>
+
+    <string name="LAUNCHDETAIL_share_no_mission">No mission details available</string>
+    <string name="LAUNCHDETAIL_share_details">%1$s\n\nLocation: %2$s\n\nExpected Launch Time: %3$s</string>
 
     <string name="ROCKETDETAIL_title">Rocket Detail</string>
     <string name="ROCKETDETAIL_loading_summary">Loading rocket summary…</string>
