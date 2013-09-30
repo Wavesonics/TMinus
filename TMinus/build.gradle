@@ -14,7 +14,7 @@ repositories {
 
 dependencies {
     // Google Play Services
-    compile 'com.google.android.gms:play-services:3.2.25'
+    compile 'com.google.android.gms:play-services:3.2.65'
 
     // Support Libraries
     compile 'com.android.support:support-v4:18.0.0'
@@ -26,11 +26,11 @@ dependencies {
 
     compile ('de.keyboardsurfer.android.widget:crouton:1.8.1') {
         exclude module: 'support-v4'
-        compile 'com.android.support:support-v4:13.0.0'
+        compile 'com.android.support:support-v4:18.0.0'
     }
 
-    compile 'com.j256.ormlite:ormlite-core:4.46'
-    compile 'com.j256.ormlite:ormlite-android:4.46'
+    compile 'com.j256.ormlite:ormlite-core:4.47'
+    compile 'com.j256.ormlite:ormlite-android:4.47'
 
     compile files('libs/volley.jar')
     compile files('libs/CWAC-WakefulIntentService.jar')
@@ -38,7 +38,7 @@ dependencies {
 
 android {
     compileSdkVersion 18
-    buildToolsVersion "18.0.1"
+    buildToolsVersion "18.1"
 
     defaultConfig {
         minSdkVersion 14
