@@ -403,7 +403,7 @@ public class LaunchDetailFragment extends Fragment implements Listener, RocketDe
 
 	private void updateShareIntent()
 	{
-		if( m_launchItem != null && m_shareActionProvider != null )
+		if( m_launchItem != null && m_shareActionProvider != null && isAdded() )
 		{
 			Intent intent = new Intent( android.content.Intent.ACTION_SEND );
 			intent.setType( "text/plain" );
@@ -421,7 +421,7 @@ public class LaunchDetailFragment extends Fragment implements Listener, RocketDe
 	{
 		String body = "";
 
-		if( m_launchItem != null )
+		if( m_launchItem != null && isAdded() )
 		{
 			final String missionDescription;
 			if( m_launchItem.mission != null )
