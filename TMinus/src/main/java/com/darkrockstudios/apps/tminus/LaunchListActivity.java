@@ -8,7 +8,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 
-import com.darkrockstudios.apps.tminus.R.id;
 import com.darkrockstudios.apps.tminus.fragments.LaunchDetailFragment;
 import com.darkrockstudios.apps.tminus.fragments.LaunchListFragment;
 import com.darkrockstudios.apps.tminus.fragments.LaunchListFragment.Callbacks;
@@ -86,11 +85,11 @@ public class LaunchListActivity extends DatabaseActivity
 		// Handle item selection
 		switch( item.getItemId() )
 		{
-			case id.action_refresh:
+			case R.id.action_refresh:
 				refreshLaunchList();
 				handled = true;
 				break;
-			case id.action_settings:
+			case R.id.action_settings:
 			{
 				Intent intent = new Intent( this, SettingsActivity.class );
 				startActivity( intent );
@@ -144,7 +143,7 @@ public class LaunchListActivity extends DatabaseActivity
 	public void countDownClicked( View v )
 	{
 		LaunchDetailFragment launchDetailFragment = (LaunchDetailFragment)getSupportFragmentManager()
-				                                                                  .findFragmentById( id.launch_detail_container );
+				.findFragmentById( R.id.launch_detail_container );
 		if( launchDetailFragment != null )
 		{
 			final int launchId = launchDetailFragment.getLaunchId();
@@ -171,5 +170,16 @@ public class LaunchListActivity extends DatabaseActivity
 
 		LocationDetailFragment locationDetailFragment = LocationDetailFragment.newInstance( location.id, true );
 		locationDetailFragment.show( getSupportFragmentManager(), "dialog" );
+	}
+
+	public void rocketImageClicked( View v )
+	{
+		LaunchDetailFragment fragment = (LaunchDetailFragment) getSupportFragmentManager()
+				.findFragmentById( R.id.launch_detail_container );
+
+		if( fragment != null )
+		{
+			fragment.zoomRocketImage();
+		}
 	}
 }

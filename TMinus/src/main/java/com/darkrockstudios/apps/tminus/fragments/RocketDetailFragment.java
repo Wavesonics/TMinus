@@ -1,6 +1,7 @@
 package com.darkrockstudios.apps.tminus.fragments;
 
 
+import android.animation.Animator;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
@@ -28,6 +29,7 @@ import com.darkrockstudios.apps.tminus.loaders.RocketDetailLoader;
 import com.darkrockstudios.apps.tminus.loaders.RocketDetailLoader.Listener;
 import com.darkrockstudios.apps.tminus.loaders.RocketLoader;
 import com.darkrockstudios.apps.tminus.loaders.RocketLoader.RocketLoadListener;
+import com.darkrockstudios.apps.tminus.misc.Utilities;
 
 import java.io.File;
 
@@ -39,19 +41,24 @@ import de.keyboardsurfer.android.widget.crouton.Style;
  * Dark Rock Studios
  * darkrockstudios.com
  */
-public class RocketDetailFragment extends DialogFragment implements Listener, RocketLoadListener
+public class RocketDetailFragment extends DialogFragment implements Listener, RocketLoadListener, Utilities.ZoomAnimationHandler
 {
 	public static final String TAG         = LaunchDetailFragment.class.getSimpleName();
 	public static final String ARG_ITEM_ID = "item_id";
 	private File                       m_dataDirectory;
 	private Rocket                     m_rocket;
 	private RocketDetail               m_rocketDetail;
+	private View             m_containerView;
 	private NetworkImageView           m_rocketImage;
+	private NetworkImageView m_rocketImageExpanded;
 	private TextView                   m_rocketName;
 	private TextView                   m_rocketConfiguration;
 	private TextView                   m_rocketSummary;
 	private RocketDetailUpdateReceiver m_updateReceiver;
 	private IntentFilter               m_updateIntentFilter;
+
+	private Animator m_currentAnimator;
+	private int      m_shortAnimationDuration;
 
 	public RocketDetailFragment()
 	{
@@ -69,6 +76,17 @@ public class RocketDetailFragment extends DialogFragment implements Listener, Ro
 	}
 
 	@Override
+	public void onCreate( Bundle savedInstanceState )
+	{
+		super.onCreate( savedInstanceState );
+
+		setHasOptionsMenu( true );
+
+		m_shortAnimationDuration =
+				getResources().getInteger( android.R.integer.config_shortAnimTime );
+	}
+
+	@Override
 	public View onCreateView( LayoutInflater inflater, ViewGroup container,
 	                          Bundle savedInstanceState )
 	{
@@ -82,10 +100,15 @@ public class RocketDetailFragment extends DialogFragment implements Listener, Ro
 
 		if( rootView != null )
 		{
-			m_rocketImage = (NetworkImageView)rootView.findViewById( R.id.ROCKETDETAIL_rocket_image );
-			m_rocketName = (TextView)rootView.findViewById( R.id.ROCKETDETAIL_name );
-			m_rocketConfiguration = (TextView)rootView.findViewById( R.id.ROCKETDETAIL_configuration );
-			m_rocketSummary = (TextView)rootView.findViewById( R.id.ROCKETDETAIL_details );
+			m_containerView = rootView.findViewById( R.id.ROCKETDETAIL_container );
+			m_rocketImage =
+					(NetworkImageView) rootView.findViewById( R.id.ROCKETDETAIL_rocket_image );
+			m_rocketImageExpanded = (NetworkImageView) rootView
+					.findViewById( R.id.ROCKETDETAIL_expanded_rocket_image );
+			m_rocketName = (TextView) rootView.findViewById( R.id.ROCKETDETAIL_name );
+			m_rocketConfiguration =
+					(TextView) rootView.findViewById( R.id.ROCKETDETAIL_configuration );
+			m_rocketSummary = (TextView) rootView.findViewById( R.id.ROCKETDETAIL_details );
 
 			loadRocket();
 		}
@@ -132,6 +155,8 @@ public class RocketDetailFragment extends DialogFragment implements Listener, Ro
 					ImageLoader imageLoader = new ImageLoader( TMinusApplication
 							                                           .getRequestQueue(),  TMinusApplication.getBitmapCache() );
 					m_rocketImage.setImageUrl( m_rocketDetail.imageUrl, imageLoader );
+
+					m_rocketImageExpanded.setImageUrl( m_rocketDetail.imageUrl, imageLoader );
 				}
 
 				if( m_rocketDetail.summary != null )
@@ -214,6 +239,28 @@ public class RocketDetailFragment extends DialogFragment implements Listener, Ro
 			intent.putExtra( RocketDetailUpdateService.EXTRA_ROCKET_ID, m_rocket.id );
 			activity.startService( intent );
 		}
+	}
+
+	public void zoomRocketImage()
+	{
+		// If we don't have rocket info yet, don't bother zooming
+		if( m_rocketDetail != null && m_rocketDetail.imageUrl != null )
+		{
+			Utilities.zoomImage( m_rocketImage, m_rocketImageExpanded, m_containerView, this,
+			                     m_shortAnimationDuration );
+		}
+	}
+
+	@Override
+	public void setCurrentAnimator( Animator animator )
+	{
+		m_currentAnimator = animator;
+	}
+
+	@Override
+	public Animator getCurrentAnimator()
+	{
+		return m_currentAnimator;
 	}
 
 	private class RocketDetailUpdateReceiver extends BroadcastReceiver

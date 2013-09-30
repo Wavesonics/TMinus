@@ -1,25 +1,29 @@
-<LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:id="@+id/LAUNCHDETAIL_container_view"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent">
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal"
         android:divider="?android:attr/dividerHorizontal"
         android:showDividers="middle">
 
-    <ScrollView
+        <ScrollView
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="2">
 
-        <LinearLayout
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:divider="?android:attr/dividerVertical"
                 android:showDividers="middle"
                 android:orientation="vertical">
 
-            <LinearLayout
+                <LinearLayout
                     android:id="@+id/LAUNCHDETAIL_imminent_launch_container"
                     android:orientation="vertical"
                     android:layout_width="match_parent"
@@ -27,7 +31,7 @@
                     android:layout_marginBottom="@dimen/launch_detail_padding"
                     android:background="@color/count_down_alert_background">
 
-                <TextView
+                    <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/LAUNCHDETAIL_imminent_launch"
@@ -35,24 +39,25 @@
                         android:textColor="@color/count_down_alert_text"
                         android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"/>
 
-                <Button
+                    <Button
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/LAUNCHDETAIL_count_down_button"
                         android:id="@+id/button"
                         android:onClick="countDownClicked"
                         android:layout_gravity="center"/>
-            </LinearLayout>
+                </LinearLayout>
 
-            <com.android.volley.toolbox.NetworkImageView
+                <com.android.volley.toolbox.NetworkImageView
                     android:layout_width="match_parent"
                     android:layout_height="300dp"
                     android:layout_margin="@dimen/launch_detail_rocket_image_padding"
                     android:scaleType="centerCrop"
                     android:id="@+id/LAUNCHDETAIL_mission_image"
+                    android:onClick="rocketImageClicked"
                     android:contentDescription="@string/LAUNCHDETAIL_launch_image_description"/>
 
-            <LinearLayout
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="@dimen/launch_detail_padding"
@@ -60,7 +65,7 @@
                     android:id="@+id/content_view"
                     android:background="@color/secondary_background">
 
-                <TextView
+                    <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textAppearance="@style/textAppearanceLargeAccent"
@@ -69,14 +74,14 @@
                         android:textStyle="bold"
                         tools:ignore="HardcodedText"/>
 
-                <ImageView
+                    <ImageView
                         android:layout_width="match_parent"
                         android:layout_height="5dp"
                         android:src="@drawable/header_divider"
                         android:scaleType="fitXY"
                         android:layout_marginBottom="@dimen/launch_detail_spacing"/>
 
-                <TextView
+                    <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textAppearance="?android:attr/textAppearanceLarge"
@@ -84,7 +89,7 @@
                         android:id="@+id/LAUNCHDETAIL_mission_description"
                         tools:ignore="HardcodedText"/>
 
-                <TextView
+                    <TextView
                         tools:ignore="HardcodedText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -93,7 +98,7 @@
                         android:textStyle="bold"
                         android:layout_marginTop="@dimen/launch_detail_padding"/>
 
-                <ImageView
+                    <ImageView
                         android:layout_width="match_parent"
                         android:layout_height="5dp"
                         android:src="@drawable/header_divider"
@@ -101,11 +106,11 @@
                         android:layout_marginBottom="@dimen/launch_detail_spacing"
                         android:id="@+id/imageView"/>
 
-                <LinearLayout
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
 
-                    <TextView
+                        <TextView
                             tools:ignore="HardcodedText"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -113,7 +118,7 @@
                             android:text="@string/LAUNCHDETAIL_status"
                             android:layout_weight="1"/>
 
-                    <TextView
+                        <TextView
                             tools:ignore="HardcodedText"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -124,7 +129,8 @@
                             android:id="@+id/LAUNCHDETAIL_status"
                             android:layout_weight="1"/>
 
-                    <TextView
+                        <TextView
+                            android:id="@+id/LAUNCHDETAIL_window_length_label"
                             tools:ignore="HardcodedText"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -132,7 +138,8 @@
                             android:text="@string/LAUNCHDETAIL_launch_window_length"
                             android:layout_weight="1"/>
 
-                    <TextView
+                        <TextView
+                            android:id="@+id/LAUNCHDETAIL_window_length"
                             tools:ignore="HardcodedText"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -140,17 +147,16 @@
                             android:textStyle="bold"
                             android:textColor="@color/accent_text"
                             android:text="0d 0h 0m"
-                            android:id="@+id/LAUNCHDETAIL_window_length"
                             android:layout_weight="1"/>
-                </LinearLayout>
+                    </LinearLayout>
 
-                <LinearLayout
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/launch_detail_padding"
                         android:gravity="bottom">
 
-                    <ImageView
+                        <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:id="@+id/imageView3"
@@ -158,14 +164,14 @@
                             android:layout_marginBottom="@dimen/launch_detail_row_icon_bottom_padding"
                             android:layout_marginLeft="@dimen/launch_detail_row_icon_left_padding"/>
 
-                    <LinearLayout
+                        <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal"
                             android:id="@+id/linearLayout"
                             android:gravity="right">
 
-                        <TextView
+                            <TextView
                                 android:id="@+id/launch_detail_net_1"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -174,14 +180,14 @@
                                 android:text="Dec 25"
                                 android:textAppearance="?android:attr/textAppearanceMedium"/>
 
-                        <TextView
+                            <TextView
                                 tools:ignore="HardcodedText"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text=", "
                                 android:textAppearance="?android:attr/textAppearanceMedium"/>
 
-                        <TextView
+                            <TextView
                                 android:id="@+id/launch_detail_net_2"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -189,14 +195,14 @@
                                 android:textAppearance="?android:attr/textAppearanceMedium"
                                 android:singleLine="true"/>
 
-                        <TextView
+                            <TextView
                                 tools:ignore="HardcodedText"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text=" "
                                 android:textAppearance="?android:attr/textAppearanceMedium"/>
 
-                        <TextView
+                            <TextView
                                 android:id="@+id/launch_detail_net_3"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -204,14 +210,14 @@
                                 android:textAppearance="?android:attr/textAppearanceMedium"
                                 android:singleLine="true"/>
 
-                        <TextView
+                            <TextView
                                 tools:ignore="HardcodedText"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text=" "
                                 android:textAppearance="?android:attr/textAppearanceMedium"/>
 
-                        <TextView
+                            <TextView
                                 android:id="@+id/textView"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -219,10 +225,10 @@
                                 android:textStyle="bold"
                                 android:textAppearance="?android:attr/textAppearanceMedium"
                                 android:singleLine="true"/>
+                        </LinearLayout>
                     </LinearLayout>
-                </LinearLayout>
 
-                <ImageView
+                    <ImageView
                         android:layout_width="match_parent"
                         android:layout_height="5dp"
                         android:src="@drawable/header_divider"
@@ -230,18 +236,18 @@
                         android:layout_marginBottom="@dimen/launch_detail_spacing"
                         />
 
-                <LinearLayout
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
 
-                    <TextView
+                        <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textAppearance="?android:attr/textAppearanceLarge"
                             android:text="@string/LAUNCHDETAIL_count_down"
                             android:layout_weight="1"/>
 
-                    <TextView
+                        <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textAppearance="?android:attr/textAppearanceLarge"
@@ -250,22 +256,22 @@
                             android:layout_weight="1"
                             android:textColor="@color/accent_text"
                             tools:ignore="HardcodedText"/>
-                </LinearLayout>
+                    </LinearLayout>
 
-                <LinearLayout
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_marginTop="@dimen/launch_detail_padding"
                         android:gravity="bottom">
 
-                    <ImageView
+                        <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:src="@drawable/ic_launch_detail_location"
                             android:layout_marginBottom="@dimen/launch_detail_row_icon_bottom_padding"
                             android:layout_marginLeft="@dimen/launch_detail_row_icon_left_padding"/>
 
-                    <TextView
+                        <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:textAppearance="?android:attr/textAppearanceLarge"
@@ -274,17 +280,17 @@
                             android:layout_weight="1"
                             android:gravity="right"
                             android:id="@+id/LAUNCHDETAIL_location"/>
-                </LinearLayout>
+                    </LinearLayout>
 
-                <ImageView
+                    <ImageView
                         android:layout_width="match_parent"
                         android:layout_height="5dp"
                         android:src="@drawable/header_divider"
                         android:scaleType="fitXY"/>
 
-            </LinearLayout>
+                </LinearLayout>
 
-            <ProgressBar
+                <ProgressBar
                     style="?android:attr/progressBarStyleLarge"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -293,11 +299,11 @@
                     android:layout_gravity="center"
                     android:visibility="gone"/>
 
-        </LinearLayout>
+            </LinearLayout>
 
-    </ScrollView>
+        </ScrollView>
 
-    <LinearLayout
+        <LinearLayout
             android:orientation="vertical"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -305,14 +311,14 @@
             android:divider="?android:attr/dividerVertical"
             android:showDividers="middle">
 
-        <FrameLayout
+            <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:id="@+id/LAUNCHDETAIL_rocket_container"
                 android:layout_margin="@dimen/launch_detail_padding"/>
 
-        <FrameLayout
+            <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
@@ -320,13 +326,21 @@
                 android:layout_marginTop="@dimen/launch_detail_padding"
                 android:layout_marginLeft="@dimen/launch_detail_padding"
                 android:layout_marginRight="@dimen/launch_detail_padding">
-            <!-- TODO: This is an awful awful hack for which I will surly be punished: http://stackoverflow.com/a/17705806/1366
-                       This prevents a momentary flicker when swapping the fragment in -->
-            <SurfaceView
+                <!-- TODO: This is an awful awful hack for which I will surly be punished: http://stackoverflow.com/a/17705806/1366
+                           This prevents a momentary flicker when swapping the fragment in -->
+                <SurfaceView
                     android:layout_width="0dp"
                     android:layout_height="0dp"/>
-        </FrameLayout>
+            </FrameLayout>
 
+        </LinearLayout>
     </LinearLayout>
 
-</LinearLayout>
+    <com.android.volley.toolbox.NetworkImageView
+        android:id="@+id/LAUNCHDETAIL_expanded_rocket_image"
+        android:visibility="invisible"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:contentDescription="@string/LAUNCHDETAIL_description_zoom_touch_close"/>
+</FrameLayout>

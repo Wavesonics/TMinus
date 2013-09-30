@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.Window;
 
 import com.darkrockstudios.apps.tminus.fragments.RocketDetailFragment;
@@ -84,5 +85,16 @@ public class RocketDetailActivity extends DatabaseActivity
 		}
 
 		return handled;
+	}
+
+	public void rocketImageClicked( View v )
+	{
+		RocketDetailFragment fragment =
+				(RocketDetailFragment) getSupportFragmentManager()
+						.findFragmentByTag( FRAGMENT_TAG );
+		if( fragment != null )
+		{
+			fragment.zoomRocketImage();
+		}
 	}
 }

@@ -2,53 +2,63 @@
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:tools="http://schemas.android.com/tools"
+                android:id="@+id/ROCKETDETAIL_container"
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
     <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="@style/textAppearanceLargeAccent"
-            android:id="@+id/ROCKETDETAIL_name"
-            android:layout_gravity="center"
-            android:layout_alignTop="@+id/ROCKETDETAIL_rocket_image"
-            android:layout_toRightOf="@+id/ROCKETDETAIL_rocket_image"/>
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/textAppearanceLargeAccent"
+        android:id="@+id/ROCKETDETAIL_name"
+        android:layout_gravity="center"
+        android:layout_alignTop="@+id/ROCKETDETAIL_rocket_image"
+        android:layout_toRightOf="@+id/ROCKETDETAIL_rocket_image"/>
 
     <com.android.volley.toolbox.NetworkImageView
-            android:layout_width="106dp"
-            android:layout_height="144dp"
-            android:id="@+id/ROCKETDETAIL_rocket_image"
-            android:layout_gravity="left|center_vertical"
-            android:layout_margin="@dimen/rocket_detail_padding"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true"/>
+        android:layout_width="106dp"
+        android:layout_height="144dp"
+        android:id="@+id/ROCKETDETAIL_rocket_image"
+        android:layout_gravity="left|center_vertical"
+        android:layout_margin="@dimen/rocket_detail_padding"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:onClick="rocketImageClicked"/>
 
     <TextView
-            tools:ignore="HardcodedText"
+        tools:ignore="HardcodedText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="configuration"
+        android:id="@+id/ROCKETDETAIL_configuration"
+        android:textColor="@color/secondary_text"
+        android:layout_below="@+id/ROCKETDETAIL_name"
+        android:layout_toRightOf="@+id/ROCKETDETAIL_rocket_image"/>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/scrollView"
+        android:padding="@dimen/rocket_detail_padding"
+        android:layout_below="@id/ROCKETDETAIL_rocket_image">
+
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="configuration"
-            android:id="@+id/ROCKETDETAIL_configuration"
-            android:textColor="@color/secondary_text"
-            android:layout_below="@+id/ROCKETDETAIL_name"
-            android:layout_toRightOf="@+id/ROCKETDETAIL_rocket_image"/>
-
-    <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/scrollView"
-            android:padding="@dimen/rocket_detail_padding"
-            android:layout_below="@id/ROCKETDETAIL_rocket_image">
-
-        <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="@string/ROCKETDETAIL_loading_summary"
-                android:id="@+id/ROCKETDETAIL_details"
-                android:singleLine="false"/>
+            android:text="@string/ROCKETDETAIL_loading_summary"
+            android:id="@+id/ROCKETDETAIL_details"
+            android:singleLine="false"/>
     </ScrollView>
+
+    <com.android.volley.toolbox.NetworkImageView
+        android:id="@+id/ROCKETDETAIL_expanded_rocket_image"
+        android:visibility="invisible"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:contentDescription="@string/LAUNCHDETAIL_description_zoom_touch_close"/>
 
 </RelativeLayout>

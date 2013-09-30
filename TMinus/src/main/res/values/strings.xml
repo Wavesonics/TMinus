@@ -42,6 +42,7 @@
     <string name="LAUNCHDETAIL_location_detail_button">Details</string>
     <string name="LAUNCHDETAIL_details_header">Details</string>
     <string name="LAUNCHDETAIL_net_hours">HOURS</string>
+    <string name="LAUNCHDETAIL_description_zoom_touch_close">Touch to close</string>
 
     <string name="LAUNCHDETAIL_share_no_mission">No mission details available</string>
     <string name="LAUNCHDETAIL_share_details">%1$s\n\nLocation: %2$s\n\nExpected Launch Time: %3$s</string>

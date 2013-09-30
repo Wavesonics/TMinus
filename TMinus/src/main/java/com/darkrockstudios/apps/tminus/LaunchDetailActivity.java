@@ -55,7 +55,7 @@ public class LaunchDetailActivity extends DatabaseActivity
 		switch( item.getItemId() )
 		{
 			case android.R.id.home:
-				NavUtils.navigateUpFromSameTask(this);
+				NavUtils.navigateUpFromSameTask( this );
 				handled = true;
 				break;
 			case R.id.action_settings:
@@ -97,7 +97,7 @@ public class LaunchDetailActivity extends DatabaseActivity
 
 	public void rocketDetailsClicked( View v )
 	{
-		Rocket rocket = (Rocket)v.getTag();
+		Rocket rocket = (Rocket) v.getTag();
 
 		final Context context = v.getContext();
 		Intent intent = new Intent( context, RocketDetailActivity.class );
@@ -107,11 +107,22 @@ public class LaunchDetailActivity extends DatabaseActivity
 
 	public void locationDetailsClicked( View v )
 	{
-		Location location = (Location)v.getTag();
+		Location location = (Location) v.getTag();
 
 		final Context context = v.getContext();
 		Intent intent = new Intent( context, LocationDetailActivity.class );
 		intent.putExtra( RocketDetailActivity.ARG_ITEM_ID, location.id );
 		context.startActivity( intent );
+	}
+
+	public void rocketImageClicked( View v )
+	{
+		LaunchDetailFragment fragment =
+				(LaunchDetailFragment) getSupportFragmentManager()
+						.findFragmentByTag( FRAGMENT_TAG );
+		if( fragment != null )
+		{
+			fragment.zoomRocketImage();
+		}
 	}
 }
