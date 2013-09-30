@@ -44,7 +44,8 @@ import java.util.concurrent.Callable;
 public class LaunchUpdateService extends Service
 {
 	public static final  String ACTION_LAUNCH_LIST_UPDATED       = "com.darkrockstudios.apps.tminus.ACTION_LAUNCH_LIST_UPDATED";
-	public static final  String ACTION_LAUNCH_LIST_UPDATE_FAILED = "com.darkrockstudios.apps.tminus.ACTION_LAUNCH_LIST_UPDATE_FAILED";
+	public static final  String ACTION_LAUNCH_LIST_UPDATE_FAILED =
+			"com.darkrockstudios.apps.tminus.ACTION_LAUNCH_LIST_UPDATE_FAILED";
 	private static final String TAG                              = LaunchUpdateService.class.getSimpleName();
 	private PowerManager.WakeLock m_wakeLock;
 
@@ -60,7 +61,7 @@ public class LaunchUpdateService extends Service
 
 		Log.d( TAG, "LaunchUpdateService created." );
 
-		final PowerManager powerManager = (PowerManager)getSystemService( Context.POWER_SERVICE );
+		final PowerManager powerManager = (PowerManager) getSystemService( Context.POWER_SERVICE );
 		m_wakeLock = powerManager.newWakeLock( PowerManager.PARTIAL_WAKE_LOCK, TAG );
 	}
 
@@ -203,7 +204,8 @@ public class LaunchUpdateService extends Service
 													                                                              .extractId( launch ) ) )
 											                                      {
 												                                      UpdateAlarmsService
-														                                      .cancelAlarmsForLaunch( launch, LaunchUpdateService.this );
+														                                      .cancelAlarmsForLaunch( launch,
+														                                                              LaunchUpdateService.this );
 											                                      }
 
 											                                      locInfoDao

@@ -11,13 +11,13 @@ import java.util.List;
  */
 public class TminusUri
 {
-	public static final String SCHEME         = "tminus";
-	public static final String AUTHORITY      = "tminus.com";
-	public static final String SEGMENT_LAUNCH = "launch";
-	public static final String SEGMENT_COUNTDOWN = "countdown";
+	public static final String SCHEME               = "tminus";
+	public static final String AUTHORITY            = "tminus.com";
+	public static final String SEGMENT_LAUNCH       = "launch";
+	public static final String SEGMENT_COUNTDOWN    = "countdown";
 	public static final String SEGMENT_NOTIFICATION = "notification";
-	public static final String SEGMENT_REMINDER = "reminder";
-	public static final String SEGMENT_IMMINENT = "reminder";
+	public static final String SEGMENT_REMINDER     = "reminder";
+	public static final String SEGMENT_IMMINENT     = "reminder";
 
 	private static Uri constructBaseUri()
 	{
@@ -29,12 +29,13 @@ public class TminusUri
 
 	public static Uri buildLaunchDetail( int launchId )
 	{
-		return constructBaseUri().buildUpon().appendPath( SEGMENT_LAUNCH ).appendPath( launchId+"" ).build();
+		return constructBaseUri().buildUpon().appendPath( SEGMENT_LAUNCH ).appendPath( launchId + "" ).build();
 	}
 
 	public static Uri buildLaunchCountDown( int launchId )
 	{
-		return constructBaseUri().buildUpon().appendPath( SEGMENT_LAUNCH ).appendPath( SEGMENT_COUNTDOWN ).appendPath( launchId+"" ).build();
+		return constructBaseUri().buildUpon().appendPath( SEGMENT_LAUNCH ).appendPath( SEGMENT_COUNTDOWN )
+				       .appendPath( launchId + "" ).build();
 	}
 
 	private static Uri constructBaseLaunchNotificationUri()
@@ -49,7 +50,7 @@ public class TminusUri
 	{
 		Uri.Builder builder = constructBaseLaunchNotificationUri().buildUpon();
 		builder.appendPath( SEGMENT_REMINDER );
-		builder.appendPath( launchId+"" );
+		builder.appendPath( launchId + "" );
 		return builder.build();
 	}
 
@@ -57,7 +58,7 @@ public class TminusUri
 	{
 		Uri.Builder builder = constructBaseLaunchNotificationUri().buildUpon();
 		builder.appendPath( SEGMENT_IMMINENT );
-		builder.appendPath( launchId+"" );
+		builder.appendPath( launchId + "" );
 		return builder.build();
 	}
 

@@ -94,7 +94,8 @@ public class NotificationService extends WakefulIntentService
 		builder.setAutoCancel( true );
 
 		final String summary = getString( string.NOTIFICATION_reminder_summary, launch.name, Utilities
-				                                                                                     .getDateText( launch.net ), launch.location.name );
+				                                                                                     .getDateText( launch.net ),
+		                                  launch.location.name );
 		builder.setStyle( new NotificationCompat.BigTextStyle()
 				                  .bigText( summary ) );
 
@@ -106,7 +107,7 @@ public class NotificationService extends WakefulIntentService
 		builder.setContentIntent( pendingIntent );
 
 		Notification notification = builder.build();
-		NotificationManager notificationManager = (NotificationManager)getSystemService( Context.NOTIFICATION_SERVICE );
+		NotificationManager notificationManager = (NotificationManager) getSystemService( Context.NOTIFICATION_SERVICE );
 
 		notificationManager.notify( NOTIFICATION_TAG_REMINDER, launch.id, notification );
 
@@ -133,7 +134,8 @@ public class NotificationService extends WakefulIntentService
 		builder.setAutoCancel( true );
 
 		final String summary = getString( string.NOTIFICATION_launch_imminent_summary, launch.name, Utilities
-				                                                                                            .getDateText( launch.net ), launch.location.name );
+				                                                                                            .getDateText( launch.net ),
+		                                  launch.location.name );
 		builder.setStyle( new NotificationCompat.BigTextStyle().bigText( summary ) );
 
 		Intent launchDetailIntent = new Intent( this, CountDownActivity.class );
@@ -144,7 +146,7 @@ public class NotificationService extends WakefulIntentService
 		builder.setContentIntent( pendingIntent );
 
 		Notification notification = builder.build();
-		NotificationManager notificationManager = (NotificationManager)getSystemService( Context.NOTIFICATION_SERVICE );
+		NotificationManager notificationManager = (NotificationManager) getSystemService( Context.NOTIFICATION_SERVICE );
 
 		notificationManager.notify( NOTIFICATION_TAG_LAUNCH_IMMINENT, launch.id, notification );
 

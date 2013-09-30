@@ -159,7 +159,7 @@ public class LaunchDetailFragment extends Fragment implements Listener, RocketDe
 			m_rocketImage =
 					(NetworkImageView) rootView.findViewById( R.id.LAUNCHDETAIL_mission_image );
 			m_rocketImageExpanded = (NetworkImageView) rootView
-					.findViewById( R.id.LAUNCHDETAIL_expanded_rocket_image );
+					                                           .findViewById( R.id.LAUNCHDETAIL_expanded_rocket_image );
 			m_locationContainer =
 					(ViewGroup) rootView.findViewById( id.LAUNCHDETAIL_location_container );
 			m_rocketContainer =
@@ -217,14 +217,14 @@ public class LaunchDetailFragment extends Fragment implements Listener, RocketDe
 					           m_launchItem.rocket.configuration );
 
 			Intent intent = new Intent( Intent.ACTION_INSERT )
-					.setData( Events.CONTENT_URI )
-					.putExtra( CalendarContract.EXTRA_EVENT_BEGIN_TIME, m_launchItem.net.getTime() )
-					.putExtra( CalendarContract.EXTRA_EVENT_END_TIME,
-					           m_launchItem.windowend.getTime() )
-					.putExtra( Events.TITLE, title )
-					.putExtra( Events.DESCRIPTION, description )
-					.putExtra( Events.EVENT_LOCATION, m_launchItem.location.name )
-					.putExtra( Events.AVAILABILITY, Events.AVAILABILITY_BUSY );
+					                .setData( Events.CONTENT_URI )
+					                .putExtra( CalendarContract.EXTRA_EVENT_BEGIN_TIME, m_launchItem.net.getTime() )
+					                .putExtra( CalendarContract.EXTRA_EVENT_END_TIME,
+					                           m_launchItem.windowend.getTime() )
+					                .putExtra( Events.TITLE, title )
+					                .putExtra( Events.DESCRIPTION, description )
+					                .putExtra( Events.EVENT_LOCATION, m_launchItem.location.name )
+					                .putExtra( Events.AVAILABILITY, Events.AVAILABILITY_BUSY );
 			startActivity( intent );
 		}
 	}
@@ -290,7 +290,7 @@ public class LaunchDetailFragment extends Fragment implements Listener, RocketDe
 					(TextView) rootView.findViewById( R.id.LAUNCHDETAIL_location );
 			location.setText( m_launchItem.location.name );
 			int flagResourceId = Utilities
-					.getFlagResource( m_launchItem.location.locInfo.countrycode );
+					                     .getFlagResource( m_launchItem.location.locInfo.countrycode );
 			location.setCompoundDrawablesWithIntrinsicBounds( 0, 0, flagResourceId, 0 );
 
 			final TextView windowLabel =
@@ -462,7 +462,7 @@ public class LaunchDetailFragment extends Fragment implements Listener, RocketDe
 		if( m_locationContainer != null )
 		{
 			LocationDetailFragment locationDetailFragment = LocationDetailFragment
-					.newInstance( m_launchItem.location.id, isTabletLayout );
+					                                                .newInstance( m_launchItem.location.id, isTabletLayout );
 			getChildFragmentManager().beginTransaction()
 					.add( R.id.LAUNCHDETAIL_location_container, locationDetailFragment,
 					      LOCATION_FRAGMENT_TAG )

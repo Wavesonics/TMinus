@@ -20,7 +20,8 @@ import java.util.Vector;
  */
 public class RocketDetailUpdateService extends Service implements RocketDetailFetchListener, RocketLoadListener
 {
-	public static final  String ACTION_ROCKET_DETAIL_UPDATE_FAILED = "com.darkrockstudios.apps.tminus.ROCKET_DETAIL_UPDATE_FAILED";
+	public static final  String ACTION_ROCKET_DETAIL_UPDATE_FAILED =
+			"com.darkrockstudios.apps.tminus.ROCKET_DETAIL_UPDATE_FAILED";
 	public static final  String ACTION_ROCKET_DETAIL_UPDATED       = "com.darkrockstudios.apps.tminus.ROCKET_DETAIL_UPDATED";
 	public static final  String EXTRA_ROCKET_ID                    = "rocket_id";
 	private static final String TAG                                = RocketDetailUpdateService.class.getSimpleName();
@@ -150,11 +151,15 @@ public class RocketDetailUpdateService extends Service implements RocketDetailFe
 		public boolean equals( Object that )
 		{
 			if( this == that )
+			{
 				return true;
+			}
 			if( !(that instanceof RocketId) )
+			{
 				return false;
+			}
 
-			final RocketId thatId = (RocketId)that;
+			final RocketId thatId = (RocketId) that;
 			return getValue() == thatId.getValue();
 		}
 	}

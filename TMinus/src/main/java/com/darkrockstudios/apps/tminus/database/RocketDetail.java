@@ -9,14 +9,14 @@ import com.j256.ormlite.table.DatabaseTable;
 @DatabaseTable(tableName = RocketDetail.TABLE_NAME)
 public class RocketDetail
 {
-    public static final String TABLE_NAME = "RocketDetail";
+	public static final String TABLE_NAME = "RocketDetail";
 
-    @DatabaseField(id = true)
-    public int rocketId;
+	@DatabaseField(id = true)
+	public int rocketId;
 
-    @DatabaseField
-    public String imageUrl;
+	@DatabaseField
+	public String imageUrl;
 
-    @DatabaseField
-    public String summary;
+	@DatabaseField
+	public String summary;
 }

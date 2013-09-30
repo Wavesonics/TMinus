@@ -70,7 +70,7 @@ public class RocketDetailActivity extends DatabaseActivity
 		switch( item.getItemId() )
 		{
 			case android.R.id.home:
-				NavUtils.navigateUpFromSameTask(this);
+				NavUtils.navigateUpFromSameTask( this );
 				handled = true;
 				break;
 			case R.id.action_settings:
@@ -91,7 +91,7 @@ public class RocketDetailActivity extends DatabaseActivity
 	{
 		RocketDetailFragment fragment =
 				(RocketDetailFragment) getSupportFragmentManager()
-						.findFragmentByTag( FRAGMENT_TAG );
+						                       .findFragmentByTag( FRAGMENT_TAG );
 		if( fragment != null )
 		{
 			fragment.zoomRocketImage();

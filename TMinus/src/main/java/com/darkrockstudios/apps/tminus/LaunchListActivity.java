@@ -60,8 +60,8 @@ public class LaunchListActivity extends DatabaseActivity
 
 			// In two-pane mode, list items should be given the
 			// 'activated' state when touched.
-			((LaunchListFragment)getSupportFragmentManager()
-					                     .findFragmentById( R.id.launch_list ))
+			((LaunchListFragment) getSupportFragmentManager()
+					                      .findFragmentById( R.id.launch_list ))
 					.setActivateOnItemClick( true );
 		}
 
@@ -135,15 +135,15 @@ public class LaunchListActivity extends DatabaseActivity
 
 	private void refreshLaunchList()
 	{
-		LaunchListFragment launchListFragment = (LaunchListFragment)getSupportFragmentManager()
-				                                                            .findFragmentById( R.id.launch_list );
+		LaunchListFragment launchListFragment = (LaunchListFragment) getSupportFragmentManager()
+				                                                             .findFragmentById( R.id.launch_list );
 		launchListFragment.refresh();
 	}
 
 	public void countDownClicked( View v )
 	{
-		LaunchDetailFragment launchDetailFragment = (LaunchDetailFragment)getSupportFragmentManager()
-				.findFragmentById( R.id.launch_detail_container );
+		LaunchDetailFragment launchDetailFragment = (LaunchDetailFragment) getSupportFragmentManager()
+				                                                                   .findFragmentById( R.id.launch_detail_container );
 		if( launchDetailFragment != null )
 		{
 			final int launchId = launchDetailFragment.getLaunchId();
@@ -158,7 +158,7 @@ public class LaunchListActivity extends DatabaseActivity
 
 	public void rocketDetailsClicked( View v )
 	{
-		Rocket rocket = (Rocket)v.getTag();
+		Rocket rocket = (Rocket) v.getTag();
 
 		RocketDetailFragment rocketDetailFragment = RocketDetailFragment.newInstance( rocket.id );
 		rocketDetailFragment.show( getSupportFragmentManager(), "dialog" );
@@ -166,7 +166,7 @@ public class LaunchListActivity extends DatabaseActivity
 
 	public void locationDetailsClicked( View v )
 	{
-		Location location = (Location)v.getTag();
+		Location location = (Location) v.getTag();
 
 		LocationDetailFragment locationDetailFragment = LocationDetailFragment.newInstance( location.id, true );
 		locationDetailFragment.show( getSupportFragmentManager(), "dialog" );
@@ -175,7 +175,7 @@ public class LaunchListActivity extends DatabaseActivity
 	public void rocketImageClicked( View v )
 	{
 		LaunchDetailFragment fragment = (LaunchDetailFragment) getSupportFragmentManager()
-				.findFragmentById( R.id.launch_detail_container );
+				                                                       .findFragmentById( R.id.launch_detail_container );
 
 		if( fragment != null )
 		{

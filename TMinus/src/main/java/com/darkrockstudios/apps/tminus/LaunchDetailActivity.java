@@ -119,7 +119,7 @@ public class LaunchDetailActivity extends DatabaseActivity
 	{
 		LaunchDetailFragment fragment =
 				(LaunchDetailFragment) getSupportFragmentManager()
-						.findFragmentByTag( FRAGMENT_TAG );
+						                       .findFragmentByTag( FRAGMENT_TAG );
 		if( fragment != null )
 		{
 			fragment.zoomRocketImage();

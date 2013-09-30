@@ -104,7 +104,7 @@ public class RocketDetailFragment extends DialogFragment implements Listener, Ro
 			m_rocketImage =
 					(NetworkImageView) rootView.findViewById( R.id.ROCKETDETAIL_rocket_image );
 			m_rocketImageExpanded = (NetworkImageView) rootView
-					.findViewById( R.id.ROCKETDETAIL_expanded_rocket_image );
+					                                           .findViewById( R.id.ROCKETDETAIL_expanded_rocket_image );
 			m_rocketName = (TextView) rootView.findViewById( R.id.ROCKETDETAIL_name );
 			m_rocketConfiguration =
 					(TextView) rootView.findViewById( R.id.ROCKETDETAIL_configuration );
@@ -153,7 +153,7 @@ public class RocketDetailFragment extends DialogFragment implements Listener, Ro
 				if( m_rocketImage != null )
 				{
 					ImageLoader imageLoader = new ImageLoader( TMinusApplication
-							                                           .getRequestQueue(),  TMinusApplication.getBitmapCache() );
+							                                           .getRequestQueue(), TMinusApplication.getBitmapCache() );
 					m_rocketImage.setImageUrl( m_rocketDetail.imageUrl, imageLoader );
 
 					m_rocketImageExpanded.setImageUrl( m_rocketDetail.imageUrl, imageLoader );
@@ -285,7 +285,7 @@ public class RocketDetailFragment extends DialogFragment implements Listener, Ro
 
 						activity.setProgressBarIndeterminateVisibility( false );
 						Crouton.makeText( activity, string.TOAST_rocket_detail_update_complete, Style.CONFIRM )
-						     .show();
+						       .show();
 					}
 				}
 				else if( RocketDetailUpdateService.ACTION_ROCKET_DETAIL_UPDATE_FAILED.equals( intent.getAction() ) )

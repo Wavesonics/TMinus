@@ -20,7 +20,7 @@ public class BitmapCache extends LruCache implements ImageCache
 	@Override
 	public Bitmap getBitmap( String url )
 	{
-		return (Bitmap)get( url );
+		return (Bitmap) get( url );
 	}
 
 	@Override

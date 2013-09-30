@@ -124,7 +124,7 @@ public class LocationDetailFragment extends DialogFragment
 		final LatLng pos = getLocation();
 
 		SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager()
-				.findFragmentByTag( MAP_FRAGMENT_TAG );
+				                                                      .findFragmentByTag( MAP_FRAGMENT_TAG );
 		if( mapFragment != null )
 		{
 			GoogleMap map = mapFragment.getMap();
@@ -179,7 +179,7 @@ public class LocationDetailFragment extends DialogFragment
 			if( m_locationName != null )
 			{
 				int flagResourceId = Utilities
-						.getFlagResource( m_location.locInfo.countrycode );
+						                     .getFlagResource( m_location.locInfo.countrycode );
 				m_locationName.setCompoundDrawablesWithIntrinsicBounds( flagResourceId, 0, 0, 0 );
 			}
 		}

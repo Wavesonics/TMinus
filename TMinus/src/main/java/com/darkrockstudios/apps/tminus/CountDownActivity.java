@@ -62,10 +62,10 @@ public class CountDownActivity extends Activity implements LaunchLoader.Listener
 		m_timeTicker = new TickTimer();
 
 		final Typeface typeface = Typeface.createFromAsset( getAssets(), FONT_PATH );
-		m_timerView = (TextView)findViewById( R.id.COUNTDOWN_timer );
+		m_timerView = (TextView) findViewById( R.id.COUNTDOWN_timer );
 		m_timerView.setTypeface( typeface );
 
-		m_statusView = (TextView)findViewById( id.COUNTDOWN_launch_status );
+		m_statusView = (TextView) findViewById( id.COUNTDOWN_launch_status );
 		m_statusView.setTypeface( typeface );
 
 		loadLaunch();
@@ -208,7 +208,8 @@ public class CountDownActivity extends Activity implements LaunchLoader.Listener
 		}
 
 		m_timerView
-				.setText( sign + twoDigit.format( hr ) + ":" + twoDigit.format( min ) + ":" + twoDigit.format( sec ) + ":" + twoDigit.format( centisec ) );
+				.setText( sign + twoDigit.format( hr ) + ":" + twoDigit.format( min ) + ":" + twoDigit.format( sec ) + ":" +
+				          twoDigit.format( centisec ) );
 	}
 
 	private void blinkTimer()

@@ -32,7 +32,8 @@ public class RocketDetailFetcher
 {
 	private static final String TAG = RocketDetailFetcher.class.getSimpleName();
 
-	private static final Pattern WIKI_ARTICLE_PATTERN = Pattern.compile( "^http[s]?://[a-z]{2}.wikipedia.org/wiki/([a-zA-Z0-9-_\\(\\)]+)/?(?:\\?.*)?$" );
+	private static final Pattern WIKI_ARTICLE_PATTERN =
+			Pattern.compile( "^http[s]?://[a-z]{2}.wikipedia.org/wiki/([a-zA-Z0-9-_\\(\\)]+)/?(?:\\?.*)?$" );
 
 	private static void requestRocketImage( String articleTitle, IntermediateLoadListener listener, Context context )
 	{
@@ -43,7 +44,8 @@ public class RocketDetailFetcher
 		// prop=pageimages
 
 		final String baseUrl = "http://en.wikipedia.org";
-		final String imageQuery = "/w/api.php?action=query&prop=pageimages&format=json&piprop=thumbnail%7Cname&pithumbsize=512&pilimit=1&indexpageids=&redirects=&titles=";
+		final String imageQuery =
+				"/w/api.php?action=query&prop=pageimages&format=json&piprop=thumbnail%7Cname&pithumbsize=512&pilimit=1&indexpageids=&redirects=&titles=";
 
 		final String url = baseUrl + imageQuery + articleTitle;
 
@@ -58,7 +60,8 @@ public class RocketDetailFetcher
 		Log.d( TAG, "Requesting Rocket Article..." );
 
 		final String baseUrl = "http://en.wikipedia.org";
-		final String articleQuery = "/w/api.php?action=parse&format=json&prop=wikitext&section=0&contentformat=text%2Fx-wiki&contentmodel=wikitext&redirects=&page=";
+		final String articleQuery =
+				"/w/api.php?action=parse&format=json&prop=wikitext&section=0&contentformat=text%2Fx-wiki&contentmodel=wikitext&redirects=&page=";
 
 		final String url = baseUrl + articleQuery + articleTitle;
 
@@ -205,7 +208,7 @@ public class RocketDetailFetcher
 		private static final Pattern SIMPLE_LINK_PATTERN  = Pattern.compile( "\\[\\[([^|]*?)\\]\\]" );
 		private static final Pattern ASSET_PATTERN        = Pattern.compile( "\\[\\[[a-zA-Z]+:(.*?)\\]\\]" );
 		private static final Pattern REF_PATTERN          = Pattern.compile( "(<ref>.*?</ref>)" );
-		private static final Pattern CITE_PATTERN          = Pattern.compile( "(\\{\\{cite.*?\\}\\})" );
+		private static final Pattern CITE_PATTERN         = Pattern.compile( "(\\{\\{cite.*?\\}\\})" );
 		private static final Pattern CONVERT_PATTERN      = Pattern.compile( "\\{\\{convert\\|([0-9]+)\\|([a-zA-Z]+)\\}\\}" );
 		private static final Pattern BOLD_PATTERN         = Pattern.compile( "'''(.+?)'''" );
 		private static final Pattern ITALICS_PATTERN      = Pattern.compile( "''(.+?)''" );

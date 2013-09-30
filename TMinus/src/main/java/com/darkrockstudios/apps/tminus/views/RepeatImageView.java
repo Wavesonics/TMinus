@@ -18,7 +18,7 @@ import com.darkrockstudios.apps.tminus.R;
  */
 public class RepeatImageView extends ImageView
 {
-	private int m_tileAxis;
+	private int   m_tileAxis;
 	private float m_scaleY;
 
 	public RepeatImageView( Context context )
@@ -56,7 +56,7 @@ public class RepeatImageView extends ImageView
 
 		if( d != null && d instanceof BitmapDrawable )
 		{
-			BitmapDrawable bd = (BitmapDrawable)d;
+			BitmapDrawable bd = (BitmapDrawable) d;
 
 			bd.mutate();
 			switch( m_tileAxis )
@@ -95,7 +95,7 @@ public class RepeatImageView extends ImageView
 
 		if( d != null && d instanceof BitmapDrawable )
 		{
-			BitmapDrawable bd = (BitmapDrawable)d;
+			BitmapDrawable bd = (BitmapDrawable) d;
 
 			Bitmap bitmap = bd.getBitmap();
 			if( bitmap != null )
@@ -116,16 +116,16 @@ public class RepeatImageView extends ImageView
 	}
 
 	@Override
-	public void onMeasure(int widthMeasureSpec, int heightMeasureSpec)
+	public void onMeasure( int widthMeasureSpec, int heightMeasureSpec )
 	{
-		super.onMeasure( widthMeasureSpec,  heightMeasureSpec);
+		super.onMeasure( widthMeasureSpec, heightMeasureSpec );
 
 		//setScaleY( m_scaleY );
 		//setTiling();
 	}
 
 	@Override
-	public void onLayout(boolean changed, int left, int top, int right, int bottom)
+	public void onLayout( boolean changed, int left, int top, int right, int bottom )
 	{
 		super.onLayout( changed, left, top, right, bottom );
 
@@ -134,7 +134,7 @@ public class RepeatImageView extends ImageView
 	}
 
 	@Override
-	protected void onSizeChanged (int w, int h, int oldw, int oldh)
+	protected void onSizeChanged( int w, int h, int oldw, int oldh )
 	{
 		super.onSizeChanged( w, h, oldw, oldh );
 

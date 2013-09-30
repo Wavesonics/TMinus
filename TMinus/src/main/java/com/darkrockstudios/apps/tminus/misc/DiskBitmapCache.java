@@ -34,7 +34,9 @@ public class DiskBitmapCache extends DiskBasedCache implements ImageLoader.Image
 		final Entry requestedItem = get( url );
 
 		if( requestedItem == null )
+		{
 			return null;
+		}
 
 		return BitmapFactory.decodeByteArray( requestedItem.data, 0, requestedItem.data.length );
 	}

@@ -87,10 +87,11 @@ public class LaunchListFragment extends ListFragment
 	}
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-	                         Bundle savedInstanceState) {
+	public View onCreateView( LayoutInflater inflater, ViewGroup container,
+	                          Bundle savedInstanceState )
+	{
 
-		return inflater.inflate( R.layout.fragment_launch_list, null);
+		return inflater.inflate( R.layout.fragment_launch_list, null );
 	}
 
 	@Override
@@ -100,7 +101,7 @@ public class LaunchListFragment extends ListFragment
 
 		// Restore the previously serialized activated item position.
 		if( savedInstanceState != null
-				    && savedInstanceState.containsKey( STATE_ACTIVATED_POSITION ) )
+		    && savedInstanceState.containsKey( STATE_ACTIVATED_POSITION ) )
 		{
 			setActivatedPosition( savedInstanceState.getInt( STATE_ACTIVATED_POSITION ) );
 		}
@@ -123,7 +124,7 @@ public class LaunchListFragment extends ListFragment
 		}
 		else
 		{
-			m_callbacks = (Callbacks)activity;
+			m_callbacks = (Callbacks) activity;
 		}
 
 		m_updateReceiver = new LaunchUpdateReceiver();
@@ -154,7 +155,7 @@ public class LaunchListFragment extends ListFragment
 
 		// Notify the active callbacks interface (the activity, if the
 		// fragment is attached to one) that an item has been selected.
-		Launch launch = (Launch)listView.getAdapter().getItem( position );
+		Launch launch = (Launch) listView.getAdapter().getItem( position );
 		m_callbacks.onItemSelected( launch );
 	}
 
@@ -278,17 +279,17 @@ public class LaunchListFragment extends ListFragment
 			View view = convertView;
 			if( view == null )
 			{
-				LayoutInflater inflater = (LayoutInflater)getContext()
-						                                          .getSystemService( Context.LAYOUT_INFLATER_SERVICE );
+				LayoutInflater inflater = (LayoutInflater) getContext()
+						                                           .getSystemService( Context.LAYOUT_INFLATER_SERVICE );
 				view = inflater.inflate( R.layout.row_launch_list_item, null );
 			}
 
 			final Launch launch = getItem( pos );
 
-			final TextView titleView = (TextView)view.findViewById( R.id.launch_list_item_title );
+			final TextView titleView = (TextView) view.findViewById( R.id.launch_list_item_title );
 			titleView.setText( launch.name );
 
-			final TextView descriptionView = (TextView)view.findViewById( R.id.launch_list_item_description );
+			final TextView descriptionView = (TextView) view.findViewById( R.id.launch_list_item_description );
 			if( launch.mission != null )
 			{
 				descriptionView.setText( launch.mission.description );
@@ -298,9 +299,9 @@ public class LaunchListFragment extends ListFragment
 				descriptionView.setText( R.string.LAUNCHLIST_no_mission_details );
 			}
 
-			final TextView netView1 = (TextView)view.findViewById( R.id.launch_list_item_net_1 );
-			final TextView netView2 = (TextView)view.findViewById( R.id.launch_list_item_net_2 );
-			final TextView netView3 = (TextView)view.findViewById( R.id.launch_list_item_net_3 );
+			final TextView netView1 = (TextView) view.findViewById( R.id.launch_list_item_net_1 );
+			final TextView netView2 = (TextView) view.findViewById( R.id.launch_list_item_net_2 );
+			final TextView netView3 = (TextView) view.findViewById( R.id.launch_list_item_net_3 );
 
 			SimpleDateFormat monthDay = new SimpleDateFormat( "MMM dd" );
 			SimpleDateFormat year = new SimpleDateFormat( "yyyy" );
@@ -310,7 +311,7 @@ public class LaunchListFragment extends ListFragment
 			netView2.setText( year.format( launch.net ) );
 			netView3.setText( time.format( launch.net ) );
 
-			final ImageView typeIcon = (ImageView) view.findViewById(R.id.LAUNCHLIST_type_icon);
+			final ImageView typeIcon = (ImageView) view.findViewById( R.id.LAUNCHLIST_type_icon );
 			typeIcon.setImageResource( Utilities.getLaunchTypeResource( launch.mission ) );
 
 			return view;

@@ -13,7 +13,7 @@ public class LocInfo
 {
 	public transient static final String TABLE_NAME = "LocInfo";
 
-	@DatabaseField( id = true )
+	@DatabaseField(id = true)
 	public int id;
 
 	@DatabaseField
