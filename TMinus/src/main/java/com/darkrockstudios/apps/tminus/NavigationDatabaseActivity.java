@@ -2,6 +2,7 @@ package com.darkrockstudios.apps.tminus;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -9,6 +10,8 @@ import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 /**
  * Created by Adam on 10/6/13.
@@ -19,10 +22,11 @@ public abstract class NavigationDatabaseActivity extends DatabaseActivity
 {
 	protected DrawerLayout          m_drawerLayout;
 	protected ActionBarDrawerToggle m_drawerToggle;
+	protected ListView m_navigationList;
 
 	protected void initNavDrawer()
 	{
-		m_drawerLayout = (DrawerLayout) findViewById( R.id.drawer_layout );
+		m_drawerLayout = (DrawerLayout) findViewById( R.id.NAVDRAWER_drawer_layout );
 		m_drawerToggle =
 				new NavigationDrawerToggle( this, m_drawerLayout, R.drawable.ic_drawer, R.string.NAVDRAWER_open_description,
 				                            R.string.NAVDRAWER_close_description );
@@ -30,11 +34,46 @@ public abstract class NavigationDatabaseActivity extends DatabaseActivity
 		// Set the drawer toggle as the DrawerListener
 		m_drawerLayout.setDrawerListener( m_drawerToggle );
 
+		m_navigationList = (ListView) findViewById( R.id.NAVDRAWER_left_drawer );
+		m_navigationList.setAdapter( new NavigationListAdapter( this ) );
+
 		ActionBar actionBar = getActionBar();
 		if( actionBar != null )
 		{
 			actionBar.setDisplayHomeAsUpEnabled( true );
 			actionBar.setHomeButtonEnabled( true );
+		}
+	}
+
+	private class NavigationListAdapter extends ArrayAdapter<String>
+	{
+		public NavigationListAdapter( Context context )
+		{
+			super( context, R.layout.row_navigation_item, R.id.NAVDRAWER_nav_item_title );
+		}
+
+		@Override
+		public int getCount()
+		{
+			return 0;
+		}
+
+		@Override
+		public String getItem( int position )
+		{
+			return "";
+		}
+
+		@Override
+		public int getPosition( String item )
+		{
+			return super.getPosition( item );
+		}
+
+		@Override
+		public boolean hasStableIds()
+		{
+			return true;
 		}
 	}
 
