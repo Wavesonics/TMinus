@@ -12,6 +12,9 @@
     <string name="title_activity_rocket_detail">Rocket Detail</string>
     <string name="title_activity_location_detail">Location Detail</string>
 
+    <string name="NAVDRAWER_open_description">Open navigation drawer</string>
+    <string name="NAVDRAWER_close_description">Close navigation drawer</string>
+
     <string name="MENU_share_item">Share</string>
     <string name="MENU_add_to_calendar_item">Add to Calendar</string>
 

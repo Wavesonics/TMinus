@@ -34,8 +34,8 @@ import com.darkrockstudios.apps.tminus.launchlibrary.Rocket;
  * {@link com.darkrockstudios.apps.tminus.fragments.LaunchListFragment.Callbacks} interface
  * to listen for item selections.
  */
-public class LaunchListActivity extends DatabaseActivity
-		implements Callbacks
+public class LaunchListActivity extends NavigationDatabaseActivity
+implements Callbacks
 {
 	/**
 	 * Whether or not the activity is in two-pane mode, i.e. running on a tablet
@@ -60,12 +60,11 @@ public class LaunchListActivity extends DatabaseActivity
 
 			// In two-pane mode, list items should be given the
 			// 'activated' state when touched.
-			((LaunchListFragment) getSupportFragmentManager()
-					                      .findFragmentById( R.id.launch_list ))
-					.setActivateOnItemClick( true );
+			LaunchListFragment fragment = (LaunchListFragment) getSupportFragmentManager().findFragmentById( R.id.launch_list );
+			fragment.setActivateOnItemClick( true );
 		}
 
-		// TODO: If exposing deep links into your app, handle intents here.
+		initNavDrawer();
 	}
 
 	@Override
@@ -82,6 +81,7 @@ public class LaunchListActivity extends DatabaseActivity
 	public boolean onOptionsItemSelected( MenuItem item )
 	{
 		final boolean handled;
+
 		// Handle item selection
 		switch( item.getItemId() )
 		{
