@@ -3,6 +3,7 @@
     <CLASSES>
       <root url="jar://$PROJECT_DIR$/TMinus/build/exploded-bundles/ComGoogleAndroidGmsPlayServices3265.aar/classes.jar!/" />
       <root url="file://$PROJECT_DIR$/TMinus/build/exploded-bundles/ComGoogleAndroidGmsPlayServices3265.aar/res" />
+      <root url="jar://$PROJECT_DIR$/TMinus/build/exploded-bundles/ComGoogleAndroidGmsPlayServices3265.aar/classes.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

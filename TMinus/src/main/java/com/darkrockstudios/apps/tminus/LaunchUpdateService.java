@@ -27,6 +27,7 @@ import com.google.gson.JsonSyntaxException;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.misc.TransactionManager;
+import com.j256.ormlite.stmt.DeleteBuilder;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -35,6 +36,7 @@ import org.json.JSONObject;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.concurrent.Callable;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by Adam on 7/13/13.
@@ -264,9 +266,13 @@ public class LaunchUpdateService extends Service
 				{
 					e.printStackTrace();
 				}
-
-				OpenHelperManager.releaseHelper();
+				finally
+				{
+					OpenHelperManager.releaseHelper();
+				}
 			}
+
+			cleanUpOldLaunches();
 
 			return numLaunches;
 		}
@@ -277,6 +283,42 @@ public class LaunchUpdateService extends Service
 			Log.d( TAG, "Background update complete." );
 			sendSuccessBroadcast();
 			stopService();
+		}
+
+		private Date getOldLaunchThreshold()
+		{
+			final long MAX_DAYS_OLD = 5;
+
+			Date now = new Date();
+			Date cutOffDate = new Date( now.getTime() - TimeUnit.DAYS.toMillis( MAX_DAYS_OLD ) );
+
+			return cutOffDate;
+		}
+
+		private void cleanUpOldLaunches()
+		{
+			final DatabaseHelper databaseHelper = OpenHelperManager
+					                                      .getHelper( LaunchUpdateService.this, DatabaseHelper.class );
+			if( databaseHelper != null )
+			{
+				try
+				{
+					final Dao<Launch, Integer> launchDao = databaseHelper.getLaunchDao();
+
+					DeleteBuilder<Launch, Integer> builder = launchDao.deleteBuilder();
+					builder.where().lt( "NET", getOldLaunchThreshold() );
+
+					launchDao.delete( builder.prepare() );
+				}
+				catch( SQLException e )
+				{
+					e.printStackTrace();
+				}
+				finally
+				{
+					OpenHelperManager.releaseHelper();
+				}
+			}
 		}
 	}
 }
