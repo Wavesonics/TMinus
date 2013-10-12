@@ -71,12 +71,10 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textAppearance="@style/textAppearanceLargeAccent"
-                        android:text="Mission Name"
+                        tools:text="Mission Name"
                         android:id="@+id/LAUNCHDETAIL_mission_name"
                         android:textStyle="bold"
-                        tools:ignore="HardcodedText"
                         android:layout_marginTop="@dimen/launch_detail_padding"/>
-
 
                 <ImageView
                     android:layout_width="match_parent"
@@ -90,12 +88,10 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textAppearance="?android:attr/textAppearanceLarge"
-                        android:text="Mission description"
-                        android:id="@+id/LAUNCHDETAIL_mission_description"
-                        tools:ignore="HardcodedText"/>
+                        tools:text="Mission description"
+                        android:id="@+id/LAUNCHDETAIL_mission_description"/>
 
                 <TextView
-                        tools:ignore="HardcodedText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textAppearance="@style/textAppearanceLargeAccent"
@@ -117,43 +113,39 @@
                         android:layout_height="wrap_content">
 
                     <TextView
-                        tools:ignore="HardcodedText"
                         android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textAppearance="?android:attr/textAppearanceLarge"
-                            android:text="@string/LAUNCHDETAIL_status"
-                            android:layout_weight="1"/>
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:text="@string/LAUNCHDETAIL_status"
+                        android:layout_weight="1"/>
 
                     <TextView
-                            tools:ignore="HardcodedText"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textAppearance="?android:attr/textAppearanceLarge"
-                            android:textStyle="bold"
-                            android:textColor="@color/accent_text"
-                            android:text="GO"
-                            android:id="@+id/LAUNCHDETAIL_status"
-                            android:layout_weight="1"/>
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:textStyle="bold"
+                        android:textColor="@color/accent_text"
+                        tools:text="GO"
+                        android:id="@+id/LAUNCHDETAIL_status"
+                        android:layout_weight="1"/>
 
                     <TextView
                         android:id="@+id/LAUNCHDETAIL_window_length_label"
-                        tools:ignore="HardcodedText"
                         android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textAppearance="?android:attr/textAppearanceLarge"
-                            android:text="@string/LAUNCHDETAIL_launch_window_length"
-                            android:layout_weight="1"/>
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:text="@string/LAUNCHDETAIL_launch_window_length"
+                        android:layout_weight="1"/>
 
                     <TextView
                         android:id="@+id/LAUNCHDETAIL_window_length"
-                        tools:ignore="HardcodedText"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textAppearance="?android:attr/textAppearanceLarge"
-                            android:textStyle="bold"
-                            android:textColor="@color/accent_text"
-                            android:text="0d 0h 0m"
-                            android:layout_weight="1"/>
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:textStyle="bold"
+                        android:textColor="@color/accent_text"
+                        tools:text="0d 0h 0m"
+                        android:layout_weight="1"/>
                 </LinearLayout>
 
                 <LinearLayout
@@ -164,11 +156,11 @@
 
                     <ImageView
                         android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/imageView3"
-                            android:src="@drawable/ic_launch_detail_time"
-                            android:layout_marginBottom="@dimen/launch_detail_row_icon_bottom_padding"
-                            android:layout_marginLeft="@dimen/launch_detail_row_icon_left_padding"/>
+                        android:layout_height="wrap_content"
+                        android:id="@+id/imageView3"
+                        android:src="@drawable/ic_launch_detail_time"
+                        android:layout_marginBottom="@dimen/launch_detail_row_icon_bottom_padding"
+                        android:layout_marginLeft="@dimen/launch_detail_row_icon_left_padding"/>
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -212,7 +204,7 @@
                             android:id="@+id/launch_detail_net_3"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="12:00"
+                            tools:text="12:00"
                             android:textAppearance="?android:attr/textAppearanceMedium"
                             android:singleLine="true"/>
 
@@ -281,7 +273,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:textAppearance="?android:attr/textAppearanceLarge"
-                        android:text="Location Name"
+                        tools:text="Location Name"
                         android:textColor="@color/accent_text"
                         android:layout_weight="1"
                         android:gravity="right|center_vertical"
@@ -333,10 +325,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:text="Rocket Name"
+                        tools:text="Rocket Name"
                         android:id="@+id/LAUNCHDETAIL_rocket_name"
-                        android:textColor="@color/secondary_text"
-                        tools:ignore="HardcodedText"/>
+                        android:textColor="@color/secondary_text"/>
 
                     <Button
                         android:layout_width="0dp"
