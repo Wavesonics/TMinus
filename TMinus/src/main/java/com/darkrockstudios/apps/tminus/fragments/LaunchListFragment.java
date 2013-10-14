@@ -68,6 +68,11 @@ public class LaunchListFragment extends ListFragment
 	private int       m_activatedPosition = ListView.INVALID_POSITION;
 	private LaunchUpdateReceiver m_updateReceiver;
 
+	public static LaunchListFragment newInstance()
+	{
+		return new LaunchListFragment();
+	}
+
 	/**
 	 * Mandatory empty constructor for the fragment manager to instantiate the
 	 * fragment (e.g. upon screen orientation changes).

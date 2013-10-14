@@ -34,7 +34,7 @@ public class LaunchDetailActivity extends DatabaseActivity
 				// using a fragment transaction.
 				LaunchDetailFragment fragment = LaunchDetailFragment.newInstance( m_launchId );
 				getSupportFragmentManager().beginTransaction()
-						.add( R.id.launch_detail_container, fragment, FRAGMENT_TAG )
+						.add( R.id.COMMON_detail_fragment_container, fragment, FRAGMENT_TAG )
 						.commit();
 			}
 		}

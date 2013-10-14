@@ -27,7 +27,7 @@ public abstract class NavigationDatabaseActivity extends DatabaseActivity
 {
 	protected DrawerLayout          m_drawerLayout;
 	protected ActionBarDrawerToggle m_drawerToggle;
-	protected ListView m_navigationList;
+	protected ListView              m_navigationList;
 
 	protected void initNavDrawer()
 	{
@@ -40,7 +40,7 @@ public abstract class NavigationDatabaseActivity extends DatabaseActivity
 		m_drawerLayout.setDrawerListener( m_drawerToggle );
 
 		m_navigationList = (ListView) findViewById( R.id.NAVDRAWER_left_drawer );
-		NavigationListAdapter navListAdapter =  new NavigationListAdapter( this );
+		NavigationListAdapter navListAdapter = new NavigationListAdapter( this );
 		m_navigationList.setOnItemClickListener( new NavigationItemClickListener() );
 		m_navigationList.setAdapter( navListAdapter );
 
@@ -65,6 +65,9 @@ public abstract class NavigationDatabaseActivity extends DatabaseActivity
 					intent.setFlags( Intent.FLAG_ACTIVITY_CLEAR_TOP );
 					break;
 				case 1:
+					intent = new Intent( NavigationDatabaseActivity.this, RocketListActivity.class );
+					intent.setFlags( Intent.FLAG_ACTIVITY_CLEAR_TOP );
+					break;
 				case 2:
 				default:
 					intent = null;
@@ -74,6 +77,7 @@ public abstract class NavigationDatabaseActivity extends DatabaseActivity
 			if( intent != null )
 			{
 				startActivity( intent );
+				finish();
 			}
 		}
 	}
@@ -96,17 +100,20 @@ public abstract class NavigationDatabaseActivity extends DatabaseActivity
 		{
 			super( context, R.layout.row_navigation_item, R.id.NAVDRAWER_nav_item_title );
 
-			NavigationItem launchListItem = new NavigationItem( context, R.string.NAVDRAWER_item_title_launch_list, R.drawable.ic_launch_type_planet_science );
+			NavigationItem launchListItem = new NavigationItem( context, R.string.NAVDRAWER_item_title_launch_list,
+			                                                    R.drawable.ic_navdrawer_launch_list );
 			add( launchListItem );
 
-			NavigationItem rocketListItem = new NavigationItem( context, R.string.NAVDRAWER_item_title_rocket_list, R.drawable.ic_launch_type_human_explore );
+			NavigationItem rocketListItem = new NavigationItem( context, R.string.NAVDRAWER_item_title_rocket_list,
+			                                                    R.drawable.ic_navdrawer_rocket_list );
 			add( rocketListItem );
 
-			NavigationItem locationListItem = new NavigationItem( context, R.string.NAVDRAWER_item_title_location_list, R.drawable.ic_launch_type_earth_science );
+			NavigationItem locationListItem = new NavigationItem( context, R.string.NAVDRAWER_item_title_location_list,
+			                                                      R.drawable.ic_navdrawer_location_list );
 			add( locationListItem );
 		}
 
-		public View getView(int position, View convertView, ViewGroup parent)
+		public View getView( int position, View convertView, ViewGroup parent )
 		{
 			final View row;
 			if( convertView == null )
@@ -120,10 +127,10 @@ public abstract class NavigationDatabaseActivity extends DatabaseActivity
 
 			NavigationItem item = getItem( position );
 
-			TextView titleView = (TextView)row.findViewById( R.id.NAVDRAWER_nav_item_title );
+			TextView titleView = (TextView) row.findViewById( R.id.NAVDRAWER_nav_item_title );
 			titleView.setText( item.m_title );
 
-			ImageView iconView = (ImageView)row.findViewById( R.id.NAVDRAWER_nav_item_icon );
+			ImageView iconView = (ImageView) row.findViewById( R.id.NAVDRAWER_nav_item_icon );
 			iconView.setImageDrawable( item.m_iconResource );
 
 			return row;

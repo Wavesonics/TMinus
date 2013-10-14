@@ -35,6 +35,10 @@
             </intent-filter>
         </activity>
         <activity
+            android:name="com.darkrockstudios.apps.tminus.RocketListActivity"
+            android:label="@string/app_name">
+        </activity>
+        <activity
             android:name="com.darkrockstudios.apps.tminus.LaunchDetailActivity"
             android:label="@string/title_launch_detail"
             android:parentActivityName=".LaunchListActivity">

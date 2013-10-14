@@ -33,6 +33,8 @@
     <string name="LAUNCHLIST_item_hours">HOURS</string>
     <string name="LAUNCHLIST_no_mission_details">No mission details available</string>
 
+    <string name="ROCKETLIST_item_no_configuration">No configuration specified</string>
+
     <string name="LAUNCHDETAIL_status">Status:</string>
     <string name="LAUNCHDETAIL_launch_window">Launch:</string>
     <string name="LAUNCHDETAIL_launch_window_length">Window:</string>

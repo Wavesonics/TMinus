@@ -3,7 +3,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:0.5.+'
+        classpath 'com.android.tools.build:gradle:0.6.+'
     }
 }
 apply plugin: 'android'
@@ -24,7 +24,7 @@ dependencies {
 
     compile 'com.google.code.gson:gson:2.2.4'
 
-    compile ('de.keyboardsurfer.android.widget:crouton:1.8.1') {
+    compile('de.keyboardsurfer.android.widget:crouton:1.8.1') {
         exclude module: 'support-v4'
         compile 'com.android.support:support-v4:18.0.0'
     }

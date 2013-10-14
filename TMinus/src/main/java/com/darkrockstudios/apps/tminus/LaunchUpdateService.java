@@ -306,7 +306,7 @@ public class LaunchUpdateService extends Service
 					final Dao<Launch, Integer> launchDao = databaseHelper.getLaunchDao();
 
 					DeleteBuilder<Launch, Integer> builder = launchDao.deleteBuilder();
-					builder.where().lt( "NET", getOldLaunchThreshold() );
+					builder.where().lt( "net", getOldLaunchThreshold() );
 
 					launchDao.delete( builder.prepare() );
 				}

@@ -2,6 +2,7 @@ package com.darkrockstudios.apps.tminus;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -37,6 +38,8 @@ import com.darkrockstudios.apps.tminus.launchlibrary.Rocket;
 public class LaunchListActivity extends NavigationDatabaseActivity
 implements Callbacks
 {
+	private static final String TAG_LAUNCH_LIST = "LaunchList";
+
 	/**
 	 * Whether or not the activity is in two-pane mode, i.e. running on a tablet
 	 * device.
@@ -48,9 +51,23 @@ implements Callbacks
 	{
 		super.onCreate( savedInstanceState );
 		requestWindowFeature( Window.FEATURE_INDETERMINATE_PROGRESS );
-		setContentView( R.layout.activity_launch_list );
+		setContentView( R.layout.activity_common_list );
 
-		if( findViewById( R.id.launch_detail_container ) != null )
+		FragmentManager fragmentManager = getSupportFragmentManager();
+
+		LaunchListFragment launchListFragment = LaunchListFragment.newInstance();
+		fragmentManager.beginTransaction().replace( R.id.COMMON_list_fragment_container, launchListFragment,
+		                                            TAG_LAUNCH_LIST ).commit();
+
+		initNavDrawer();
+	}
+
+	@Override
+	public void onResume()
+	{
+		super.onResume();
+
+		if( findViewById( R.id.COMMON_detail_fragment_container ) != null )
 		{
 			// The detail container view will be present only in the
 			// large-screen layouts (res/values-large and
@@ -60,11 +77,10 @@ implements Callbacks
 
 			// In two-pane mode, list items should be given the
 			// 'activated' state when touched.
-			LaunchListFragment fragment = (LaunchListFragment) getSupportFragmentManager().findFragmentById( R.id.launch_list );
-			fragment.setActivateOnItemClick( true );
+			LaunchListFragment launchListFragment =
+					(LaunchListFragment) getSupportFragmentManager().findFragmentByTag( TAG_LAUNCH_LIST );
+			launchListFragment.setActivateOnItemClick( true );
 		}
-
-		initNavDrawer();
 	}
 
 	@Override
@@ -120,7 +136,7 @@ implements Callbacks
 			LaunchDetailFragment fragment = new LaunchDetailFragment();
 			fragment.setArguments( arguments );
 			getSupportFragmentManager().beginTransaction()
-					.replace( R.id.launch_detail_container, fragment )
+					.replace( R.id.COMMON_detail_fragment_container, fragment )
 					.commit();
 		}
 		else
@@ -136,14 +152,14 @@ implements Callbacks
 	private void refreshLaunchList()
 	{
 		LaunchListFragment launchListFragment = (LaunchListFragment) getSupportFragmentManager()
-				                                                             .findFragmentById( R.id.launch_list );
+				                                                             .findFragmentById( R.id.COMMON_list_fragment_container );
 		launchListFragment.refresh();
 	}
 
 	public void countDownClicked( View v )
 	{
 		LaunchDetailFragment launchDetailFragment = (LaunchDetailFragment) getSupportFragmentManager()
-				                                                                   .findFragmentById( R.id.launch_detail_container );
+				                                                                   .findFragmentById( R.id.COMMON_detail_fragment_container );
 		if( launchDetailFragment != null )
 		{
 			final int launchId = launchDetailFragment.getLaunchId();
@@ -175,7 +191,7 @@ implements Callbacks
 	public void rocketImageClicked( View v )
 	{
 		LaunchDetailFragment fragment = (LaunchDetailFragment) getSupportFragmentManager()
-				                                                       .findFragmentById( R.id.launch_detail_container );
+				                                                       .findFragmentById( R.id.COMMON_detail_fragment_container );
 
 		if( fragment != null )
 		{
