@@ -69,6 +69,9 @@ public abstract class NavigationDatabaseActivity extends DatabaseActivity
 					intent.setFlags( Intent.FLAG_ACTIVITY_CLEAR_TOP );
 					break;
 				case 2:
+					intent = new Intent( NavigationDatabaseActivity.this, LocationBrowserActivity.class );
+					intent.setFlags( Intent.FLAG_ACTIVITY_CLEAR_TOP );
+					break;
 				default:
 					intent = null;
 					break;

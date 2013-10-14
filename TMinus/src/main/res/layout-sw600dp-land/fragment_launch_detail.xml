@@ -326,11 +326,6 @@
                 android:layout_marginTop="@dimen/launch_detail_padding"
                 android:layout_marginLeft="@dimen/launch_detail_padding"
                 android:layout_marginRight="@dimen/launch_detail_padding">
-                <!-- TODO: This is an awful awful hack for which I will surly be punished: http://stackoverflow.com/a/17705806/1366
-                           This prevents a momentary flicker when swapping the fragment in -->
-                <SurfaceView
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"/>
             </FrameLayout>
 
         </LinearLayout>

@@ -10,11 +10,9 @@
     <!-- The main content view -->
     <fragment
         android:id="@+id/launch_list"
-        android:name="com.darkrockstudios.apps.tminus.fragments.LaunchListFragment"
+        android:name="com.darkrockstudios.apps.tminus.fragments.LocationBrowserFragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/LAUNCHLIST_next_launch_container"
-        android:layout_alignParentTop="true"
         tools:context=".LaunchListActivity"
         tools:layout="@android:layout/list_content"/>
 
