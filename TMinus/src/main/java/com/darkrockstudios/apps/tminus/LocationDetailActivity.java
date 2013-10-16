@@ -13,8 +13,8 @@ import com.darkrockstudios.apps.tminus.fragments.LocationDetailFragment;
  */
 public class LocationDetailActivity extends DatabaseActivity
 {
-	private static final String FRAGMENT_TAG = "LocationDetailFragment";
-	public static final  String ARG_ITEM_ID  = "item_id";
+	private static final String FRAGMENT_TAG  = "LocationDetailFragment";
+	public static final  String EXTRA_ITEM_ID = "item_id";
 	private int m_locationId;
 
 	public void onCreate( Bundle savedInstanceState )
@@ -45,7 +45,7 @@ public class LocationDetailActivity extends DatabaseActivity
 		final Intent intent = getIntent();
 		if( intent != null )
 		{
-			locationId = intent.getIntExtra( LocationDetailActivity.ARG_ITEM_ID, -1 );
+			locationId = intent.getIntExtra( LocationDetailActivity.EXTRA_ITEM_ID, -1 );
 		}
 
 		return locationId;

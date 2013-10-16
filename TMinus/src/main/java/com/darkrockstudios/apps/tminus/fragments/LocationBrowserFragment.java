@@ -26,24 +26,36 @@ import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.QueryBuilder;
 
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Adam on 10/13/13.
  */
-public class LocationBrowserFragment extends Fragment implements GoogleMap.OnMarkerClickListener
+public class LocationBrowserFragment extends Fragment implements GoogleMap.OnInfoWindowClickListener
 {
 	private static final String TAG              = LocationBrowserFragment.class.getSimpleName();
 	private static final String MAP_FRAGMENT_TAG = "LocationBrowserMapFragment";
 	private static final LatLng DEFAULT_LOCATION = new LatLng( 37.523506, -77.412109 );
 
-	private LocInfoLoader  m_locationsLoader;
-	private List<Location> m_locations;
+	private LocInfoLoader         m_locationsLoader;
+	private List<Location>        m_locations;
+	private Map<Marker, Location> m_locationLookup;
+
+	private LocationClickListener m_locationClickListener;
+
+	public static interface LocationClickListener
+	{
+		public void onLocationClicked( Location location );
+	}
 
 	@Override
 	public void onCreate( Bundle savedInstanceState )
 	{
 		super.onCreate( savedInstanceState );
+
+		m_locationLookup = new HashMap<Marker, Location>();
 	}
 
 	@Override
@@ -76,8 +88,21 @@ public class LocationBrowserFragment extends Fragment implements GoogleMap.OnMar
 				                      .show();
 			}
 
+			if( activity instanceof LocationClickListener )
+			{
+				m_locationClickListener = (LocationClickListener) activity;
+			}
+
 			reloadData();
 		}
+	}
+
+	@Override
+	public void onDetach()
+	{
+		super.onDetach();
+
+		m_locationClickListener = null;
 	}
 
 	private void reloadData()
@@ -124,8 +149,10 @@ public class LocationBrowserFragment extends Fragment implements GoogleMap.OnMar
 				GoogleMap map = mapFragment.getMap();
 				if( map != null )
 				{
-					map.setOnMarkerClickListener( this );
+					map.setOnInfoWindowClickListener( this );
 					map.clear();
+
+					m_locationLookup.clear();
 
 					for( Location location : m_locations )
 					{
@@ -133,10 +160,12 @@ public class LocationBrowserFragment extends Fragment implements GoogleMap.OnMar
 						{
 							LatLng pos = new LatLng( location.latitude, location.longitude );
 
-							MarkerOptions marker = new MarkerOptions();
-							marker.position( pos );
-							marker.title( location.locInfo.name );
-							map.addMarker( marker );
+							MarkerOptions markerOptions = new MarkerOptions();
+							markerOptions.position( pos );
+							markerOptions.title( location.locInfo.name );
+							Marker marker = map.addMarker( markerOptions );
+
+							m_locationLookup.put( marker, location );
 						}
 					}
 				}
@@ -145,9 +174,13 @@ public class LocationBrowserFragment extends Fragment implements GoogleMap.OnMar
 	}
 
 	@Override
-	public boolean onMarkerClick( Marker marker )
+	public void onInfoWindowClick( Marker marker )
 	{
-		return false;
+		Location location = m_locationLookup.get( marker );
+		if( m_locationClickListener != null && location != null )
+		{
+			m_locationClickListener.onLocationClicked( location );
+		}
 	}
 
 	private class LocInfoLoader extends AsyncTask<Integer, Void, List<Location>>
@@ -190,6 +223,7 @@ public class LocationBrowserFragment extends Fragment implements GoogleMap.OnMar
 		{
 			Log.i( TAG, "Location loaded." );
 			m_locations = result;
+			m_locationLookup.clear();
 
 			m_locationsLoader = null;
 
