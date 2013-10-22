@@ -48,7 +48,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class LaunchDetailFragment extends Fragment implements Listener, RocketDetailLoader.Listener, Utilities.ZoomAnimationHandler
 {
-	public static final String TAG =
+	public static final  String TAG                         =
 			LaunchDetailFragment.class.getSimpleName();
 	public static final  String ARG_ITEM_ID                 = "item_id";
 	private static final String LOCATION_FRAGMENT_TAG       = "LocationFragmentTag";
@@ -59,10 +59,10 @@ public class LaunchDetailFragment extends Fragment implements Listener, RocketDe
 	private RocketDetail               m_rocketDetail;
 	private TimeReceiver               m_timeReceiver;
 	private NetworkImageView           m_rocketImage;
-	private NetworkImageView m_rocketImageExpanded;
+	private NetworkImageView           m_rocketImageExpanded;
 	private ViewGroup                  m_locationContainer;
 	private ViewGroup                  m_rocketContainer;
-	private View             m_containerView;
+	private View                       m_containerView;
 	private View                       m_contentView;
 	private View                       m_progressBar;
 	private View                       m_countDownContainer;
@@ -450,32 +450,36 @@ public class LaunchDetailFragment extends Fragment implements Listener, RocketDe
 			m_rocketDetailButton.setTag( m_launchItem.rocket );
 		}
 
-		loadRocketDetails();
-
-		updateViews();
-		updateShareIntent();
-		showContent();
-
-		// TODO: Better tablet layout detection
-		final boolean isTabletLayout = (m_rocketContainer != null);
-
-		if( m_locationContainer != null )
+		if( isAdded() )
 		{
-			LocationDetailFragment locationDetailFragment = LocationDetailFragment
-					                                                .newInstance( m_launchItem.location.id, isTabletLayout );
-			getChildFragmentManager().beginTransaction()
-					.add( R.id.LAUNCHDETAIL_location_container, locationDetailFragment,
-					      LOCATION_FRAGMENT_TAG )
-					.commit();
-		}
+			loadRocketDetails();
 
-		if( m_rocketContainer != null )
-		{
-			RocketDetailFragment rocketDetailFragment =
-					RocketDetailFragment.newInstance( m_launchItem.rocket.id );
-			getChildFragmentManager().beginTransaction()
-					.add( R.id.LAUNCHDETAIL_rocket_container, rocketDetailFragment,
-					      ROCKET_FRAGMENT_TAG ).commit();
+			updateViews();
+			updateShareIntent();
+			showContent();
+
+			// TODO: Better tablet layout detection
+			final boolean isTabletLayout = (m_rocketContainer != null);
+
+			if( m_locationContainer != null )
+			{
+				LocationDetailFragment locationDetailFragment = LocationDetailFragment
+						                                                .newInstance( m_launchItem.location.id,
+						                                                              isTabletLayout );
+				getChildFragmentManager().beginTransaction()
+						.add( R.id.LAUNCHDETAIL_location_container, locationDetailFragment,
+						      LOCATION_FRAGMENT_TAG )
+						.commit();
+			}
+
+			if( m_rocketContainer != null )
+			{
+				RocketDetailFragment rocketDetailFragment =
+						RocketDetailFragment.newInstance( m_launchItem.rocket.id );
+				getChildFragmentManager().beginTransaction()
+						.add( R.id.LAUNCHDETAIL_rocket_container, rocketDetailFragment,
+						      ROCKET_FRAGMENT_TAG ).commit();
+			}
 		}
 	}
 
