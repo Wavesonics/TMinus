@@ -1,9 +1,15 @@
 package com.darkrockstudios.apps.tminus.fragments;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.ListFragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,26 +18,37 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.darkrockstudios.apps.tminus.R;
+import com.darkrockstudios.apps.tminus.RocketUpdateService;
 import com.darkrockstudios.apps.tminus.database.DatabaseHelper;
 import com.darkrockstudios.apps.tminus.launchlibrary.Rocket;
+import com.darkrockstudios.apps.tminus.misc.Preferences;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.PreparedQuery;
 import com.j256.ormlite.stmt.QueryBuilder;
 
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+import de.keyboardsurfer.android.widget.crouton.Crouton;
+import de.keyboardsurfer.android.widget.crouton.Style;
 
 /**
  * Created by Adam on 10/13/13.
  */
 public class RocketListFragment extends ListFragment
 {
+	private static final String TAG = RocketListFragment.class.getSimpleName();
+
 	private static final String STATE_ACTIVATED_POSITION = "activated_position";
 
-	private Callbacks m_callbacks         = s_dummyCallbacks;
-	private int       m_activatedPosition = ListView.INVALID_POSITION;
+	private Callbacks m_callbacks = s_dummyCallbacks;
+	private RocketUpdateReceiver m_updateReceiver;
+	private int m_activatedPosition = ListView.INVALID_POSITION;
 	private ArrayAdapter<Rocket> m_adapter;
+	private static final long UPDATE_THRESHOLD = TimeUnit.DAYS.toMillis( 7 );
 
 	private static Callbacks s_dummyCallbacks = new Callbacks()
 	{
@@ -60,7 +77,6 @@ public class RocketListFragment extends ListFragment
 	public View onCreateView( LayoutInflater inflater, ViewGroup container,
 	                          Bundle savedInstanceState )
 	{
-
 		return inflater.inflate( R.layout.fragment_rocket_list, null );
 	}
 
@@ -76,7 +92,25 @@ public class RocketListFragment extends ListFragment
 			setActivatedPosition( savedInstanceState.getInt( STATE_ACTIVATED_POSITION ) );
 		}
 
-		if( !reloadData() )
+		boolean shouldRefresh = !reloadData();
+
+		final SharedPreferences preferences = PreferenceManager
+				                                      .getDefaultSharedPreferences( getActivity() );
+		if( preferences.contains( Preferences.KEY_LAST_ROCKET_LIST_UPDATE ) )
+		{
+			long lastUpdated = preferences.getLong( Preferences.KEY_LAST_ROCKET_LIST_UPDATE, -1 );
+			Date now = new Date();
+			if( lastUpdated < now.getTime() - UPDATE_THRESHOLD )
+			{
+				shouldRefresh = true;
+			}
+		}
+		else
+		{
+			shouldRefresh = true;
+		}
+
+		if( shouldRefresh )
 		{
 			refresh();
 		}
@@ -96,6 +130,13 @@ public class RocketListFragment extends ListFragment
 		{
 			m_callbacks = (Callbacks) activity;
 		}
+
+		m_updateReceiver = new RocketUpdateReceiver();
+
+		IntentFilter m_updateIntentFilter = new IntentFilter();
+		m_updateIntentFilter.addAction( RocketUpdateService.ACTION_ROCKET_LIST_UPDATED );
+		m_updateIntentFilter.addAction( RocketUpdateService.ACTION_ROCKET_LIST_UPDATE_FAILED );
+		activity.registerReceiver( m_updateReceiver, m_updateIntentFilter );
 	}
 
 	@Override
@@ -105,6 +146,10 @@ public class RocketListFragment extends ListFragment
 
 		// Reset the active callbacks interface to the dummy implementation.
 		m_callbacks = s_dummyCallbacks;
+
+		Activity activity = getActivity();
+		activity.unregisterReceiver( m_updateReceiver );
+		m_updateReceiver = null;
 	}
 
 	@Override
@@ -182,7 +227,21 @@ public class RocketListFragment extends ListFragment
 
 	public void refresh()
 	{
-		//requestRockets();
+		requestRockets();
+	}
+
+	private void requestRockets()
+	{
+		Activity activity = getActivity();
+		if( activity != null && isAdded() )
+		{
+			Log.d( TAG, "Requesting rockets..." );
+
+			activity.setProgressBarIndeterminateVisibility( true );
+
+			Intent rocketUpdate = new Intent( activity, RocketUpdateService.class );
+			activity.startService( rocketUpdate );
+		}
 	}
 
 	/**
@@ -246,5 +305,33 @@ public class RocketListFragment extends ListFragment
 		 * Callback for when an item has been selected.
 		 */
 		public void onItemSelected( Rocket rocket );
+	}
+
+	private class RocketUpdateReceiver extends BroadcastReceiver
+	{
+		@Override
+		public void onReceive( Context context, Intent intent )
+		{
+			final Activity activity = getActivity();
+			if( activity != null && isAdded() )
+			{
+				if( RocketUpdateService.ACTION_ROCKET_LIST_UPDATED.equals( intent.getAction() ) )
+				{
+					Log.d( TAG, "Received Launch List update SUCCESS broadcast, will update the UI now." );
+
+					reloadData();
+
+					activity.setProgressBarIndeterminateVisibility( false );
+					Crouton.makeText( activity, R.string.TOAST_rocket_list_update_complete, Style.CONFIRM ).show();
+				}
+				else if( RocketUpdateService.ACTION_ROCKET_LIST_UPDATE_FAILED.equals( intent.getAction() ) )
+				{
+					Log.d( TAG, "Received Launch List update FAILURE broadcast." );
+
+					Crouton.makeText( activity, R.string.TOAST_rocket_list_update_failed, Style.ALERT ).show();
+					activity.setProgressBarIndeterminateVisibility( false );
+				}
+			}
+		}
 	}
 }

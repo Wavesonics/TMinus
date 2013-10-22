@@ -15,4 +15,5 @@ public class Preferences
 	public static final String KEY_ALERT_PEBBLE_FOR_NOTIFICATIONS = "alert_pebble_for_notifications";
 	public static final String KEY_ALWAYS_SHOW_COUNT_DOWN         = "always_show_count_down";
 	public static final String KEY_FULLSCREEN_COUNT_DOWN          = "fullscreen_count_down";
+	public static final String KEY_LAST_ROCKET_LIST_UPDATE        = "last_rocket_list_update";
 }
