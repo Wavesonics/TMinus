@@ -193,7 +193,7 @@ public class RocketListFragment extends ListFragment
 		boolean dataLoaded = false;
 
 		final Activity activity = getActivity();
-		if( activity != null )
+		if( activity != null && isAdded() )
 		{
 			final DatabaseHelper databaseHelper = OpenHelperManager.getHelper( activity, DatabaseHelper.class );
 			if( databaseHelper != null )
