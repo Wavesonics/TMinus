@@ -18,10 +18,11 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.darkrockstudios.apps.tminus.R;
-import com.darkrockstudios.apps.tminus.RocketUpdateService;
 import com.darkrockstudios.apps.tminus.database.DatabaseHelper;
 import com.darkrockstudios.apps.tminus.launchlibrary.Rocket;
 import com.darkrockstudios.apps.tminus.misc.Preferences;
+import com.darkrockstudios.apps.tminus.updatetasks.DataUpdaterService;
+import com.darkrockstudios.apps.tminus.updatetasks.RocketUpdateTask;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.PreparedQuery;
@@ -134,8 +135,8 @@ public class RocketListFragment extends ListFragment
 		m_updateReceiver = new RocketUpdateReceiver();
 
 		IntentFilter m_updateIntentFilter = new IntentFilter();
-		m_updateIntentFilter.addAction( RocketUpdateService.ACTION_ROCKET_LIST_UPDATED );
-		m_updateIntentFilter.addAction( RocketUpdateService.ACTION_ROCKET_LIST_UPDATE_FAILED );
+		m_updateIntentFilter.addAction( RocketUpdateTask.ACTION_ROCKET_LIST_UPDATED );
+		m_updateIntentFilter.addAction( RocketUpdateTask.ACTION_ROCKET_LIST_UPDATE_FAILED );
 		activity.registerReceiver( m_updateReceiver, m_updateIntentFilter );
 	}
 
@@ -239,7 +240,8 @@ public class RocketListFragment extends ListFragment
 
 			activity.setProgressBarIndeterminateVisibility( true );
 
-			Intent rocketUpdate = new Intent( activity, RocketUpdateService.class );
+			Intent rocketUpdate = new Intent( activity, DataUpdaterService.class );
+			rocketUpdate.putExtra( DataUpdaterService.EXTRA_UPDATE_TYPE, RocketUpdateTask.UPDATE_TYPE );
 			activity.startService( rocketUpdate );
 		}
 	}
@@ -315,7 +317,7 @@ public class RocketListFragment extends ListFragment
 			final Activity activity = getActivity();
 			if( activity != null && isAdded() )
 			{
-				if( RocketUpdateService.ACTION_ROCKET_LIST_UPDATED.equals( intent.getAction() ) )
+				if( RocketUpdateTask.ACTION_ROCKET_LIST_UPDATED.equals( intent.getAction() ) )
 				{
 					Log.d( TAG, "Received Launch List update SUCCESS broadcast, will update the UI now." );
 
@@ -324,7 +326,7 @@ public class RocketListFragment extends ListFragment
 					activity.setProgressBarIndeterminateVisibility( false );
 					Crouton.makeText( activity, R.string.TOAST_rocket_list_update_complete, Style.CONFIRM ).show();
 				}
-				else if( RocketUpdateService.ACTION_ROCKET_LIST_UPDATE_FAILED.equals( intent.getAction() ) )
+				else if( RocketUpdateTask.ACTION_ROCKET_LIST_UPDATE_FAILED.equals( intent.getAction() ) )
 				{
 					Log.d( TAG, "Received Launch List update FAILURE broadcast." );
 
