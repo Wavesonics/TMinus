@@ -65,7 +65,7 @@ public abstract class NavigationDatabaseActivity extends DatabaseActivity
 					intent.setFlags( Intent.FLAG_ACTIVITY_CLEAR_TOP );
 					break;
 				case 1:
-					intent = new Intent( NavigationDatabaseActivity.this, RocketListActivity.class );
+					intent = new Intent( NavigationDatabaseActivity.this, RocketBrowserActivity.class );
 					intent.setFlags( Intent.FLAG_ACTIVITY_CLEAR_TOP );
 					break;
 				case 2:

@@ -39,9 +39,9 @@ import de.keyboardsurfer.android.widget.crouton.Style;
 /**
  * Created by Adam on 10/13/13.
  */
-public class RocketListFragment extends ListFragment
+public class RocketBrowserFragment extends ListFragment
 {
-	private static final String TAG = RocketListFragment.class.getSimpleName();
+	private static final String TAG = RocketBrowserFragment.class.getSimpleName();
 
 	private static final String STATE_ACTIVATED_POSITION = "activated_position";
 
@@ -59,9 +59,9 @@ public class RocketListFragment extends ListFragment
 		}
 	};
 
-	public static RocketListFragment newInstance()
+	public static RocketBrowserFragment newInstance()
 	{
-		return new RocketListFragment();
+		return new RocketBrowserFragment();
 	}
 
 	@Override
@@ -319,7 +319,7 @@ public class RocketListFragment extends ListFragment
 			{
 				if( RocketUpdateTask.ACTION_ROCKET_LIST_UPDATED.equals( intent.getAction() ) )
 				{
-					Log.d( TAG, "Received Launch List update SUCCESS broadcast, will update the UI now." );
+					Log.d( TAG, "Received Rocket List update SUCCESS broadcast, will update the UI now." );
 
 					reloadData();
 
@@ -328,7 +328,7 @@ public class RocketListFragment extends ListFragment
 				}
 				else if( RocketUpdateTask.ACTION_ROCKET_LIST_UPDATE_FAILED.equals( intent.getAction() ) )
 				{
-					Log.d( TAG, "Received Launch List update FAILURE broadcast." );
+					Log.d( TAG, "Received Rocket List update FAILURE broadcast." );
 
 					Crouton.makeText( activity, R.string.TOAST_rocket_list_update_failed, Style.ALERT ).show();
 					activity.setProgressBarIndeterminateVisibility( false );

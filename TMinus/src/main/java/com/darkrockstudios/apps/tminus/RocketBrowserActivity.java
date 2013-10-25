@@ -8,14 +8,14 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.Window;
 
+import com.darkrockstudios.apps.tminus.fragments.RocketBrowserFragment;
 import com.darkrockstudios.apps.tminus.fragments.RocketDetailFragment;
-import com.darkrockstudios.apps.tminus.fragments.RocketListFragment;
 import com.darkrockstudios.apps.tminus.launchlibrary.Rocket;
 
 /**
  * Created by Adam on 10/13/13.
  */
-public class RocketListActivity extends NavigationDatabaseActivity implements RocketListFragment.Callbacks
+public class RocketBrowserActivity extends NavigationDatabaseActivity implements RocketBrowserFragment.Callbacks
 {
 	private static final String TAG_ROCKET_LIST = "RocketList";
 
@@ -30,8 +30,9 @@ public class RocketListActivity extends NavigationDatabaseActivity implements Ro
 
 		FragmentManager fragmentManager = getSupportFragmentManager();
 
-		RocketListFragment rocketListFragment = RocketListFragment.newInstance();
-		fragmentManager.beginTransaction().replace( R.id.COMMON_list_fragment_container, rocketListFragment, TAG_ROCKET_LIST )
+		RocketBrowserFragment rocketBrowserFragment = RocketBrowserFragment.newInstance();
+		fragmentManager.beginTransaction()
+		               .replace( R.id.COMMON_list_fragment_container, rocketBrowserFragment, TAG_ROCKET_LIST )
 		               .commit();
 
 		initNavDrawer();
@@ -52,9 +53,9 @@ public class RocketListActivity extends NavigationDatabaseActivity implements Ro
 
 			// In two-pane mode, list items should be given the
 			// 'activated' state when touched.
-			RocketListFragment rocketListFragment =
-					(RocketListFragment) getSupportFragmentManager().findFragmentByTag( TAG_ROCKET_LIST );
-			rocketListFragment.setActivateOnItemClick( true );
+			RocketBrowserFragment rocketBrowserFragment =
+					(RocketBrowserFragment) getSupportFragmentManager().findFragmentByTag( TAG_ROCKET_LIST );
+			rocketBrowserFragment.setActivateOnItemClick( true );
 		}
 	}
 
@@ -96,9 +97,9 @@ public class RocketListActivity extends NavigationDatabaseActivity implements Ro
 
 	private void refreshRocketList()
 	{
-		RocketListFragment launchListFragment = (RocketListFragment) getSupportFragmentManager()
-				                                                             .findFragmentById( R.id.COMMON_list_fragment_container );
-		launchListFragment.refresh();
+		RocketBrowserFragment fragment = (RocketBrowserFragment) getSupportFragmentManager()
+				                                                         .findFragmentById( R.id.COMMON_list_fragment_container );
+		fragment.refresh();
 	}
 
 	@Override

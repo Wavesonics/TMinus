@@ -16,6 +16,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.darkrockstudios.apps.tminus.database.DatabaseHelper;
 import com.darkrockstudios.apps.tminus.launchlibrary.Launch;
 import com.darkrockstudios.apps.tminus.launchlibrary.LaunchLibraryGson;
+import com.darkrockstudios.apps.tminus.launchlibrary.LaunchLibraryUrls;
 import com.darkrockstudios.apps.tminus.launchlibrary.LocInfo;
 import com.darkrockstudios.apps.tminus.launchlibrary.Location;
 import com.darkrockstudios.apps.tminus.launchlibrary.Mission;
@@ -106,7 +107,7 @@ public class LaunchUpdateService extends Service
 			Log.d( TAG, "WakeLock acquired." );
 		}
 
-		final String url = "http://launchlibrary.net/ll/json/next/20";
+		final String url = LaunchLibraryUrls.next( 20 );
 
 		LaunchListResponseListener listener = new LaunchListResponseListener();
 		JsonObjectRequest request = new JsonObjectRequest( url, null, listener, listener );

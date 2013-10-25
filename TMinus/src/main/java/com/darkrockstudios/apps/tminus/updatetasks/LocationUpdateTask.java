@@ -8,7 +8,7 @@ import android.util.Log;
 import com.darkrockstudios.apps.tminus.database.DatabaseHelper;
 import com.darkrockstudios.apps.tminus.launchlibrary.LaunchLibraryGson;
 import com.darkrockstudios.apps.tminus.launchlibrary.LaunchLibraryUrls;
-import com.darkrockstudios.apps.tminus.launchlibrary.Rocket;
+import com.darkrockstudios.apps.tminus.launchlibrary.Location;
 import com.darkrockstudios.apps.tminus.misc.Preferences;
 import com.google.gson.Gson;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
@@ -22,20 +22,20 @@ import java.sql.SQLException;
 import java.util.Date;
 
 /**
- * Created by Adam on 10/23/13.
+ * Created by Adam on 10/24/13.
  */
-public class RocketUpdateTask extends UpdateTask
+public class LocationUpdateTask extends UpdateTask
 {
-	private static final String TAG = RocketUpdateTask.class.getSimpleName();
+	private static final String TAG = LocationUpdateTask.class.getSimpleName();
 
-	public static final String UPDATE_TYPE = "rockets";
+	public static final String UPDATE_TYPE = "locations";
 
-	public static final String ACTION_ROCKET_LIST_UPDATED       =
-			RocketUpdateTask.class.getPackage() + ".ACTION_ROCKET_LIST_UPDATED";
-	public static final String ACTION_ROCKET_LIST_UPDATE_FAILED =
-			RocketUpdateTask.class.getPackage() + ".ACTION_ROCKET_LIST_UPDATE_FAILED";
+	public static final String ACTION_LOCATION_LIST_UPDATED       =
+			LocationUpdateTask.class.getPackage() + ".ACTION_LOCATION_LIST_UPDATED";
+	public static final String ACTION_LOCATION_LIST_UPDATE_FAILED =
+			LocationUpdateTask.class.getPackage() + ".ACTION_LOCATION_LIST_UPDATE_FAILED";
 
-	public RocketUpdateTask( Context context )
+	public LocationUpdateTask( Context context )
 	{
 		super( context );
 	}
@@ -52,24 +52,24 @@ public class RocketUpdateTask extends UpdateTask
 			{
 				try
 				{
-					final Dao<Rocket, Integer> rocketDao = databaseHelper.getRocketDao();
+					final Dao<Location, Integer> locationDao = databaseHelper.getLocationDao();
 
-					JSONArray rockets = response.getJSONArray( "rocket" );
-					if( rockets != null && rockets.length() > 0 )
+					JSONArray locations = response.getJSONArray( "location" );
+					if( locations != null && locations.length() > 0 )
 					{
 						final Gson gson = LaunchLibraryGson.create();
 
-						final int n = rockets.length();
+						final int n = locations.length();
 						for( int ii = 0; ii < n; ++ii )
 						{
-							final Rocket rocket = gson.fromJson( rockets.get( ii ).toString(), Rocket.class );
-							rocketDao.createOrUpdate( rocket );
+							final Location location = gson.fromJson( locations.get( ii ).toString(), Location.class );
+							locationDao.createOrUpdate( location );
 						}
 
 						final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences( getContext() );
-						preferences.edit().putLong( Preferences.KEY_LAST_ROCKET_LIST_UPDATE, new Date().getTime() ).commit();
+						preferences.edit().putLong( Preferences.KEY_LAST_LOCATION_LIST_UPDATE, new Date().getTime() ).commit();
 
-						Log.i( TAG, "Rockets after update: " + rocketDao.countOf() );
+						Log.i( TAG, "Locations after update: " + locationDao.countOf() );
 
 						success = true;
 					}
@@ -95,18 +95,18 @@ public class RocketUpdateTask extends UpdateTask
 	@Override
 	public String getRequestUrl()
 	{
-		return LaunchLibraryUrls.rockets();
+		return LaunchLibraryUrls.padList();
 	}
 
 	@Override
 	public String getSuccessIntentAction()
 	{
-		return ACTION_ROCKET_LIST_UPDATED;
+		return ACTION_LOCATION_LIST_UPDATED;
 	}
 
 	@Override
 	public String getFailureIntentAction()
 	{
-		return ACTION_ROCKET_LIST_UPDATE_FAILED;
+		return ACTION_LOCATION_LIST_UPDATE_FAILED;
 	}
 }
