@@ -8,6 +8,7 @@ import android.util.Log;
 import com.darkrockstudios.apps.tminus.database.DatabaseHelper;
 import com.darkrockstudios.apps.tminus.launchlibrary.LaunchLibraryGson;
 import com.darkrockstudios.apps.tminus.launchlibrary.LaunchLibraryUrls;
+import com.darkrockstudios.apps.tminus.launchlibrary.LocInfo;
 import com.darkrockstudios.apps.tminus.launchlibrary.Location;
 import com.darkrockstudios.apps.tminus.misc.Preferences;
 import com.google.gson.Gson;
@@ -52,6 +53,7 @@ public class LocationUpdateTask extends UpdateTask
 			{
 				try
 				{
+					final Dao<LocInfo, Integer> locInfoDao = databaseHelper.getLocInfoDao();
 					final Dao<Location, Integer> locationDao = databaseHelper.getLocationDao();
 
 					JSONArray locations = response.getJSONArray( "location" );
@@ -62,8 +64,28 @@ public class LocationUpdateTask extends UpdateTask
 						final int n = locations.length();
 						for( int ii = 0; ii < n; ++ii )
 						{
-							final Location location = gson.fromJson( locations.get( ii ).toString(), Location.class );
-							locationDao.createOrUpdate( location );
+							JSONObject locationObj = locations.getJSONObject( ii );
+
+							final LocInfo location = gson.fromJson( locationObj.toString(), LocInfo.class );
+							Dao.CreateOrUpdateStatus status = locInfoDao.createOrUpdate( location );
+
+							if( status.isCreated() || status.isUpdated() )
+							{
+								JSONObject padsObj = locationObj.getJSONObject( "pads" );
+
+								// This is special case handling for some inconsistencies in the returned data
+								JSONArray pads = padsObj.optJSONArray( "pad" );
+								if( pads != null )
+								{
+									for( int xx = 0; xx < pads.length(); ++xx )
+									{
+										final Location pad =
+												gson.fromJson( pads.getJSONObject( xx ).toString(), Location.class );
+										pad.locInfo = location; // Set it's parent
+										locationDao.createOrUpdate( pad );
+									}
+								}
+							}
 						}
 
 						final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences( getContext() );
