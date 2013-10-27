@@ -15,7 +15,7 @@ import com.darkrockstudios.apps.tminus.fragments.LaunchListFragment.Callbacks;
 import com.darkrockstudios.apps.tminus.fragments.LocationDetailFragment;
 import com.darkrockstudios.apps.tminus.fragments.RocketDetailFragment;
 import com.darkrockstudios.apps.tminus.launchlibrary.Launch;
-import com.darkrockstudios.apps.tminus.launchlibrary.Location;
+import com.darkrockstudios.apps.tminus.launchlibrary.Pad;
 import com.darkrockstudios.apps.tminus.launchlibrary.Rocket;
 
 
@@ -36,7 +36,7 @@ import com.darkrockstudios.apps.tminus.launchlibrary.Rocket;
  * to listen for item selections.
  */
 public class LaunchListActivity extends NavigationDatabaseActivity
-implements Callbacks
+		implements Callbacks
 {
 	private static final String TAG_LAUNCH_LIST = "LaunchList";
 
@@ -182,9 +182,9 @@ implements Callbacks
 
 	public void locationDetailsClicked( View v )
 	{
-		Location location = (Location) v.getTag();
+		Pad pad = (Pad) v.getTag();
 
-		LocationDetailFragment locationDetailFragment = LocationDetailFragment.newInstance( location.id, true );
+		LocationDetailFragment locationDetailFragment = LocationDetailFragment.newInstance( pad.id, true );
 		locationDetailFragment.show( getSupportFragmentManager(), "dialog" );
 	}
 

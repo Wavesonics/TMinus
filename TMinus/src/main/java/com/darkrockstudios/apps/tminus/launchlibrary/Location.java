@@ -3,16 +3,13 @@ package com.darkrockstudios.apps.tminus.launchlibrary;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
-import java.io.Serializable;
-
 /**
- * Created by Adam on 6/23/13.
+ * Created by Adam on 8/19/13.
  * Dark Rock Studios
  * darkrockstudios.com
  */
-
 @DatabaseTable(tableName = Location.TABLE_NAME)
-public class Location implements Serializable
+public class Location
 {
 	public transient static final String TABLE_NAME = "Location";
 
@@ -23,23 +20,11 @@ public class Location implements Serializable
 	public String name;
 
 	@DatabaseField
-	public boolean retired;
-
-	@DatabaseField(foreign = true, foreignAutoCreate = true, foreignAutoRefresh = true)
-	public LocInfo locInfo;
-
-	@DatabaseField(canBeNull = true)
-	public Double longitude;
-
-	@DatabaseField(canBeNull = true)
-	public Double latitude;
+	public String infoURL;
 
 	@DatabaseField
 	public String wikiURL;
 
 	@DatabaseField
-	public String infoURL;
-
-	@DatabaseField
-	public String mapURL;
+	public String countrycode;
 }

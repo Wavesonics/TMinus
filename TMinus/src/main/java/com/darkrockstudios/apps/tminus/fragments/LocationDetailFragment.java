@@ -14,7 +14,7 @@ import android.widget.TextView;
 
 import com.darkrockstudios.apps.tminus.R;
 import com.darkrockstudios.apps.tminus.database.DatabaseHelper;
-import com.darkrockstudios.apps.tminus.launchlibrary.Location;
+import com.darkrockstudios.apps.tminus.launchlibrary.Pad;
 import com.darkrockstudios.apps.tminus.misc.Utilities;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -45,7 +45,7 @@ public class LocationDetailFragment extends DialogFragment
 	private static final String MAP_FRAGMENT_TAG        = "MapFragment";
 	private static final float  LOCATION_ZOOM           = 15.0f;
 	private static final LatLng DEFAULT_LOCATION        = new LatLng( 37.523506, -77.412109 );
-	private Location    m_location;
+	private Pad         m_pad;
 	private FrameLayout m_mapContainer;
 	private TextView    m_locationName;
 
@@ -172,14 +172,14 @@ public class LocationDetailFragment extends DialogFragment
 
 	public void updateViews()
 	{
-		if( m_location != null )
+		if( m_pad != null )
 		{
 			updateMap();
 
 			if( m_locationName != null )
 			{
 				int flagResourceId = Utilities
-						                     .getFlagResource( m_location.locInfo.countrycode );
+						                     .getFlagResource( m_pad.location.countrycode );
 				m_locationName.setCompoundDrawablesWithIntrinsicBounds( flagResourceId, 0, 0, 0 );
 			}
 		}
@@ -216,9 +216,9 @@ public class LocationDetailFragment extends DialogFragment
 	{
 		final LatLng pos;
 
-		if( m_location != null && m_location.longitude != null && m_location.latitude != null )
+		if( m_pad != null && m_pad.longitude != null && m_pad.latitude != null )
 		{
-			pos = new LatLng( m_location.latitude, m_location.longitude );
+			pos = new LatLng( m_pad.latitude, m_pad.longitude );
 		}
 		else
 		{
@@ -254,12 +254,12 @@ public class LocationDetailFragment extends DialogFragment
 		return locationId;
 	}
 
-	private class LocationLoader extends AsyncTask<Integer, Void, Location>
+	private class LocationLoader extends AsyncTask<Integer, Void, Pad>
 	{
 		@Override
-		protected Location doInBackground( Integer... ids )
+		protected Pad doInBackground( Integer... ids )
 		{
-			Location location = null;
+			Pad pad = null;
 
 			Activity activity = getActivity();
 			if( activity != null )
@@ -270,8 +270,8 @@ public class LocationDetailFragment extends DialogFragment
 				{
 					try
 					{
-						Dao<Location, Integer> locationDao = databaseHelper.getLocationDao();
-						location = locationDao.queryForId( ids[ 0 ] );
+						Dao<Pad, Integer> locationDao = databaseHelper.getPadDao();
+						pad = locationDao.queryForId( ids[ 0 ] );
 					}
 					catch( SQLException e )
 					{
@@ -282,14 +282,14 @@ public class LocationDetailFragment extends DialogFragment
 				}
 			}
 
-			return location;
+			return pad;
 		}
 
 		@Override
-		protected void onPostExecute( Location result )
+		protected void onPostExecute( Pad result )
 		{
-			Log.i( TAG, "Location loaded." );
-			m_location = result;
+			Log.i( TAG, "Pad loaded." );
+			m_pad = result;
 
 			updateViews();
 		}

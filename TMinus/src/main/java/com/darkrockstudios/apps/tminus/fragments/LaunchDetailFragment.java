@@ -223,7 +223,7 @@ public class LaunchDetailFragment extends Fragment implements Listener, RocketDe
 					                           m_launchItem.windowend.getTime() )
 					                .putExtra( Events.TITLE, title )
 					                .putExtra( Events.DESCRIPTION, description )
-					                .putExtra( Events.EVENT_LOCATION, m_launchItem.location.name )
+					                .putExtra( Events.EVENT_LOCATION, m_launchItem.pad.name )
 					                .putExtra( Events.AVAILABILITY, Events.AVAILABILITY_BUSY );
 			startActivity( intent );
 		}
@@ -288,9 +288,9 @@ public class LaunchDetailFragment extends Fragment implements Listener, RocketDe
 
 			final TextView location =
 					(TextView) rootView.findViewById( R.id.LAUNCHDETAIL_location );
-			location.setText( m_launchItem.location.name );
+			location.setText( m_launchItem.pad.name );
 			int flagResourceId = Utilities
-					                     .getFlagResource( m_launchItem.location.locInfo.countrycode );
+					                     .getFlagResource( m_launchItem.pad.location.countrycode );
 			location.setCompoundDrawablesWithIntrinsicBounds( 0, 0, flagResourceId, 0 );
 
 			final TextView windowLabel =
@@ -434,7 +434,7 @@ public class LaunchDetailFragment extends Fragment implements Listener, RocketDe
 			}
 
 			body = getString( R.string.LAUNCHDETAIL_share_details, missionDescription,
-			                  m_launchItem.location.name, m_launchItem.net );
+			                  m_launchItem.pad.name, m_launchItem.net );
 		}
 
 		return body;
@@ -464,7 +464,7 @@ public class LaunchDetailFragment extends Fragment implements Listener, RocketDe
 			if( m_locationContainer != null )
 			{
 				LocationDetailFragment locationDetailFragment = LocationDetailFragment
-						                                                .newInstance( m_launchItem.location.id,
+						                                                .newInstance( m_launchItem.pad.id,
 						                                                              isTabletLayout );
 				getChildFragmentManager().beginTransaction()
 						.add( R.id.LAUNCHDETAIL_location_container, locationDetailFragment,

@@ -8,7 +8,7 @@ import android.view.MenuItem;
 import android.view.Window;
 
 import com.darkrockstudios.apps.tminus.fragments.LocationBrowserFragment;
-import com.darkrockstudios.apps.tminus.launchlibrary.Location;
+import com.darkrockstudios.apps.tminus.launchlibrary.Pad;
 
 /**
  * Created by Adam on 10/13/13.
@@ -64,12 +64,13 @@ public class LocationBrowserActivity extends NavigationDatabaseActivity implemen
 	}
 
 	@Override
-	public void onLocationClicked( Location location )
+	public void onLocationClicked( Pad pad )
 	{
-		if( location != null )
+		if( pad != null )
 		{
 			Intent intent = new Intent( this, LocationDetailActivity.class );
-			intent.putExtra( LocationDetailActivity.EXTRA_ITEM_ID, location.id );
+			intent.putExtra( LocationDetailActivity.EXTRA_ITEM_ID, pad.id );
+			startActivity( intent );
 		}
 	}
 

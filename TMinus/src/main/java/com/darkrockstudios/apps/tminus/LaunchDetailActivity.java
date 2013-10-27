@@ -10,7 +10,7 @@ import android.view.View;
 import android.view.Window;
 
 import com.darkrockstudios.apps.tminus.fragments.LaunchDetailFragment;
-import com.darkrockstudios.apps.tminus.launchlibrary.Location;
+import com.darkrockstudios.apps.tminus.launchlibrary.Pad;
 import com.darkrockstudios.apps.tminus.launchlibrary.Rocket;
 
 public class LaunchDetailActivity extends DatabaseActivity
@@ -107,11 +107,11 @@ public class LaunchDetailActivity extends DatabaseActivity
 
 	public void locationDetailsClicked( View v )
 	{
-		Location location = (Location) v.getTag();
+		Pad pad = (Pad) v.getTag();
 
 		final Context context = v.getContext();
 		Intent intent = new Intent( context, LocationDetailActivity.class );
-		intent.putExtra( RocketDetailActivity.ARG_ITEM_ID, location.id );
+		intent.putExtra( RocketDetailActivity.ARG_ITEM_ID, pad.id );
 		context.startActivity( intent );
 	}
 

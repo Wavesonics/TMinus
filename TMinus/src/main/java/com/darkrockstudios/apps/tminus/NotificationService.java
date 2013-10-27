@@ -95,7 +95,7 @@ public class NotificationService extends WakefulIntentService
 
 		final String summary = getString( string.NOTIFICATION_reminder_summary, launch.name, Utilities
 				                                                                                     .getDateText( launch.net ),
-		                                  launch.location.name );
+		                                  launch.pad.name );
 		builder.setStyle( new NotificationCompat.BigTextStyle()
 				                  .bigText( summary ) );
 
@@ -135,7 +135,7 @@ public class NotificationService extends WakefulIntentService
 
 		final String summary = getString( string.NOTIFICATION_launch_imminent_summary, launch.name, Utilities
 				                                                                                            .getDateText( launch.net ),
-		                                  launch.location.name );
+		                                  launch.pad.name );
 		builder.setStyle( new NotificationCompat.BigTextStyle().bigText( summary ) );
 
 		Intent launchDetailIntent = new Intent( this, CountDownActivity.class );

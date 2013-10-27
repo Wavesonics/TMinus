@@ -17,9 +17,9 @@ import com.darkrockstudios.apps.tminus.database.DatabaseHelper;
 import com.darkrockstudios.apps.tminus.launchlibrary.Launch;
 import com.darkrockstudios.apps.tminus.launchlibrary.LaunchLibraryGson;
 import com.darkrockstudios.apps.tminus.launchlibrary.LaunchLibraryUrls;
-import com.darkrockstudios.apps.tminus.launchlibrary.LocInfo;
 import com.darkrockstudios.apps.tminus.launchlibrary.Location;
 import com.darkrockstudios.apps.tminus.launchlibrary.Mission;
+import com.darkrockstudios.apps.tminus.launchlibrary.Pad;
 import com.darkrockstudios.apps.tminus.launchlibrary.Rocket;
 import com.darkrockstudios.apps.tminus.misc.Preferences;
 import com.google.gson.Gson;
@@ -180,10 +180,12 @@ public class LaunchUpdateService extends Service
 				try
 				{
 					final Dao<Launch, Integer> launchDao = databaseHelper.getLaunchDao();
-					final Dao<LocInfo, Integer> locInfoDao = databaseHelper.getLocInfoDao();
 					final Dao<Location, Integer> locationDao = databaseHelper.getLocationDao();
+					final Dao<Pad, Integer> padDao = databaseHelper.getPadDao();
 					final Dao<Mission, Integer> missionDao = databaseHelper.getMissionDao();
 					final Dao<Rocket, Integer> rocketDao = databaseHelper.getRocketDao();
+
+					int numUpdated = 0;
 
 					final JSONArray launchListArray = launchListObj.getJSONArray( "launch" );
 					for( int ii = 0; ii < launchListArray.length(); ++ii )
@@ -193,7 +195,7 @@ public class LaunchUpdateService extends Service
 							final JSONObject launchObj = launchListArray.getJSONObject( ii );
 							if( launchObj != null )
 							{
-								final Launch launch = gson.fromJson( launchObj.toString(), Launch.class );
+								final Launch launch = parseLaunch( launchObj, gson );
 
 								try
 								{
@@ -211,10 +213,10 @@ public class LaunchUpdateService extends Service
 														                                                              LaunchUpdateService.this );
 											                                      }
 
-											                                      locInfoDao
-													                                      .createOrUpdate( launch.location.locInfo );
 											                                      locationDao
-													                                      .createOrUpdate( launch.location );
+													                                      .createOrUpdate( launch.pad.location );
+											                                      padDao
+													                                      .createOrUpdate( launch.pad );
 
 											                                      if( launch.mission != null )
 											                                      {
@@ -231,6 +233,7 @@ public class LaunchUpdateService extends Service
 											                                      return null;
 										                                      }
 									                                      } );
+									++numUpdated;
 								}
 								catch( SQLException e )
 								{
@@ -276,6 +279,22 @@ public class LaunchUpdateService extends Service
 			cleanUpOldLaunches();
 
 			return numLaunches;
+		}
+
+		private Launch parseLaunch( JSONObject launchObj, Gson gson ) throws JSONException
+		{
+			final Launch launch = gson.fromJson( launchObj.toString(), Launch.class );
+
+			JSONObject locationObj = launchObj.getJSONObject( "location" );
+			final Location location = gson.fromJson( locationObj.toString(), Location.class );
+
+			JSONObject padObj = locationObj.getJSONObject( "pad" );
+			final Pad pad = gson.fromJson( padObj.toString(), Pad.class );
+			pad.location = location;
+
+			launch.pad = pad;
+
+			return launch;
 		}
 
 		@Override

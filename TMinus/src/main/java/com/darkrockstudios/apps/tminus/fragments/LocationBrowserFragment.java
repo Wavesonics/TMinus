@@ -17,7 +17,7 @@ import android.view.ViewGroup;
 
 import com.darkrockstudios.apps.tminus.R;
 import com.darkrockstudios.apps.tminus.database.DatabaseHelper;
-import com.darkrockstudios.apps.tminus.launchlibrary.Location;
+import com.darkrockstudios.apps.tminus.launchlibrary.Pad;
 import com.darkrockstudios.apps.tminus.misc.Preferences;
 import com.darkrockstudios.apps.tminus.updatetasks.DataUpdaterService;
 import com.darkrockstudios.apps.tminus.updatetasks.LocationUpdateTask;
@@ -53,9 +53,9 @@ public class LocationBrowserFragment extends Fragment implements GoogleMap.OnInf
 	private static final String MAP_FRAGMENT_TAG = "LocationBrowserMapFragment";
 	private static final LatLng DEFAULT_LOCATION = new LatLng( 37.523506, -77.412109 );
 
-	private LocInfoLoader         m_locationsLoader;
-	private List<Location>        m_locations;
-	private Map<Marker, Location> m_locationLookup;
+	private LocInfoLoader    m_locationsLoader;
+	private List<Pad>        m_pads;
+	private Map<Marker, Pad> m_locationLookup;
 
 	private LocationClickListener m_locationClickListener;
 	private LocationUpdateReceiver m_updateReceiver;
@@ -64,7 +64,7 @@ public class LocationBrowserFragment extends Fragment implements GoogleMap.OnInf
 
 	public static interface LocationClickListener
 	{
-		public void onLocationClicked( Location location );
+		public void onLocationClicked( Pad pad );
 	}
 
 	@Override
@@ -72,7 +72,7 @@ public class LocationBrowserFragment extends Fragment implements GoogleMap.OnInf
 	{
 		super.onCreate( savedInstanceState );
 
-		m_locationLookup = new HashMap<Marker, Location>();
+		m_locationLookup = new HashMap<Marker, Pad>();
 	}
 
 	@Override
@@ -210,7 +210,7 @@ public class LocationBrowserFragment extends Fragment implements GoogleMap.OnInf
 
 	private void updateMap()
 	{
-		if( m_locations != null )
+		if( m_pads != null )
 		{
 			SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager()
 					                                                      .findFragmentByTag( MAP_FRAGMENT_TAG );
@@ -224,18 +224,18 @@ public class LocationBrowserFragment extends Fragment implements GoogleMap.OnInf
 
 					m_locationLookup.clear();
 
-					for( Location location : m_locations )
+					for( Pad pad : m_pads )
 					{
-						if( location.latitude != null && location.longitude != null )
+						if( pad.latitude != null && pad.longitude != null )
 						{
-							LatLng pos = new LatLng( location.latitude, location.longitude );
+							LatLng pos = new LatLng( pad.latitude, pad.longitude );
 
 							MarkerOptions markerOptions = new MarkerOptions();
 							markerOptions.position( pos );
-							markerOptions.title( location.locInfo.name );
+							markerOptions.title( pad.location.name );
 							Marker marker = map.addMarker( markerOptions );
 
-							m_locationLookup.put( marker, location );
+							m_locationLookup.put( marker, pad );
 						}
 					}
 				}
@@ -246,19 +246,19 @@ public class LocationBrowserFragment extends Fragment implements GoogleMap.OnInf
 	@Override
 	public void onInfoWindowClick( Marker marker )
 	{
-		Location location = m_locationLookup.get( marker );
-		if( m_locationClickListener != null && location != null )
+		Pad pad = m_locationLookup.get( marker );
+		if( m_locationClickListener != null && pad != null )
 		{
-			m_locationClickListener.onLocationClicked( location );
+			m_locationClickListener.onLocationClicked( pad );
 		}
 	}
 
-	private class LocInfoLoader extends AsyncTask<Integer, Void, List<Location>>
+	private class LocInfoLoader extends AsyncTask<Integer, Void, List<Pad>>
 	{
 		@Override
-		protected List<Location> doInBackground( Integer... ids )
+		protected List<Pad> doInBackground( Integer... ids )
 		{
-			List<Location> locations = null;
+			List<Pad> pads = null;
 
 			Activity activity = getActivity();
 			if( activity != null )
@@ -269,12 +269,12 @@ public class LocationBrowserFragment extends Fragment implements GoogleMap.OnInf
 				{
 					try
 					{
-						Dao<Location, Integer> locationDao = databaseHelper.getLocationDao();
-						QueryBuilder<Location, Integer> builder = locationDao.queryBuilder();
-						builder.groupBy( "locInfo_id" );
+						Dao<Pad, Integer> locationDao = databaseHelper.getPadDao();
+						QueryBuilder<Pad, Integer> builder = locationDao.queryBuilder();
+						builder.groupBy( "location_id" );
 						builder.orderBy( "name", true );
 
-						locations = locationDao.query( builder.prepare() );
+						pads = locationDao.query( builder.prepare() );
 					}
 					catch( SQLException e )
 					{
@@ -285,14 +285,14 @@ public class LocationBrowserFragment extends Fragment implements GoogleMap.OnInf
 				}
 			}
 
-			return locations;
+			return pads;
 		}
 
 		@Override
-		protected void onPostExecute( List<Location> result )
+		protected void onPostExecute( List<Pad> result )
 		{
-			Log.i( TAG, "Location loaded." );
-			m_locations = result;
+			Log.i( TAG, "Pad loaded." );
+			m_pads = result;
 			m_locationLookup.clear();
 
 			m_locationsLoader = null;
@@ -311,7 +311,7 @@ public class LocationBrowserFragment extends Fragment implements GoogleMap.OnInf
 			{
 				if( LocationUpdateTask.ACTION_LOCATION_LIST_UPDATED.equals( intent.getAction() ) )
 				{
-					Log.d( TAG, "Received Location List update SUCCESS broadcast, will update the UI now." );
+					Log.d( TAG, "Received Pad List update SUCCESS broadcast, will update the UI now." );
 
 					reloadData();
 
@@ -320,7 +320,7 @@ public class LocationBrowserFragment extends Fragment implements GoogleMap.OnInf
 				}
 				else if( LocationUpdateTask.ACTION_LOCATION_LIST_UPDATE_FAILED.equals( intent.getAction() ) )
 				{
-					Log.d( TAG, "Received Location List update FAILURE broadcast." );
+					Log.d( TAG, "Received Pad List update FAILURE broadcast." );
 
 					Crouton.makeText( activity, R.string.TOAST_location_list_update_failed, Style.ALERT ).show();
 					activity.setProgressBarIndeterminateVisibility( false );

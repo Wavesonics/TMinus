@@ -47,9 +47,8 @@ public class Launch implements Serializable
 	               foreignAutoRefresh = true)
 	public Rocket rocket;
 
-	@DatabaseField(canBeNull = false, foreign = true, foreignAutoCreate = true,
-	               foreignAutoRefresh = true)
-	public Location location;
+	@DatabaseField(canBeNull = false, foreign = true, foreignAutoCreate = true, foreignAutoRefresh = true)
+	public Pad pad;
 
 	public String toString()
 	{
