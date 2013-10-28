@@ -57,7 +57,7 @@ public class LocationBrowserFragment extends Fragment implements GoogleMap.OnInf
 	private List<Pad>        m_pads;
 	private Map<Marker, Pad> m_locationLookup;
 
-	private LocationClickListener m_locationClickListener;
+	private LocationClickListener  m_locationClickListener;
 	private LocationUpdateReceiver m_updateReceiver;
 
 	private static final long UPDATE_THRESHOLD = TimeUnit.DAYS.toMillis( 7 );
@@ -157,10 +157,10 @@ public class LocationBrowserFragment extends Fragment implements GoogleMap.OnInf
 
 	public void refresh()
 	{
-		requestRockets();
+		requestLocations();
 	}
 
-	private void requestRockets()
+	private void requestLocations()
 	{
 		Activity activity = getActivity();
 		if( activity != null && isAdded() )
@@ -169,9 +169,9 @@ public class LocationBrowserFragment extends Fragment implements GoogleMap.OnInf
 
 			activity.setProgressBarIndeterminateVisibility( true );
 
-			Intent rocketUpdate = new Intent( activity, DataUpdaterService.class );
-			rocketUpdate.putExtra( DataUpdaterService.EXTRA_UPDATE_TYPE, LocationUpdateTask.UPDATE_TYPE );
-			activity.startService( rocketUpdate );
+			Intent locationUpdate = new Intent( activity, DataUpdaterService.class );
+			locationUpdate.putExtra( DataUpdaterService.EXTRA_UPDATE_TYPE, LocationUpdateTask.UPDATE_TYPE );
+			activity.startService( locationUpdate );
 		}
 	}
 

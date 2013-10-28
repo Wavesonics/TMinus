@@ -69,7 +69,7 @@ public class LocationBrowserActivity extends NavigationDatabaseActivity implemen
 		if( pad != null )
 		{
 			Intent intent = new Intent( this, LocationDetailActivity.class );
-			intent.putExtra( LocationDetailActivity.EXTRA_ITEM_ID, pad.id );
+			intent.putExtra( LocationDetailActivity.EXTRA_LOCATION_ID, pad.location.id );
 			startActivity( intent );
 		}
 	}

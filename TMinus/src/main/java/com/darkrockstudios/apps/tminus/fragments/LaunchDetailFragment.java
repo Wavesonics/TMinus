@@ -464,8 +464,10 @@ public class LaunchDetailFragment extends Fragment implements Listener, RocketDe
 			if( m_locationContainer != null )
 			{
 				LocationDetailFragment locationDetailFragment = LocationDetailFragment
-						                                                .newInstance( m_launchItem.pad.id,
-						                                                              isTabletLayout );
+						                                                .newInstance( m_launchItem.pad.location.id,
+						                                                              m_launchItem.pad.id,
+						                                                              isTabletLayout,
+						                                                              true );
 				getChildFragmentManager().beginTransaction()
 						.add( R.id.LAUNCHDETAIL_location_container, locationDetailFragment,
 						      LOCATION_FRAGMENT_TAG )

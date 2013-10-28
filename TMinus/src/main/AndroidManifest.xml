@@ -62,14 +62,19 @@
         <activity
             android:name=".RocketDetailActivity"
             android:label="@string/title_activity_rocket_detail"
-            android:parentActivityName=".RocketListActivity">
+            android:parentActivityName=".RocketBrowserActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".RocketListActivity"/>
+                android:value=".RocketBrowserActivity"/>
         </activity>
         <activity
             android:name=".LocationDetailActivity"
-            android:label="@string/title_activity_location_detail"/>
+            android:label="@string/title_activity_location_detail"
+            android:parentActivityName=".LocationBrowserActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".LocationBrowserActivity"/>
+        </activity>
 
         <receiver android:name=".AlarmUpdateReceiver">
             <intent-filter>

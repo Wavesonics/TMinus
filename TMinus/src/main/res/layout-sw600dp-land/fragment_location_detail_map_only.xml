@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/LOCATIONDETAIL_container"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+    <FrameLayout
+        android:id="@+id/LOCATIONDETAIL_map_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_above="@+id/LOCATIONDETAIL_earth">
+    </FrameLayout>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="5dp"
+        android:layout_below="@id/LOCATIONDETAIL_location_name"
+        android:layout_alignParentLeft="true"
+        android:layout_alignRight="@id/LOCATIONDETAIL_earth"
+        android:src="@drawable/header_divider"
+        android:scaleType="fitXY"/>
+
+    <com.darkrockstudios.apps.tminus.views.ResizableImageView
+        android:id="@id/LOCATIONDETAIL_earth"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:src="@drawable/earth_short"/>
+
+    <TextView
+        android:id="@+id/LOCATIONDETAIL_location_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/textAppearanceLargeAccent"
+        android:text="@string/LOCATIONDETAIL_location_label"
+        android:drawableLeft="@drawable/flag_us"
+        android:layout_alignTop="@id/LOCATIONDETAIL_earth"/>
+
+</RelativeLayout>

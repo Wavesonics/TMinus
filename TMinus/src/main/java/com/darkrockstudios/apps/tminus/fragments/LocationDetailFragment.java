@@ -2,6 +2,7 @@ package com.darkrockstudios.apps.tminus.fragments;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -9,11 +10,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.darkrockstudios.apps.tminus.R;
 import com.darkrockstudios.apps.tminus.database.DatabaseHelper;
+import com.darkrockstudios.apps.tminus.launchlibrary.Location;
 import com.darkrockstudios.apps.tminus.launchlibrary.Pad;
 import com.darkrockstudios.apps.tminus.misc.Utilities;
 import com.google.android.gms.common.ConnectionResult;
@@ -28,38 +33,60 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.stmt.QueryBuilder;
 
 import java.sql.SQLException;
+import java.util.List;
+
+import de.keyboardsurfer.android.widget.crouton.Crouton;
+import de.keyboardsurfer.android.widget.crouton.Style;
 
 /**
  * Created by Adam on 7/24/13.
  * Dark Rock Studios
  * darkrockstudios.com
  */
-public class LocationDetailFragment extends DialogFragment
+public class LocationDetailFragment extends DialogFragment implements AdapterView.OnItemClickListener
 {
-	public static final  String TAG                     =
+	public static final String TAG =
 			LocationDetailFragment.class.getSimpleName();
-	public static final  String ARG_ITEM_ID             = "item_id";
+
+	public static final  int    ARG_UNSET_ID         = -1;
+	public static final  String ARG_LOCATION_ID      = "location_id";
+	public static final  String ARG_PAD_ID           = "pad_id";
 	public static final  String ARG_MAP_CONTROL_ENABLED = "map_control_enabled";
+	public static final  String ARG_ONLY_DISPLAY_MAP = "only_display_map";
 	private static final String MAP_FRAGMENT_TAG        = "MapFragment";
-	private static final float  LOCATION_ZOOM           = 15.0f;
-	private static final LatLng DEFAULT_LOCATION        = new LatLng( 37.523506, -77.412109 );
-	private Pad         m_pad;
-	private FrameLayout m_mapContainer;
-	private TextView    m_locationName;
+	private static final float  PAD_ZOOM             = 16.0f;
+
+	private static final LatLng DEFAULT_LOCATION = new LatLng( 37.523506, -77.412109 );
+	private Location       m_location;
+	private List<Pad>      m_pads;
+	private FrameLayout    m_mapContainer;
+	private TextView       m_locationName;
+	private PadListAdapter m_listAdapter;
 
 	public LocationDetailFragment()
 	{
 	}
 
-	public static LocationDetailFragment newInstance( int locationId, boolean mapControlsEnabled )
+	public static LocationDetailFragment newInstance( int locationId, int padId, boolean mapControlsEnabled, boolean onlyDisplayMap )
 	{
 		LocationDetailFragment locationDetailFragment = new LocationDetailFragment();
 
 		Bundle arguments = new Bundle();
-		arguments.putInt( ARG_ITEM_ID, locationId );
+		if( locationId > ARG_UNSET_ID )
+		{
+			arguments.putInt( ARG_LOCATION_ID, locationId );
+		}
+
+		if( padId > ARG_UNSET_ID )
+		{
+			arguments.putInt( ARG_PAD_ID, padId );
+		}
 		arguments.putBoolean( ARG_MAP_CONTROL_ENABLED, mapControlsEnabled );
+		arguments.putBoolean( ARG_ONLY_DISPLAY_MAP, onlyDisplayMap );
+
 		locationDetailFragment.setArguments( arguments );
 
 		return locationDetailFragment;
@@ -75,7 +102,15 @@ public class LocationDetailFragment extends DialogFragment
 			dialog.setTitle( R.string.LOCATIONDETAIL_title );
 		}
 
-		View rootView = inflater.inflate( R.layout.fragment_location_detail, container, false );
+		final View rootView;
+		if( shouldOnlyDisplayMap() )
+		{
+			rootView = inflater.inflate( R.layout.fragment_location_detail_map_only, container, false );
+		}
+		else
+		{
+			rootView = inflater.inflate( R.layout.fragment_location_detail, container, false );
+		}
 
 		if( rootView != null )
 		{
@@ -85,11 +120,19 @@ public class LocationDetailFragment extends DialogFragment
 			m_locationName =
 					(TextView) rootView.findViewById( R.id.LOCATIONDETAIL_location_name );
 
-
 			SupportMapFragment mapFragment = createMap();
 			getChildFragmentManager().beginTransaction()
 					.add( R.id.LOCATIONDETAIL_map_container, mapFragment, MAP_FRAGMENT_TAG )
 					.commit();
+
+			if( !shouldOnlyDisplayMap() )
+			{
+				m_listAdapter = new PadListAdapter( getActivity() );
+				ListView padList =
+						(ListView) rootView.findViewById( R.id.LOCATIONDETAIL_pad_list );
+				padList.setAdapter( m_listAdapter );
+				padList.setOnItemClickListener( this );
+			}
 		}
 
 		return rootView;
@@ -139,6 +182,42 @@ public class LocationDetailFragment extends DialogFragment
 					marker.position( pos );
 					map.addMarker( marker );
 				}
+
+				// Don't add pad markers in map only map
+				if( m_pads != null && !m_pads.isEmpty() && !shouldOnlyDisplayMap() )
+				{
+					for( Pad pad : m_pads )
+					{
+						if( pad.latitude != null && pad.longitude != null )
+						{
+							LatLng padPos = new LatLng( pad.latitude, pad.longitude );
+
+							MarkerOptions marker = new MarkerOptions();
+							marker.position( padPos );
+							map.addMarker( marker );
+						}
+					}
+				}
+			}
+		}
+	}
+
+	private void zoomToPad( Pad pad )
+	{
+		if( pad != null && pad.latitude != null && pad.longitude != null )
+		{
+			LatLng pos = new LatLng( pad.latitude, pad.longitude );
+
+			SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager()
+					                                                      .findFragmentByTag( MAP_FRAGMENT_TAG );
+			if( mapFragment != null )
+			{
+				GoogleMap map = mapFragment.getMap();
+				if( map != null )
+				{
+					CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom( pos, PAD_ZOOM );
+					map.animateCamera( cameraUpdate );
+				}
 			}
 		}
 	}
@@ -172,15 +251,22 @@ public class LocationDetailFragment extends DialogFragment
 
 	public void updateViews()
 	{
-		if( m_pad != null )
+		if( m_location != null )
 		{
 			updateMap();
 
 			if( m_locationName != null )
 			{
+				m_locationName.setText( m_location.name );
+
 				int flagResourceId = Utilities
-						                     .getFlagResource( m_pad.location.countrycode );
+						                     .getFlagResource( m_location.countrycode );
 				m_locationName.setCompoundDrawablesWithIntrinsicBounds( flagResourceId, 0, 0, 0 );
+			}
+
+			if( m_pads != null )
+			{
+
 			}
 		}
 	}
@@ -196,29 +282,30 @@ public class LocationDetailFragment extends DialogFragment
 		}
 	}
 
-	private float getLocationZoom()
+	private void loadPads()
 	{
-		LatLng pos = getLocation();
-		final float zoom;
-		if( pos == DEFAULT_LOCATION )
+		if( m_location != null )
 		{
-			zoom = 0.0f;
+			PadLoader padLoader = new PadLoader();
+			padLoader.execute( m_location.id );
 		}
-		else
-		{
-			zoom = LOCATION_ZOOM;
-		}
-
-		return zoom;
 	}
 
 	private LatLng getLocation()
 	{
 		final LatLng pos;
 
-		if( m_pad != null && m_pad.longitude != null && m_pad.latitude != null )
+		if( m_pads != null && !m_pads.isEmpty() )
 		{
-			pos = new LatLng( m_pad.latitude, m_pad.longitude );
+			Pad pad = m_pads.get( 0 );
+			if( pad != null && pad.longitude != null && pad.latitude != null )
+			{
+				pos = new LatLng( pad.latitude, pad.longitude );
+			}
+			else
+			{
+				pos = DEFAULT_LOCATION;
+			}
 		}
 		else
 		{
@@ -241,25 +328,104 @@ public class LocationDetailFragment extends DialogFragment
 		return mapControlsEnabled;
 	}
 
+	private boolean shouldOnlyDisplayMap()
+	{
+		boolean onlyDisplayMap = false;
+
+		final Bundle arguments = getArguments();
+		if( arguments != null && arguments.containsKey( ARG_ONLY_DISPLAY_MAP ) )
+		{
+			onlyDisplayMap = arguments.getBoolean( ARG_ONLY_DISPLAY_MAP );
+		}
+
+		return onlyDisplayMap;
+	}
+
 	public int getLocationId()
 	{
 		int locationId = -1;
 
 		final Bundle arguments = getArguments();
-		if( arguments != null && arguments.containsKey( ARG_ITEM_ID ) )
+		if( arguments != null && arguments.containsKey( ARG_LOCATION_ID ) )
 		{
-			locationId = arguments.getInt( ARG_ITEM_ID );
+			locationId = arguments.getInt( ARG_LOCATION_ID );
 		}
 
 		return locationId;
 	}
 
-	private class LocationLoader extends AsyncTask<Integer, Void, Pad>
+	public int getPadId()
+	{
+		int padId = -1;
+
+		final Bundle arguments = getArguments();
+		if( arguments != null && arguments.containsKey( ARG_PAD_ID ) )
+		{
+			padId = arguments.getInt( ARG_PAD_ID );
+		}
+
+		return padId;
+	}
+
+	@Override
+	public void onItemClick( AdapterView<?> parent, View view, int position, long id )
+	{
+		final Activity activity = getActivity();
+		if( activity != null && isAdded() )
+		{
+			if( m_pads != null && !m_pads.isEmpty() && position < m_pads.size() )
+			{
+				Pad pad = m_pads.get( position );
+
+				if( pad.latitude != null && pad.longitude != null )
+				{
+					zoomToPad( pad );
+				}
+				else
+				{
+					Crouton.makeText( activity, R.string.TOAST_location_detail_pad_no_coordinates, Style.INFO ).show();
+				}
+			}
+		}
+	}
+
+	private class PadListAdapter extends ArrayAdapter<Pad>
+	{
+		public PadListAdapter( Context context )
+		{
+			super( context, R.layout.row_pad_list_item );
+		}
+
+		public View getView( int position, View convertView, ViewGroup parent )
+		{
+			final View view;
+			if( convertView == null )
+			{
+				LayoutInflater inflater = LayoutInflater.from( getContext() );
+				view = inflater.inflate( R.layout.row_pad_list_item, parent, false );
+			}
+			else
+			{
+				view = convertView;
+			}
+
+			Pad pad = getItem( position );
+
+			TextView padName = (TextView) view.findViewById( R.id.LOCATIONDETAIL_pad_list_item_name );
+			padName.setText( pad.name );
+
+			return view;
+		}
+	}
+
+	private class PadLoader extends AsyncTask<Integer, Void, List<Pad>>
 	{
 		@Override
-		protected Pad doInBackground( Integer... ids )
+		protected List<Pad> doInBackground( Integer... ids )
 		{
-			Pad pad = null;
+			final int locationId = ids[ 0 ];
+
+			List<Pad> pads = null;
 
 			Activity activity = getActivity();
 			if( activity != null )
@@ -270,8 +436,11 @@ public class LocationDetailFragment extends DialogFragment
 				{
 					try
 					{
-						Dao<Pad, Integer> locationDao = databaseHelper.getPadDao();
-						pad = locationDao.queryForId( ids[ 0 ] );
+						Dao<Pad, Integer> padDao = databaseHelper.getPadDao();
+						QueryBuilder<Pad, Integer> queryBuilder = padDao.queryBuilder();
+						queryBuilder.where().eq( "location_id", locationId );
+
+						pads = padDao.query( queryBuilder.prepare() );
 					}
 					catch( SQLException e )
 					{
@@ -282,14 +451,63 @@ public class LocationDetailFragment extends DialogFragment
 				}
 			}
 
-			return pad;
+			return pads;
 		}
 
 		@Override
-		protected void onPostExecute( Pad result )
+		protected void onPostExecute( List<Pad> result )
 		{
-			Log.i( TAG, "Pad loaded." );
-			m_pad = result;
+			Log.i( TAG, "Pads loaded." );
+			m_pads = result;
+
+			if( m_listAdapter != null )
+			{
+				m_listAdapter.clear();
+				m_listAdapter.addAll( m_pads );
+				m_listAdapter.notifyDataSetChanged();
+			}
+
+			updateViews();
+		}
+	}
+
+	private class LocationLoader extends AsyncTask<Integer, Void, Location>
+	{
+		@Override
+		protected Location doInBackground( Integer... ids )
+		{
+			Location location = null;
+
+			Activity activity = getActivity();
+			if( activity != null )
+			{
+				final DatabaseHelper databaseHelper =
+						OpenHelperManager.getHelper( activity, DatabaseHelper.class );
+				if( databaseHelper != null )
+				{
+					try
+					{
+						Dao<Location, Integer> locationDao = databaseHelper.getLocationDao();
+						location = locationDao.queryForId( ids[ 0 ] );
+					}
+					catch( SQLException e )
+					{
+						e.printStackTrace();
+					}
+
+					OpenHelperManager.releaseHelper();
+				}
+			}
+
+			return location;
+		}
+
+		@Override
+		protected void onPostExecute( Location result )
+		{
+			Log.i( TAG, "Location loaded." );
+			m_location = result;
+			loadPads();
 
 			updateViews();
 		}

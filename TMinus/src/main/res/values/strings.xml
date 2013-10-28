@@ -70,6 +70,7 @@
     <string name="TOAST_rocket_list_update_failed">Rocket list update failed</string>
     <string name="TOAST_location_list_update_complete">Location list updated</string>
     <string name="TOAST_location_list_update_failed">Location list update failed</string>
+    <string name="TOAST_location_detail_pad_no_coordinates">No coordinates available for Pad</string>
 
     <string name="COUNTDOWN_launch_status">Status: %s</string>
     <string name="COUNTDOWN_launch_status_green">GO</string>
@@ -105,6 +106,8 @@
     <string name="PREF_always_show_count_down_summary">Display the Count Down button for all Launches regardless of how
         far off they are
     </string>
+
     <string name="LOCATIONDETAIL_location_label">Location</string>
+    <string name="LOCATIONDETAIL_pad_list_label">Launch Pads:</string>
 
 </resources>

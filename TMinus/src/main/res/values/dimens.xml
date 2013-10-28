@@ -11,6 +11,7 @@
     <dimen name="launch_detail_rocket_image_padding">16dp</dimen>
     <dimen name="launch_detail_row_icon_left_padding">10dp</dimen>
     <dimen name="launch_detail_row_icon_bottom_padding">5dp</dimen>
+    <dimen name="location_detail_padding">8dp</dimen>
     <dimen name="rocket_detail_padding">16dp</dimen>
     <dimen name="rocket_list_padding">16dp</dimen>
 </resources>

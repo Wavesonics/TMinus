@@ -184,7 +184,8 @@ public class LaunchListActivity extends NavigationDatabaseActivity
 	{
 		Pad pad = (Pad) v.getTag();
 
-		LocationDetailFragment locationDetailFragment = LocationDetailFragment.newInstance( pad.id, true );
+		LocationDetailFragment locationDetailFragment =
+				LocationDetailFragment.newInstance( pad.location.id, pad.id, true, true );
 		locationDetailFragment.show( getSupportFragmentManager(), "dialog" );
 	}
 
