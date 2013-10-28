@@ -35,6 +35,7 @@
         android:orientation="vertical"
         android:layout_width="0dp"
         android:layout_height="match_parent"
+        android:layout_marginLeft="@dimen/location_detail_padding"
         android:layout_weight="3">
 
         <TextView
