@@ -17,7 +17,7 @@ public class TminusUri
 	public static final String SEGMENT_COUNTDOWN    = "countdown";
 	public static final String SEGMENT_NOTIFICATION = "notification";
 	public static final String SEGMENT_REMINDER     = "reminder";
-	public static final String SEGMENT_IMMINENT     = "reminder";
+	public static final String SEGMENT_IMMINENT = "imminent";
 
 	private static Uri constructBaseUri()
 	{
