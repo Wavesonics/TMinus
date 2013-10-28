@@ -10,7 +10,9 @@
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:divider="?android:attr/dividerHorizontal"
+        android:showDividers="middle">
 
         <com.android.volley.toolbox.NetworkImageView
             android:layout_width="match_parent"
@@ -48,9 +50,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:id="@+id/scrollView"
-                android:padding="@dimen/rocket_detail_padding">
+                android:padding="@dimen/rocket_detail_padding"
+                android:scrollbarStyle="outsideOverlay">
 
-                <TextView
+            <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium"
