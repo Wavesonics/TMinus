@@ -176,7 +176,7 @@ public class LaunchListActivity extends NavigationDatabaseActivity
 	{
 		Rocket rocket = (Rocket) v.getTag();
 
-		RocketDetailFragment rocketDetailFragment = RocketDetailFragment.newInstance( rocket.id );
+		RocketDetailFragment rocketDetailFragment = RocketDetailFragment.newInstance( rocket.id, true );
 		rocketDetailFragment.show( getSupportFragmentManager(), "dialog" );
 	}
 

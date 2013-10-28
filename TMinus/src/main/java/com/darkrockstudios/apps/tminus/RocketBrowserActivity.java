@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentManager;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.Window;
 
 import com.darkrockstudios.apps.tminus.fragments.RocketBrowserFragment;
@@ -102,6 +103,17 @@ public class RocketBrowserActivity extends NavigationDatabaseActivity implements
 		fragment.refresh();
 	}
 
+	public void rocketImageClicked( View v )
+	{
+		RocketDetailFragment fragment = (RocketDetailFragment) getSupportFragmentManager()
+				                                                       .findFragmentById( R.id.COMMON_detail_fragment_container );
+
+		if( fragment != null )
+		{
+			fragment.zoomRocketImage();
+		}
+	}
+
 	@Override
 	public void onItemSelected( Rocket rocket )
 	{
@@ -110,10 +122,7 @@ public class RocketBrowserActivity extends NavigationDatabaseActivity implements
 			// In two-pane mode, show the detail view in this activity by
 			// adding or replacing the detail fragment using a
 			// fragment transaction.
-			Bundle arguments = new Bundle();
-			arguments.putSerializable( RocketDetailFragment.ARG_ITEM_ID, rocket.id );
-			RocketDetailFragment fragment = new RocketDetailFragment();
-			fragment.setArguments( arguments );
+			RocketDetailFragment fragment = RocketDetailFragment.newInstance( rocket.id, false );
 			getSupportFragmentManager().beginTransaction()
 					.replace( R.id.COMMON_detail_fragment_container, fragment )
 					.commit();

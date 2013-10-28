@@ -43,6 +43,7 @@ public class RocketBrowserFragment extends ListFragment
 {
 	private static final String TAG = RocketBrowserFragment.class.getSimpleName();
 
+
 	private static final String STATE_ACTIVATED_POSITION = "activated_position";
 
 	private Callbacks m_callbacks = s_dummyCallbacks;
@@ -61,7 +62,9 @@ public class RocketBrowserFragment extends ListFragment
 
 	public static RocketBrowserFragment newInstance()
 	{
-		return new RocketBrowserFragment();
+		RocketBrowserFragment fragment = new RocketBrowserFragment();
+
+		return fragment;
 	}
 
 	@Override

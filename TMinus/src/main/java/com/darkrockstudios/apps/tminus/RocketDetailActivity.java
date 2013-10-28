@@ -34,7 +34,7 @@ public class RocketDetailActivity extends DatabaseActivity
 			{
 				// Create the detail fragment and add it to the activity
 				// using a fragment transaction.
-				RocketDetailFragment rocketDetailFragment = RocketDetailFragment.newInstance( m_rocketId );
+				RocketDetailFragment rocketDetailFragment = RocketDetailFragment.newInstance( m_rocketId, false );
 				getSupportFragmentManager().beginTransaction()
 						.add( R.id.rocket_detail_container, rocketDetailFragment, FRAGMENT_TAG )
 						.commit();

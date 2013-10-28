@@ -477,7 +477,7 @@ public class LaunchDetailFragment extends Fragment implements Listener, RocketDe
 			if( m_rocketContainer != null )
 			{
 				RocketDetailFragment rocketDetailFragment =
-						RocketDetailFragment.newInstance( m_launchItem.rocket.id );
+						RocketDetailFragment.newInstance( m_launchItem.rocket.id, true );
 				getChildFragmentManager().beginTransaction()
 						.add( R.id.LAUNCHDETAIL_rocket_container, rocketDetailFragment,
 						      ROCKET_FRAGMENT_TAG ).commit();

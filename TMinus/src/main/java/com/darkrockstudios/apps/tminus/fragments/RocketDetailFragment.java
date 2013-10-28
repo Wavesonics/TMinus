@@ -45,6 +45,8 @@ public class RocketDetailFragment extends DialogFragment implements Listener, Ro
 {
 	public static final String TAG         = LaunchDetailFragment.class.getSimpleName();
 	public static final String ARG_ITEM_ID = "item_id";
+	public static final String ARG_NO_IMAGE = "no_image";
+
 	private File                       m_dataDirectory;
 	private Rocket                     m_rocket;
 	private RocketDetail               m_rocketDetail;
@@ -64,12 +66,13 @@ public class RocketDetailFragment extends DialogFragment implements Listener, Ro
 	{
 	}
 
-	public static RocketDetailFragment newInstance( int rocketId )
+	public static RocketDetailFragment newInstance( int rocketId, boolean noImage )
 	{
 		RocketDetailFragment rocketDetailFragment = new RocketDetailFragment();
 
 		Bundle arguments = new Bundle();
 		arguments.putInt( ARG_ITEM_ID, rocketId );
+		arguments.putBoolean( ARG_NO_IMAGE, noImage );
 		rocketDetailFragment.setArguments( arguments );
 
 		return rocketDetailFragment;
@@ -96,7 +99,16 @@ public class RocketDetailFragment extends DialogFragment implements Listener, Ro
 			dialog.setTitle( R.string.ROCKETDETAIL_title );
 		}
 
-		View rootView = inflater.inflate( R.layout.fragment_rocket_detail, container, false );
+		final View rootView;
+
+		if( shouldDisplayImage() )
+		{
+			rootView = inflater.inflate( R.layout.fragment_rocket_detail, container, false );
+		}
+		else
+		{
+			rootView = inflater.inflate( R.layout.fragment_rocket_detail_no_image, container, false );
+		}
 
 		if( rootView != null )
 		{
@@ -228,6 +240,19 @@ public class RocketDetailFragment extends DialogFragment implements Listener, Ro
 		{
 			fetchRocketDetails();
 		}
+	}
+
+	private boolean shouldDisplayImage()
+	{
+		boolean displayImage = false;
+
+		final Bundle arguments = getArguments();
+		if( arguments != null && arguments.containsKey( ARG_NO_IMAGE ) )
+		{
+			displayImage = !arguments.getBoolean( ARG_NO_IMAGE );
+		}
+
+		return displayImage;
 	}
 
 	private void fetchRocketDetails()
