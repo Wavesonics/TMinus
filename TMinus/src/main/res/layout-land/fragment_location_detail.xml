@@ -5,9 +5,12 @@
               android:id="@+id/LOCATIONDETAIL_container"
               android:orientation="horizontal"
               android:layout_width="match_parent"
-              android:layout_height="match_parent">
+              android:layout_height="match_parent"
+              android:divider="?android:attr/dividerHorizontal"
+              android:showDividers="middle"
+              android:baselineAligned="false">
 
-    <LinearLayout
+<LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
