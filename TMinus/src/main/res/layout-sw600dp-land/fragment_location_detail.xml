@@ -24,6 +24,7 @@
         <ListView
             android:id="@+id/LOCATIONDETAIL_pad_list"
             android:scrollbarStyle="outsideOverlay"
+            android:divider="@drawable/divider_vertical_repeat"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
     </LinearLayout>

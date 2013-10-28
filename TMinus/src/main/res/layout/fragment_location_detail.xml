@@ -12,7 +12,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/location_detail_padding"
-        android:textAppearance="@style/textAppearanceLargeAccent"
+        android:textAppearance="@style/textAppearanceMediumAccent"
         tools:text="Florida"/>
 
     <FrameLayout
@@ -31,7 +31,9 @@
     <ListView
         android:id="@+id/LOCATIONDETAIL_pad_list"
         android:scrollbarStyle="outsideOverlay"
+        android:divider="@drawable/divider_vertical_repeat"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="1"/>
+        android:layout_weight="1"
+        android:padding="@dimen/location_detail_padding"/>
 </LinearLayout>

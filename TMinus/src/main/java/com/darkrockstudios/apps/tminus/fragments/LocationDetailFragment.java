@@ -66,6 +66,8 @@ public class LocationDetailFragment extends DialogFragment implements AdapterVie
 	private TextView       m_locationName;
 	private PadListAdapter m_listAdapter;
 
+	private static final String UNKNOWN_PAD_NAME = "Unknown Pad";
+
 	public LocationDetailFragment()
 	{
 	}
@@ -458,6 +460,20 @@ public class LocationDetailFragment extends DialogFragment implements AdapterVie
 		protected void onPostExecute( List<Pad> result )
 		{
 			Log.i( TAG, "Pads loaded." );
+
+			if( result != null )
+			{
+				for( int ii = 0; ii < result.size(); ++ii )
+				{
+					Pad pad = result.get( ii );
+					if( UNKNOWN_PAD_NAME.equalsIgnoreCase( pad.name.trim() ) )
+					{
+						result.remove( ii );
+						break;
+					}
+				}
+			}
+
 			m_pads = result;
 
 			if( m_listAdapter != null )
