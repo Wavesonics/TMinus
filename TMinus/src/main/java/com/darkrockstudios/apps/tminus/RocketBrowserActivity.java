@@ -13,14 +13,17 @@ import com.darkrockstudios.apps.tminus.fragments.RocketBrowserFragment;
 import com.darkrockstudios.apps.tminus.fragments.RocketDetailFragment;
 import com.darkrockstudios.apps.tminus.launchlibrary.Rocket;
 
+import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher;
+
 /**
  * Created by Adam on 10/13/13.
  */
-public class RocketBrowserActivity extends NavigationDatabaseActivity implements RocketBrowserFragment.Callbacks
+public class RocketBrowserActivity extends NavigationDatabaseActivity implements RocketBrowserFragment.Callbacks, PullToRefreshProvider
 {
 	private static final String TAG_ROCKET_LIST = "RocketList";
 
-	private boolean m_twoPane;
+	private boolean               m_twoPane;
+	private PullToRefreshAttacher m_pullToRefreshAttacher;
 
 	@Override
 	protected void onCreate( Bundle savedInstanceState )
@@ -28,6 +31,8 @@ public class RocketBrowserActivity extends NavigationDatabaseActivity implements
 		super.onCreate( savedInstanceState );
 		requestWindowFeature( Window.FEATURE_INDETERMINATE_PROGRESS );
 		setContentView( R.layout.activity_common_list );
+
+		m_pullToRefreshAttacher = PullToRefreshAttacher.get( this );
 
 		FragmentManager fragmentManager = getSupportFragmentManager();
 
@@ -135,5 +140,11 @@ public class RocketBrowserActivity extends NavigationDatabaseActivity implements
 			detailIntent.putExtra( RocketDetailActivity.ARG_ITEM_ID, rocket.id );
 			startActivity( detailIntent );
 		}
+	}
+
+	@Override
+	public PullToRefreshAttacher getPullToRefreshAttacher()
+	{
+		return m_pullToRefreshAttacher;
 	}
 }

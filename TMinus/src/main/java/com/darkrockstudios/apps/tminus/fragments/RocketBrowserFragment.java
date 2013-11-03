@@ -17,6 +17,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.darkrockstudios.apps.tminus.PullToRefreshProvider;
 import com.darkrockstudios.apps.tminus.R;
 import com.darkrockstudios.apps.tminus.database.DatabaseHelper;
 import com.darkrockstudios.apps.tminus.launchlibrary.Rocket;
@@ -35,11 +36,13 @@ import java.util.concurrent.TimeUnit;
 
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 import de.keyboardsurfer.android.widget.crouton.Style;
+import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher;
+import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 
 /**
  * Created by Adam on 10/13/13.
  */
-public class RocketBrowserFragment extends ListFragment
+public class RocketBrowserFragment extends ListFragment implements PullToRefreshAttacher.OnRefreshListener
 {
 	private static final String TAG = RocketBrowserFragment.class.getSimpleName();
 
@@ -51,6 +54,7 @@ public class RocketBrowserFragment extends ListFragment
 	private int m_activatedPosition = ListView.INVALID_POSITION;
 	private ArrayAdapter<Rocket> m_adapter;
 	private static final long UPDATE_THRESHOLD = TimeUnit.DAYS.toMillis( 7 );
+	private PullToRefreshAttacher m_pullToRefreshAttacher;
 
 	private static Callbacks s_dummyCallbacks = new Callbacks()
 	{
@@ -81,7 +85,16 @@ public class RocketBrowserFragment extends ListFragment
 	public View onCreateView( LayoutInflater inflater, ViewGroup container,
 	                          Bundle savedInstanceState )
 	{
-		return inflater.inflate( R.layout.fragment_rocket_list, null );
+		View view = inflater.inflate( R.layout.fragment_rocket_list, null );
+
+		if( m_pullToRefreshAttacher != null )
+		{
+			PullToRefreshLayout ptrLayout =
+					(PullToRefreshLayout) view.findViewById( R.id.ROCKETLIST_pull_to_refresh );
+			ptrLayout.setPullToRefreshAttacher( m_pullToRefreshAttacher, this );
+		}
+
+		return view;
 	}
 
 	@Override
@@ -133,6 +146,11 @@ public class RocketBrowserFragment extends ListFragment
 		else
 		{
 			m_callbacks = (Callbacks) activity;
+		}
+
+		if( activity instanceof PullToRefreshProvider )
+		{
+			m_pullToRefreshAttacher = ((PullToRefreshProvider) activity).getPullToRefreshAttacher();
 		}
 
 		m_updateReceiver = new RocketUpdateReceiver();
@@ -262,6 +280,26 @@ public class RocketBrowserFragment extends ListFragment
 		                             : ListView.CHOICE_MODE_NONE );
 	}
 
+	private void hideLoadingIndicators()
+	{
+		if( m_pullToRefreshAttacher != null )
+		{
+			m_pullToRefreshAttacher.setRefreshComplete();
+		}
+
+		Activity activity = getActivity();
+		if( activity != null )
+		{
+			activity.setProgressBarIndeterminateVisibility( false );
+		}
+	}
+
+	@Override
+	public void onRefreshStarted( View view )
+	{
+		refresh();
+	}
+
 	private static class RocketListAdapter extends ArrayAdapter<Rocket>
 	{
 		public RocketListAdapter( Context context )
@@ -326,15 +364,15 @@ public class RocketBrowserFragment extends ListFragment
 
 					reloadData();
 
-					activity.setProgressBarIndeterminateVisibility( false );
+					hideLoadingIndicators();
 					Crouton.makeText( activity, R.string.TOAST_rocket_list_update_complete, Style.CONFIRM ).show();
 				}
 				else if( RocketUpdateTask.ACTION_ROCKET_LIST_UPDATE_FAILED.equals( intent.getAction() ) )
 				{
 					Log.d( TAG, "Received Rocket List update FAILURE broadcast." );
 
+					hideLoadingIndicators();
 					Crouton.makeText( activity, R.string.TOAST_rocket_list_update_failed, Style.ALERT ).show();
-					activity.setProgressBarIndeterminateVisibility( false );
 				}
 			}
 		}

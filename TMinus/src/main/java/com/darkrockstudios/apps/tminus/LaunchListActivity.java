@@ -194,6 +194,7 @@ public class LaunchListActivity extends NavigationDatabaseActivity
 		locationDetailFragment.show( getSupportFragmentManager(), "dialog" );
 	}
 
+	@Override
 	public PullToRefreshAttacher getPullToRefreshAttacher()
 	{
 		return m_pullToRefreshAttacher;

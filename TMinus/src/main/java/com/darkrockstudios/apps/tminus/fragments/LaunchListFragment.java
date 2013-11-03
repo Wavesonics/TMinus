@@ -104,7 +104,7 @@ public class LaunchListFragment extends ListFragment implements PullToRefreshAtt
 		if( m_pullToRefreshAttacher != null )
 		{
 			PullToRefreshLayout ptrLayout =
-					(PullToRefreshLayout) view.findViewById( R.id.LAUNCHLIST_pull_to_refresh_container );
+					(PullToRefreshLayout) view.findViewById( R.id.LAUNCHLIST_pull_to_refresh );
 			ptrLayout.setPullToRefreshAttacher( m_pullToRefreshAttacher, this );
 		}
 
@@ -380,8 +380,8 @@ public class LaunchListFragment extends ListFragment implements PullToRefreshAtt
 				{
 					Log.d( TAG, "Received Launch List update FAILURE broadcast." );
 
-					Crouton.makeText( activity, R.string.TOAST_launch_list_refresh_failed, Style.ALERT ).show();
 					hideLoadingIndicators();
+					Crouton.makeText( activity, R.string.TOAST_launch_list_refresh_failed, Style.ALERT ).show();
 				}
 			}
 		}
