@@ -17,6 +17,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.darkrockstudios.apps.tminus.LaunchUpdateService;
+import com.darkrockstudios.apps.tminus.PullToRefreshProvider;
 import com.darkrockstudios.apps.tminus.R;
 import com.darkrockstudios.apps.tminus.R.layout;
 import com.darkrockstudios.apps.tminus.database.DatabaseHelper;
@@ -33,6 +34,8 @@ import java.util.List;
 
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 import de.keyboardsurfer.android.widget.crouton.Style;
+import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher;
+import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 
 /**
  * A list fragment representing a list of Launches. This fragment
@@ -43,7 +46,7 @@ import de.keyboardsurfer.android.widget.crouton.Style;
  * Activities containing this fragment MUST implement the {@link Callbacks}
  * interface.
  */
-public class LaunchListFragment extends ListFragment
+public class LaunchListFragment extends ListFragment implements PullToRefreshAttacher.OnRefreshListener
 {
 	private static final String TAG                      = LaunchListFragment.class.getSimpleName();
 	/**
@@ -66,7 +69,8 @@ public class LaunchListFragment extends ListFragment
 	private ArrayAdapter<Launch> m_adapter;
 	private Callbacks m_callbacks         = s_dummyCallbacks;
 	private int       m_activatedPosition = ListView.INVALID_POSITION;
-	private LaunchUpdateReceiver m_updateReceiver;
+	private LaunchUpdateReceiver  m_updateReceiver;
+	private PullToRefreshAttacher m_pullToRefreshAttacher;
 
 	public static LaunchListFragment newInstance()
 	{
@@ -95,8 +99,16 @@ public class LaunchListFragment extends ListFragment
 	public View onCreateView( LayoutInflater inflater, ViewGroup container,
 	                          Bundle savedInstanceState )
 	{
+		View view = inflater.inflate( R.layout.fragment_launch_list, null );
 
-		return inflater.inflate( R.layout.fragment_launch_list, null );
+		if( m_pullToRefreshAttacher != null )
+		{
+			PullToRefreshLayout ptrLayout =
+					(PullToRefreshLayout) view.findViewById( R.id.LAUNCHLIST_pull_to_refresh_container );
+			ptrLayout.setPullToRefreshAttacher( m_pullToRefreshAttacher, this );
+		}
+
+		return view;
 	}
 
 	@Override
@@ -130,6 +142,11 @@ public class LaunchListFragment extends ListFragment
 		else
 		{
 			m_callbacks = (Callbacks) activity;
+		}
+
+		if( activity instanceof PullToRefreshProvider )
+		{
+			m_pullToRefreshAttacher = ((PullToRefreshProvider) activity).getPullToRefreshAttacher();
 		}
 
 		m_updateReceiver = new LaunchUpdateReceiver();
@@ -258,6 +275,12 @@ public class LaunchListFragment extends ListFragment
 		requestLaunches();
 	}
 
+	@Override
+	public void onRefreshStarted( View view )
+	{
+		refresh();
+	}
+
 	/**
 	 * A callback interface that all activities containing this fragment must
 	 * implement. This mechanism allows activities to be notified of item
@@ -269,6 +292,20 @@ public class LaunchListFragment extends ListFragment
 		 * Callback for when an item has been selected.
 		 */
 		public void onItemSelected( Launch launch );
+	}
+
+	private void hideLoadingIndicators()
+	{
+		if( m_pullToRefreshAttacher != null )
+		{
+			m_pullToRefreshAttacher.setRefreshComplete();
+		}
+
+		Activity activity = getActivity();
+		if( activity != null )
+		{
+			activity.setProgressBarIndeterminateVisibility( false );
+		}
 	}
 
 	private static class LaunchListAdapter extends ArrayAdapter<Launch>
@@ -336,8 +373,7 @@ public class LaunchListFragment extends ListFragment
 					Log.d( TAG, "Received Launch List update SUCCESS broadcast, will update the UI now." );
 
 					reloadData();
-
-					activity.setProgressBarIndeterminateVisibility( false );
+					hideLoadingIndicators();
 					Crouton.makeText( activity, R.string.TOAST_launch_list_refresh_complete, Style.CONFIRM ).show();
 				}
 				else if( LaunchUpdateService.ACTION_LAUNCH_LIST_UPDATE_FAILED.equals( intent.getAction() ) )
@@ -345,7 +381,7 @@ public class LaunchListFragment extends ListFragment
 					Log.d( TAG, "Received Launch List update FAILURE broadcast." );
 
 					Crouton.makeText( activity, R.string.TOAST_launch_list_refresh_failed, Style.ALERT ).show();
-					activity.setProgressBarIndeterminateVisibility( false );
+					hideLoadingIndicators();
 				}
 			}
 		}

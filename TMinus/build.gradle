@@ -29,6 +29,8 @@ dependencies {
         compile 'com.android.support:support-v4:18.0.0'
     }
 
+    compile 'com.github.chrisbanes.actionbarpulltorefresh:library:0.8@aar'
+
     compile 'com.j256.ormlite:ormlite-core:4.47'
     compile 'com.j256.ormlite:ormlite-android:4.47'
 
@@ -37,12 +39,12 @@ dependencies {
 }
 
 android {
-    compileSdkVersion 18
-    buildToolsVersion "18.1.1"
+    compileSdkVersion 19
+    buildToolsVersion "19.0"
 
     defaultConfig {
         minSdkVersion 14
-        targetSdkVersion 18
+        targetSdkVersion 19
     }
 }
 

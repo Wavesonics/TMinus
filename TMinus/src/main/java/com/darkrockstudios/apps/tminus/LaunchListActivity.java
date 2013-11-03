@@ -18,6 +18,8 @@ import com.darkrockstudios.apps.tminus.launchlibrary.Launch;
 import com.darkrockstudios.apps.tminus.launchlibrary.Pad;
 import com.darkrockstudios.apps.tminus.launchlibrary.Rocket;
 
+import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher;
+
 
 /**
  * An activity representing a list of Launches. This activity
@@ -36,7 +38,7 @@ import com.darkrockstudios.apps.tminus.launchlibrary.Rocket;
  * to listen for item selections.
  */
 public class LaunchListActivity extends NavigationDatabaseActivity
-		implements Callbacks
+		implements Callbacks, PullToRefreshProvider
 {
 	private static final String TAG_LAUNCH_LIST = "LaunchList";
 
@@ -44,7 +46,8 @@ public class LaunchListActivity extends NavigationDatabaseActivity
 	 * Whether or not the activity is in two-pane mode, i.e. running on a tablet
 	 * device.
 	 */
-	private boolean m_twoPane;
+	private boolean               m_twoPane;
+	private PullToRefreshAttacher m_pullToRefreshAttacher;
 
 	@Override
 	protected void onCreate( Bundle savedInstanceState )
@@ -54,6 +57,8 @@ public class LaunchListActivity extends NavigationDatabaseActivity
 		setContentView( R.layout.activity_common_list );
 
 		FragmentManager fragmentManager = getSupportFragmentManager();
+
+		m_pullToRefreshAttacher = PullToRefreshAttacher.get( this );
 
 		LaunchListFragment launchListFragment = LaunchListFragment.newInstance();
 		fragmentManager.beginTransaction().replace( R.id.COMMON_list_fragment_container, launchListFragment,
@@ -187,6 +192,11 @@ public class LaunchListActivity extends NavigationDatabaseActivity
 		LocationDetailFragment locationDetailFragment =
 				LocationDetailFragment.newInstance( pad.location.id, pad.id, true, true );
 		locationDetailFragment.show( getSupportFragmentManager(), "dialog" );
+	}
+
+	public PullToRefreshAttacher getPullToRefreshAttacher()
+	{
+		return m_pullToRefreshAttacher;
 	}
 
 	public void rocketImageClicked( View v )
