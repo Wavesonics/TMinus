@@ -55,6 +55,8 @@ public class LaunchListActivity extends NavigationDatabaseActivity
 	private boolean               m_twoPane;
 	private PullToRefreshAttacher m_pullToRefreshAttacher;
 
+	boolean m_navigationSpinnerInitialized = false;
+
 	@Override
 	protected void onCreate( Bundle savedInstanceState )
 	{
@@ -278,21 +280,29 @@ public class LaunchListActivity extends NavigationDatabaseActivity
 	{
 		final boolean handled;
 
-		switch( itemPosition )
+		if( m_navigationSpinnerInitialized )
 		{
-			case 0:
-				Log.d( TAG, "Upcoming selected" );
-				setUpcomingLaunchesFragment();
-				handled = true;
-				break;
-			case 1:
-				Log.d( TAG, "Previous selected" );
-				setPreviousLaunchesFragment();
-				handled = true;
-				break;
-			default:
-				handled = false;
-				break;
+			switch( itemPosition )
+			{
+				case 0:
+					Log.d( TAG, "Upcoming selected" );
+					setUpcomingLaunchesFragment();
+					handled = true;
+					break;
+				case 1:
+					Log.d( TAG, "Previous selected" );
+					setPreviousLaunchesFragment();
+					handled = true;
+					break;
+				default:
+					handled = false;
+					break;
+			}
+		}
+		else
+		{
+			handled = false;
+			m_navigationSpinnerInitialized = true;
 		}
 
 		return handled;
