@@ -301,7 +301,7 @@ public class LaunchListActivity extends NavigationDatabaseActivity
 		}
 		else
 		{
-			handled = false;
+			handled = true;
 			m_navigationSpinnerInitialized = true;
 		}
 
