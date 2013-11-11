@@ -55,7 +55,7 @@ public class LaunchListActivity extends NavigationDatabaseActivity
 	private boolean               m_twoPane;
 	private PullToRefreshAttacher m_pullToRefreshAttacher;
 
-	boolean m_navigationSpinnerInitialized = false;
+	private boolean m_navigationSpinnerInitialized;
 
 	@Override
 	protected void onCreate( Bundle savedInstanceState )
@@ -63,6 +63,8 @@ public class LaunchListActivity extends NavigationDatabaseActivity
 		super.onCreate( savedInstanceState );
 		requestWindowFeature( Window.FEATURE_INDETERMINATE_PROGRESS );
 		setContentView( R.layout.activity_common_list );
+
+		m_navigationSpinnerInitialized = false;
 
 		setupNavigationSpinner();
 
@@ -183,6 +185,7 @@ public class LaunchListActivity extends NavigationDatabaseActivity
 		if( savedInstanceState.containsKey( STATE_SELECTED_NAVIGATION_ITEM ) && actionBar != null )
 		{
 			actionBar.setSelectedNavigationItem( savedInstanceState.getInt( STATE_SELECTED_NAVIGATION_ITEM ) );
+			m_navigationSpinnerInitialized = true;
 		}
 	}
 
