@@ -1,13 +1,16 @@
 package com.darkrockstudios.apps.tminus;
 
+import android.app.ActionBar;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
+import android.widget.ArrayAdapter;
 
 import com.darkrockstudios.apps.tminus.fragments.LaunchDetailFragment;
 import com.darkrockstudios.apps.tminus.fragments.LaunchListFragment;
@@ -38,9 +41,12 @@ import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher;
  * to listen for item selections.
  */
 public class LaunchListActivity extends NavigationDatabaseActivity
-		implements Callbacks, PullToRefreshProvider
+		implements Callbacks, PullToRefreshProvider, ActionBar.OnNavigationListener
 {
-	private static final String TAG_LAUNCH_LIST = "LaunchList";
+	private static final String TAG                            = LaunchListActivity.class.getSimpleName();
+	private static final String TAG_LAUNCH_LIST                = "LaunchList";
+	private static final String STATE_SELECTED_NAVIGATION_ITEM =
+			LaunchListActivity.class.getPackage() + ".STATE_SELECTED_NAVIGATION_ITEM";
 
 	/**
 	 * Whether or not the activity is in two-pane mode, i.e. running on a tablet
@@ -56,15 +62,29 @@ public class LaunchListActivity extends NavigationDatabaseActivity
 		requestWindowFeature( Window.FEATURE_INDETERMINATE_PROGRESS );
 		setContentView( R.layout.activity_common_list );
 
-		FragmentManager fragmentManager = getSupportFragmentManager();
+		setupNavigationSpinner();
 
 		m_pullToRefreshAttacher = PullToRefreshAttacher.get( this );
 
-		LaunchListFragment launchListFragment = LaunchListFragment.newInstance();
-		fragmentManager.beginTransaction().replace( R.id.COMMON_list_fragment_container, launchListFragment,
-		                                            TAG_LAUNCH_LIST ).commit();
+		setUpcomingLaunchesFragment();
 
 		initNavDrawer();
+	}
+
+	private void setUpcomingLaunchesFragment()
+	{
+		FragmentManager fragmentManager = getSupportFragmentManager();
+		LaunchListFragment launchListFragment = LaunchListFragment.newInstance( false );
+		fragmentManager.beginTransaction().replace( R.id.COMMON_list_fragment_container, launchListFragment,
+		                                            TAG_LAUNCH_LIST ).commit();
+	}
+
+	private void setPreviousLaunchesFragment()
+	{
+		FragmentManager fragmentManager = getSupportFragmentManager();
+		LaunchListFragment launchListFragment = LaunchListFragment.newInstance( true );
+		fragmentManager.beginTransaction().replace( R.id.COMMON_list_fragment_container, launchListFragment,
+		                                            TAG_LAUNCH_LIST ).commit();
 	}
 
 	@Override
@@ -154,6 +174,48 @@ public class LaunchListActivity extends NavigationDatabaseActivity
 		}
 	}
 
+	@Override
+	public void onRestoreInstanceState( Bundle savedInstanceState )
+	{
+		final ActionBar actionBar = getActionBar();
+		if( savedInstanceState.containsKey( STATE_SELECTED_NAVIGATION_ITEM ) && actionBar != null )
+		{
+			actionBar.setSelectedNavigationItem( savedInstanceState.getInt( STATE_SELECTED_NAVIGATION_ITEM ) );
+		}
+	}
+
+	@Override
+	public void onSaveInstanceState( Bundle outState )
+	{
+		final ActionBar actionBar = getActionBar();
+		if( actionBar != null )
+		{
+			outState.putInt( STATE_SELECTED_NAVIGATION_ITEM, actionBar.getSelectedNavigationIndex() );
+		}
+	}
+
+	private void setupNavigationSpinner()
+	{
+		ActionBar actionBar = getActionBar();
+		if( actionBar != null )
+		{
+			actionBar.setNavigationMode( ActionBar.NAVIGATION_MODE_LIST );
+
+			final String[] navigationValues = getResources().getStringArray( R.array.LAUNCHLIST_navigation_options );
+
+			ArrayAdapter<String> adapter = new ArrayAdapter<String>( actionBar.getThemedContext(),
+			                                                         android.R.layout.simple_spinner_item, android.R.id.text1,
+			                                                         navigationValues );
+			adapter.setDropDownViewResource( android.R.layout.simple_spinner_dropdown_item );
+
+			actionBar.setListNavigationCallbacks( adapter, this );
+		}
+		else
+		{
+			Log.w( TAG, "Failed to setup navigation spinner: Could not get Actionbar." );
+		}
+	}
+
 	private void refreshLaunchList()
 	{
 		LaunchListFragment launchListFragment = (LaunchListFragment) getSupportFragmentManager()
@@ -209,5 +271,30 @@ public class LaunchListActivity extends NavigationDatabaseActivity
 		{
 			fragment.zoomRocketImage();
 		}
+	}
+
+	@Override
+	public boolean onNavigationItemSelected( int itemPosition, long itemId )
+	{
+		final boolean handled;
+
+		switch( itemPosition )
+		{
+			case 0:
+				Log.d( TAG, "Upcoming selected" );
+				setUpcomingLaunchesFragment();
+				handled = true;
+				break;
+			case 1:
+				Log.d( TAG, "Previous selected" );
+				setPreviousLaunchesFragment();
+				handled = true;
+				break;
+			default:
+				handled = false;
+				break;
+		}
+
+		return handled;
 	}
 }

@@ -388,9 +388,10 @@ public class LaunchDetailFragment extends Fragment implements Listener, RocketDe
 
 		if( m_launchItem != null )
 		{
+			final Date now = new Date();
 			final Date thresholdDate =
 					new Date( m_launchItem.net.getTime() - DISPLAY_COUNTDOWN_THRESHOLD );
-			if( thresholdDate.before( new Date() ) || alwaysShow )
+			if( m_launchItem.net.after( now ) && thresholdDate.before( now ) || alwaysShow )
 			{
 				m_countDownContainer.setVisibility( View.VISIBLE );
 			}

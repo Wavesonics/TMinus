@@ -30,6 +30,7 @@ import com.j256.ormlite.stmt.QueryBuilder;
 
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import de.keyboardsurfer.android.widget.crouton.Crouton;
@@ -48,7 +49,9 @@ import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
  */
 public class LaunchListFragment extends ListFragment implements PullToRefreshAttacher.OnRefreshListener
 {
-	private static final String TAG                      = LaunchListFragment.class.getSimpleName();
+	private static final String TAG                   = LaunchListFragment.class.getSimpleName();
+	public static final  String ARG_PREVIOUS_LAUNCHES = LaunchListFragment.class.getPackage() + ".PREVIOUS_LAUNCHES";
+
 	/**
 	 * The serialization (saved instance state) Bundle key representing the
 	 * activated item position. Only used on tablets.
@@ -66,15 +69,23 @@ public class LaunchListFragment extends ListFragment implements PullToRefreshAtt
 		{
 		}
 	};
+
+	private boolean m_previousLaunches;
 	private ArrayAdapter<Launch> m_adapter;
 	private Callbacks m_callbacks         = s_dummyCallbacks;
 	private int       m_activatedPosition = ListView.INVALID_POSITION;
 	private LaunchUpdateReceiver  m_updateReceiver;
 	private PullToRefreshAttacher m_pullToRefreshAttacher;
 
-	public static LaunchListFragment newInstance()
+	public static LaunchListFragment newInstance( boolean previousLaunches )
 	{
-		return new LaunchListFragment();
+		LaunchListFragment fragment = new LaunchListFragment();
+
+		Bundle arguments = new Bundle();
+		arguments.putBoolean( LaunchListFragment.ARG_PREVIOUS_LAUNCHES, previousLaunches );
+		fragment.setArguments( arguments );
+
+		return fragment;
 	}
 
 	/**
@@ -89,6 +100,16 @@ public class LaunchListFragment extends ListFragment implements PullToRefreshAtt
 	public void onCreate( Bundle savedInstanceState )
 	{
 		super.onCreate( savedInstanceState );
+
+		final Bundle arguments = getArguments();
+		if( arguments != null && arguments.containsKey( ARG_PREVIOUS_LAUNCHES ) )
+		{
+			m_previousLaunches = arguments.getBoolean( ARG_PREVIOUS_LAUNCHES );
+		}
+		else
+		{
+			m_previousLaunches = false;
+		}
 
 		m_adapter = new LaunchListAdapter( getActivity() );
 
@@ -235,7 +256,20 @@ public class LaunchListFragment extends ListFragment implements PullToRefreshAtt
 				{
 					Dao<Launch, Integer> launchDao = databaseHelper.getLaunchDao();
 					QueryBuilder<Launch, Integer> queryBuilder = launchDao.queryBuilder();
-					PreparedQuery<Launch> query = queryBuilder.orderBy( "net", true ).prepare();
+					final PreparedQuery<Launch> query;
+
+					if( !m_previousLaunches )
+					{
+						queryBuilder.where().ge( "net", new Date() );
+						queryBuilder.orderBy( "net", true ).prepare();
+						query = queryBuilder.prepare();
+					}
+					else
+					{
+						queryBuilder.where().le( "net", new Date() );
+						queryBuilder.orderBy( "net", false ).prepare();
+						query = queryBuilder.prepare();
+					}
 
 					List<Launch> results = launchDao.query( query );
 					if( results != null && results.size() > 0 )
@@ -266,6 +300,10 @@ public class LaunchListFragment extends ListFragment implements PullToRefreshAtt
 			activity.setProgressBarIndeterminateVisibility( true );
 
 			Intent launchUpdate = new Intent( activity, LaunchUpdateService.class );
+			if( m_previousLaunches )
+			{
+				launchUpdate.putExtra( LaunchUpdateService.EXTRA_REQUEST_PREVIOUS_LAUNCHES, true );
+			}
 			activity.startService( launchUpdate );
 		}
 	}

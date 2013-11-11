@@ -9,6 +9,8 @@
     <string name="title_launch_detail">Launch Detail</string>
     <string name="title_activity_count_down">Count Down</string>
     <string name="title_activity_settings">Settings</string>
+    <string name="title_activity_rocket_list">Rockets</string>
+    <string name="title_activity_launch_locations">Locations</string>
     <string name="title_activity_rocket_detail">Rocket Detail</string>
     <string name="title_activity_location_detail">Location Detail</string>
 
@@ -32,6 +34,11 @@
 
     <string name="LAUNCHLIST_item_hours">HOURS</string>
     <string name="LAUNCHLIST_no_mission_details">No mission details available</string>
+
+    <string-array name="LAUNCHLIST_navigation_options">
+        <item>Upcoming</item>
+        <item>Previous</item>
+    </string-array>
 
     <string name="ROCKETLIST_item_no_configuration">No configuration specified</string>
 

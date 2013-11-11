@@ -15,6 +15,10 @@ public class LaunchLibraryUrls
 	private static final String PAD_LIST = "padlist";
 	private static final String ROCKETS  = "rockets";
 	private static final String NEXT     = "next";
+	private static final String LAST = "last";
+
+	private static final int NEXT_LAUNCH_LIMIT = 20;
+	private static final int LAST_LAUNCH_LIMIT = 20;
 
 	private static String getBaseUrl()
 	{
@@ -40,12 +44,25 @@ public class LaunchLibraryUrls
 
 	public static String next( int n )
 	{
-		if( n <= 0 || n > 20 )
+		if( n <= 0 || n > NEXT_LAUNCH_LIMIT )
 		{
-			throw new IllegalArgumentException( "n must conform to: 0 > n <= 20" );
+			throw new IllegalArgumentException( "n must conform to: 0 > n <= " + NEXT_LAUNCH_LIMIT );
 		}
 
 		String methodUrl = getUrlForMethod( NEXT );
+		methodUrl += "/" + n;
+
+		return methodUrl;
+	}
+
+	public static String last( int n )
+	{
+		if( n <= 0 || n > LAST_LAUNCH_LIMIT )
+		{
+			throw new IllegalArgumentException( "n must conform to: 0 > n <= " + LAST_LAUNCH_LIMIT );
+		}
+
+		String methodUrl = getUrlForMethod( LAST );
 		methodUrl += "/" + n;
 
 		return methodUrl;

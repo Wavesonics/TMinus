@@ -46,10 +46,18 @@ import java.util.concurrent.TimeUnit;
  */
 public class LaunchUpdateService extends Service
 {
-	public static final  String ACTION_LAUNCH_LIST_UPDATED       = "com.darkrockstudios.apps.tminus.ACTION_LAUNCH_LIST_UPDATED";
-	public static final  String ACTION_LAUNCH_LIST_UPDATE_FAILED =
-			"com.darkrockstudios.apps.tminus.ACTION_LAUNCH_LIST_UPDATE_FAILED";
 	private static final String TAG                              = LaunchUpdateService.class.getSimpleName();
+
+	public static final String ACTION_LAUNCH_LIST_UPDATED       =
+			LaunchUpdateService.class.getPackage() + ".ACTION_LAUNCH_LIST_UPDATED";
+	public static final String ACTION_LAUNCH_LIST_UPDATE_FAILED =
+			LaunchUpdateService.class.getPackage() + ".ACTION_LAUNCH_LIST_UPDATE_FAILED";
+	public static final String EXTRA_REQUEST_PREVIOUS_LAUNCHES  =
+			LaunchUpdateService.class.getPackage() + ".REQUEST_PREVIOUS_LAUNCHES";
+
+	private static final int UPCOMING_LAUNCH_REQUEST_COUNT = 20;
+	private static final int PREVIOUS_LAUNCH_REQUEST_COUNT = 10;
+
 	private PowerManager.WakeLock m_wakeLock;
 
 	public LaunchUpdateService()
@@ -86,7 +94,17 @@ public class LaunchUpdateService extends Service
 	{
 		Log.d( TAG, "LaunchUpdateService started." );
 
-		requestLaunches();
+		final boolean previousLaunches;
+		if( intent != null && intent.hasExtra( EXTRA_REQUEST_PREVIOUS_LAUNCHES ) )
+		{
+			previousLaunches = intent.getBooleanExtra( EXTRA_REQUEST_PREVIOUS_LAUNCHES, false );
+		}
+		else
+		{
+			previousLaunches = false;
+		}
+
+		requestLaunches( previousLaunches );
 
 		return START_NOT_STICKY;
 	}
@@ -97,7 +115,7 @@ public class LaunchUpdateService extends Service
 		return null;
 	}
 
-	private void requestLaunches()
+	private void requestLaunches( boolean previousLaunches )
 	{
 		Log.d( TAG, "Requesting Launches..." );
 		if( !m_wakeLock.isHeld() )
@@ -107,9 +125,17 @@ public class LaunchUpdateService extends Service
 			Log.d( TAG, "WakeLock acquired." );
 		}
 
-		final String url = LaunchLibraryUrls.next( 20 );
+		final String url;
+		if( !previousLaunches )
+		{
+			url = LaunchLibraryUrls.next( UPCOMING_LAUNCH_REQUEST_COUNT );
+		}
+		else
+		{
+			url = LaunchLibraryUrls.last( PREVIOUS_LAUNCH_REQUEST_COUNT );
+		}
 
-		LaunchListResponseListener listener = new LaunchListResponseListener();
+		LaunchListResponseListener listener = new LaunchListResponseListener( previousLaunches );
 		JsonObjectRequest request = new JsonObjectRequest( url, null, listener, listener );
 		request.setTag( this );
 		TMinusApplication.getRequestQueue().add( request );
@@ -141,11 +167,18 @@ public class LaunchUpdateService extends Service
 
 	private class LaunchListResponseListener implements Response.Listener<JSONObject>, Response.ErrorListener
 	{
+		private final boolean m_previousLaunches;
+
+		public LaunchListResponseListener( boolean previousLaunches )
+		{
+			m_previousLaunches = previousLaunches;
+		}
+
 		@Override
 		public void onResponse( JSONObject response )
 		{
 			Log.i( TAG, "Launches successfully retrieved from sever." );
-			LaunchListSaver loader = new LaunchListSaver();
+			LaunchListSaver loader = new LaunchListSaver( m_previousLaunches );
 			loader.execute( response );
 		}
 
@@ -162,6 +195,15 @@ public class LaunchUpdateService extends Service
 
 	private class LaunchListSaver extends AsyncTask<JSONObject, Void, Long>
 	{
+		private final boolean m_previousLaunches;
+
+		public LaunchListSaver( boolean previousLaunches )
+		{
+			super();
+
+			m_previousLaunches = previousLaunches;
+		}
+
 		@Override
 		protected Long doInBackground( JSONObject... response )
 		{
@@ -251,16 +293,23 @@ public class LaunchUpdateService extends Service
 						}
 					}
 
-					Log.d( TAG, "Parsing and database work complete, launching AlarmUpdateService..." );
-					// Now that we have new data, ensure our Alarms are set correctly
-					startService( new Intent( LaunchUpdateService.this, UpdateAlarmsService.class ) );
+					Log.d( TAG, "Parsing and database work complete" );
+
+					// Only do this work for upcoming launches
+					if( !m_previousLaunches )
+					{
+						Log.d( TAG, "Launching AlarmUpdateService..." );
+
+						// Now that we have new data, ensure our Alarms are set correctly
+						startService( new Intent( LaunchUpdateService.this, UpdateAlarmsService.class ) );
+
+						final SharedPreferences preferences = PreferenceManager
+								                                      .getDefaultSharedPreferences( LaunchUpdateService.this );
+						preferences.edit().putLong( Preferences.KEY_LAST_UPDATED, new Date().getTime() ).commit();
+						Log.d( TAG, "Refresh successful: " + numLaunches + " Launches in database." );
+					}
 
 					numLaunches = launchDao.countOf();
-
-					final SharedPreferences preferences = PreferenceManager
-							                                      .getDefaultSharedPreferences( LaunchUpdateService.this );
-					preferences.edit().putLong( Preferences.KEY_LAST_UPDATED, new Date().getTime() ).commit();
-					Log.d( TAG, "Refresh successful: " + numLaunches + " Launches in database." );
 				}
 				catch( SQLException e )
 				{
@@ -307,7 +356,7 @@ public class LaunchUpdateService extends Service
 
 		private Date getOldLaunchThreshold()
 		{
-			final long MAX_DAYS_OLD = 5;
+			final long MAX_DAYS_OLD = 365;
 
 			Date now = new Date();
 			Date cutOffDate = new Date( now.getTime() - TimeUnit.DAYS.toMillis( MAX_DAYS_OLD ) );
