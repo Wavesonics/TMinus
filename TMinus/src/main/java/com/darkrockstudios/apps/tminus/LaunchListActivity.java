@@ -63,6 +63,7 @@ public class LaunchListActivity extends NavigationDatabaseActivity
 		super.onCreate( savedInstanceState );
 		requestWindowFeature( Window.FEATURE_INDETERMINATE_PROGRESS );
 		setContentView( R.layout.activity_common_list );
+		setTitle( "" );
 
 		m_navigationSpinnerInitialized = false;
 
