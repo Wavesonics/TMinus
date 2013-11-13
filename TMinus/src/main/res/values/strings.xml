@@ -116,5 +116,6 @@
 
     <string name="LOCATIONDETAIL_location_label">Location</string>
     <string name="LOCATIONDETAIL_pad_list_label">Launch Pads:</string>
+    <string name="LAUNCHLIST_no_launches">No launches available</string>
 
 </resources>

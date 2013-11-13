@@ -348,51 +348,109 @@ public class LaunchListFragment extends ListFragment implements PullToRefreshAtt
 
 	private static class LaunchListAdapter extends ArrayAdapter<Launch>
 	{
+		private static int LAUNCH_ITEM = 0;
+		private static int EMPTY       = 1;
+
 		public LaunchListAdapter( Context context )
 		{
 			super( context, layout.row_launch_list_item );
 		}
 
 		@Override
+		public int getViewTypeCount()
+		{
+			return 2;
+
+		}
+
+		@Override
+		public int getItemViewType( int position )
+		{
+			final int type;
+
+			if( super.getCount() > 0 )
+			{
+				type = LAUNCH_ITEM;
+			}
+			else
+			{
+				type = EMPTY;
+			}
+
+			return type;
+		}
+
+		@Override
+		public int getCount()
+		{
+			int count = super.getCount();
+
+			// Cell for "no launches" text
+			if( count == 0 )
+			{
+				count = 1;
+			}
+
+			return count;
+		}
+
+		@Override
 		public View getView( int pos, View convertView, ViewGroup parent )
 		{
+			final int viewType = getItemViewType( pos );
 			View view = convertView;
 			if( view == null )
 			{
 				LayoutInflater inflater = (LayoutInflater) getContext()
 						                                           .getSystemService( Context.LAYOUT_INFLATER_SERVICE );
-				view = inflater.inflate( R.layout.row_launch_list_item, null );
+
+				if( viewType == LAUNCH_ITEM )
+				{
+					view = inflater.inflate( R.layout.row_launch_list_item, null );
+				}
+				else
+				{
+					view = inflater.inflate( android.R.layout.simple_list_item_1, null );
+				}
 			}
 
-			final Launch launch = getItem( pos );
-
-			final TextView titleView = (TextView) view.findViewById( R.id.launch_list_item_title );
-			titleView.setText( launch.name );
-
-			final TextView descriptionView = (TextView) view.findViewById( R.id.launch_list_item_description );
-			if( launch.mission != null )
+			if( viewType == LAUNCH_ITEM )
 			{
-				descriptionView.setText( launch.mission.description );
+				final Launch launch = getItem( pos );
+
+				final TextView titleView = (TextView) view.findViewById( R.id.launch_list_item_title );
+				titleView.setText( launch.name );
+
+				final TextView descriptionView = (TextView) view.findViewById( R.id.launch_list_item_description );
+				if( launch.mission != null )
+				{
+					descriptionView.setText( launch.mission.description );
+				}
+				else
+				{
+					descriptionView.setText( R.string.LAUNCHLIST_no_mission_details );
+				}
+
+				final TextView netView1 = (TextView) view.findViewById( R.id.launch_list_item_net_1 );
+				final TextView netView2 = (TextView) view.findViewById( R.id.launch_list_item_net_2 );
+				final TextView netView3 = (TextView) view.findViewById( R.id.launch_list_item_net_3 );
+
+				SimpleDateFormat monthDay = new SimpleDateFormat( "MMM dd" );
+				SimpleDateFormat year = new SimpleDateFormat( "yyyy" );
+				SimpleDateFormat time = new SimpleDateFormat( "HH:mm" );
+
+				netView1.setText( monthDay.format( launch.net ) );
+				netView2.setText( year.format( launch.net ) );
+				netView3.setText( time.format( launch.net ) );
+
+				final ImageView typeIcon = (ImageView) view.findViewById( R.id.LAUNCHLIST_type_icon );
+				typeIcon.setImageResource( Utilities.getLaunchTypeResource( launch.mission ) );
 			}
 			else
 			{
-				descriptionView.setText( R.string.LAUNCHLIST_no_mission_details );
+				TextView textView = (TextView) view.findViewById( android.R.id.text1 );
+				textView.setText( R.string.LAUNCHLIST_no_launches );
 			}
-
-			final TextView netView1 = (TextView) view.findViewById( R.id.launch_list_item_net_1 );
-			final TextView netView2 = (TextView) view.findViewById( R.id.launch_list_item_net_2 );
-			final TextView netView3 = (TextView) view.findViewById( R.id.launch_list_item_net_3 );
-
-			SimpleDateFormat monthDay = new SimpleDateFormat( "MMM dd" );
-			SimpleDateFormat year = new SimpleDateFormat( "yyyy" );
-			SimpleDateFormat time = new SimpleDateFormat( "HH:mm" );
-
-			netView1.setText( monthDay.format( launch.net ) );
-			netView2.setText( year.format( launch.net ) );
-			netView3.setText( time.format( launch.net ) );
-
-			final ImageView typeIcon = (ImageView) view.findViewById( R.id.LAUNCHLIST_type_icon );
-			typeIcon.setImageResource( Utilities.getLaunchTypeResource( launch.mission ) );
 
 			return view;
 		}
