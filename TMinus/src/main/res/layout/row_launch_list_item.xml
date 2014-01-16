@@ -32,7 +32,7 @@
                 android:text="description"
                 android:textAppearance="?android:attr/textAppearanceListItemSmall"
                 android:ellipsize="end"
-                android:singleLine="false"
+                android:maxLines="2"
                 tools:ignore="HardcodedText"/>
 
         <LinearLayout
