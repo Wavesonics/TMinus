@@ -42,4 +42,7 @@ public class Pad implements Serializable
 
 	@DatabaseField
 	public String mapURL;
+
+	//@ForeignCollectionField(eager = true)
+	//public Collection<Agency> agencies;
 }

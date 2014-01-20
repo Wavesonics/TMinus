@@ -17,7 +17,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.darkrockstudios.apps.tminus.PullToRefreshProvider;
 import com.darkrockstudios.apps.tminus.R;
 import com.darkrockstudios.apps.tminus.database.DatabaseHelper;
 import com.darkrockstudios.apps.tminus.launchlibrary.Rocket;
@@ -36,16 +35,16 @@ import java.util.concurrent.TimeUnit;
 
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 import de.keyboardsurfer.android.widget.crouton.Style;
-import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher;
+import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
+import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 
 /**
  * Created by Adam on 10/13/13.
  */
-public class RocketBrowserFragment extends ListFragment implements PullToRefreshAttacher.OnRefreshListener
+public class RocketBrowserFragment extends ListFragment implements OnRefreshListener
 {
 	private static final String TAG = RocketBrowserFragment.class.getSimpleName();
-
 
 	private static final String STATE_ACTIVATED_POSITION = "activated_position";
 
@@ -54,7 +53,8 @@ public class RocketBrowserFragment extends ListFragment implements PullToRefresh
 	private int m_activatedPosition = ListView.INVALID_POSITION;
 	private ArrayAdapter<Rocket> m_adapter;
 	private static final long UPDATE_THRESHOLD = TimeUnit.DAYS.toMillis( 7 );
-	private PullToRefreshAttacher m_pullToRefreshAttacher;
+
+	private PullToRefreshLayout m_ptrLayout;
 
 	private static Callbacks s_dummyCallbacks = new Callbacks()
 	{
@@ -87,12 +87,10 @@ public class RocketBrowserFragment extends ListFragment implements PullToRefresh
 	{
 		View view = inflater.inflate( R.layout.fragment_rocket_list, null );
 
-		if( m_pullToRefreshAttacher != null )
-		{
-			PullToRefreshLayout ptrLayout =
-					(PullToRefreshLayout) view.findViewById( R.id.ROCKETLIST_pull_to_refresh );
-			ptrLayout.setPullToRefreshAttacher( m_pullToRefreshAttacher, this );
-		}
+		m_ptrLayout =
+				(PullToRefreshLayout) view.findViewById( R.id.ROCKETLIST_pull_to_refresh );
+
+		ActionBarPullToRefresh.from( getActivity() ).allChildrenArePullable().listener( this ).setup( m_ptrLayout );
 
 		return view;
 	}
@@ -146,11 +144,6 @@ public class RocketBrowserFragment extends ListFragment implements PullToRefresh
 		else
 		{
 			m_callbacks = (Callbacks) activity;
-		}
-
-		if( activity instanceof PullToRefreshProvider )
-		{
-			m_pullToRefreshAttacher = ((PullToRefreshProvider) activity).getPullToRefreshAttacher();
 		}
 
 		m_updateReceiver = new RocketUpdateReceiver();
@@ -282,9 +275,9 @@ public class RocketBrowserFragment extends ListFragment implements PullToRefresh
 
 	private void hideLoadingIndicators()
 	{
-		if( m_pullToRefreshAttacher != null )
+		if( m_ptrLayout != null )
 		{
-			m_pullToRefreshAttacher.setRefreshComplete();
+			m_ptrLayout.setRefreshComplete();
 		}
 
 		Activity activity = getActivity();

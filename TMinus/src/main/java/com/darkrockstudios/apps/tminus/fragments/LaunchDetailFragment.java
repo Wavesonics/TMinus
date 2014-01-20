@@ -165,8 +165,9 @@ public class LaunchDetailFragment extends Fragment implements Listener, RocketDe
 			m_rocketContainer =
 					(ViewGroup) rootView.findViewById( id.LAUNCHDETAIL_rocket_container );
 
-			m_rocketImage.setErrorImageResId( R.drawable.launch_detail_no_rocket_image );
-			m_rocketImage.setDefaultImageResId( R.drawable.launch_detail_no_rocket_image );
+			m_rocketImage.setLoadingImageResId( R.drawable.rocket_image_loading );
+			//m_rocketImage.setErrorImageResId( R.drawable.rocket_image_loading );
+			//m_rocketImage.setDefaultImageResId( R.drawable.rocket_image_loading );
 
 			loadLaunch();
 		}
@@ -324,7 +325,7 @@ public class LaunchDetailFragment extends Fragment implements Listener, RocketDe
 			{
 				ImageLoader imageLoader = new ImageLoader( TMinusApplication.getRequestQueue(),
 				                                           TMinusApplication.getBitmapCache() );
-				m_rocketImage.setImageUrl( m_rocketDetail.imageUrl, imageLoader );
+				//m_rocketImage.setImageUrl( m_rocketDetail.imageUrl, imageLoader );
 				m_rocketImageExpanded.setImageUrl( m_rocketDetail.imageUrl, imageLoader );
 			}
 
@@ -470,9 +471,9 @@ public class LaunchDetailFragment extends Fragment implements Listener, RocketDe
 						                                                              isTabletLayout,
 						                                                              true );
 				getChildFragmentManager().beginTransaction()
-						.add( R.id.LAUNCHDETAIL_location_container, locationDetailFragment,
-						      LOCATION_FRAGMENT_TAG )
-						.commit();
+				                         .add( R.id.LAUNCHDETAIL_location_container, locationDetailFragment,
+				                               LOCATION_FRAGMENT_TAG )
+				                         .commit();
 			}
 
 			if( m_rocketContainer != null )
@@ -480,8 +481,8 @@ public class LaunchDetailFragment extends Fragment implements Listener, RocketDe
 				RocketDetailFragment rocketDetailFragment =
 						RocketDetailFragment.newInstance( m_launchItem.rocket.id, true );
 				getChildFragmentManager().beginTransaction()
-						.add( R.id.LAUNCHDETAIL_rocket_container, rocketDetailFragment,
-						      ROCKET_FRAGMENT_TAG ).commit();
+				                         .add( R.id.LAUNCHDETAIL_rocket_container, rocketDetailFragment,
+				                               ROCKET_FRAGMENT_TAG ).commit();
 			}
 		}
 	}
@@ -565,7 +566,7 @@ public class LaunchDetailFragment extends Fragment implements Listener, RocketDe
 			if( activity != null && isAdded() )
 			{
 				if( RocketDetailUpdateService.ACTION_ROCKET_DETAIL_UPDATED
-				                             .equals( intent.getAction() ) )
+						    .equals( intent.getAction() ) )
 				{
 					Log.i( TAG,
 					       "Received Rocket Detail update SUCCESS broadcast, will update the UI now." );
@@ -586,7 +587,7 @@ public class LaunchDetailFragment extends Fragment implements Listener, RocketDe
 
 				}
 				else if( RocketDetailUpdateService.ACTION_ROCKET_DETAIL_UPDATE_FAILED
-				                                  .equals( intent.getAction() ) )
+						         .equals( intent.getAction() ) )
 				{
 					Log.w( TAG, "Received Rocket Detail update FAILURE broadcast." );
 

@@ -13,17 +13,14 @@ import com.darkrockstudios.apps.tminus.fragments.RocketBrowserFragment;
 import com.darkrockstudios.apps.tminus.fragments.RocketDetailFragment;
 import com.darkrockstudios.apps.tminus.launchlibrary.Rocket;
 
-import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher;
-
 /**
  * Created by Adam on 10/13/13.
  */
-public class RocketBrowserActivity extends NavigationDatabaseActivity implements RocketBrowserFragment.Callbacks, PullToRefreshProvider
+public class RocketBrowserActivity extends NavigationDatabaseActivity implements RocketBrowserFragment.Callbacks
 {
 	private static final String TAG_ROCKET_LIST = "RocketList";
 
-	private boolean               m_twoPane;
-	private PullToRefreshAttacher m_pullToRefreshAttacher;
+	private boolean m_twoPane;
 
 	@Override
 	protected void onCreate( Bundle savedInstanceState )
@@ -31,8 +28,6 @@ public class RocketBrowserActivity extends NavigationDatabaseActivity implements
 		super.onCreate( savedInstanceState );
 		requestWindowFeature( Window.FEATURE_INDETERMINATE_PROGRESS );
 		setContentView( R.layout.activity_common_list );
-
-		m_pullToRefreshAttacher = PullToRefreshAttacher.get( this );
 
 		FragmentManager fragmentManager = getSupportFragmentManager();
 
@@ -129,8 +124,8 @@ public class RocketBrowserActivity extends NavigationDatabaseActivity implements
 			// fragment transaction.
 			RocketDetailFragment fragment = RocketDetailFragment.newInstance( rocket.id, false );
 			getSupportFragmentManager().beginTransaction()
-					.replace( R.id.COMMON_detail_fragment_container, fragment )
-					.commit();
+			                           .replace( R.id.COMMON_detail_fragment_container, fragment )
+			                           .commit();
 		}
 		else
 		{
@@ -140,11 +135,5 @@ public class RocketBrowserActivity extends NavigationDatabaseActivity implements
 			detailIntent.putExtra( RocketDetailActivity.ARG_ITEM_ID, rocket.id );
 			startActivity( detailIntent );
 		}
-	}
-
-	@Override
-	public PullToRefreshAttacher getPullToRefreshAttacher()
-	{
-		return m_pullToRefreshAttacher;
 	}
 }

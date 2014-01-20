@@ -10,6 +10,7 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import com.darkrockstudios.apps.tminus.launchlibrary.Agency;
 import com.darkrockstudios.apps.tminus.launchlibrary.Launch;
 import com.darkrockstudios.apps.tminus.launchlibrary.Location;
 import com.darkrockstudios.apps.tminus.launchlibrary.Mission;
@@ -30,13 +31,14 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper
 {
 	private static final String                     TAG               = DatabaseHelper.class.getSimpleName();
 	private static final String                     DATABASE_NAME     = "TMinus.db";
-	private static final int                        DATABASE_VERSION  = 7;
+	private static final int                        DATABASE_VERSION  = 8;
 	private              Dao<Launch, Integer>       m_launchDao       = null;
 	private              Dao<Location, Integer>     m_locationDao     = null;
 	private              Dao<Pad, Integer>          m_padDao          = null;
 	private              Dao<Mission, Integer>      m_missionDao      = null;
 	private              Dao<Rocket, Integer>       m_rocketDao       = null;
 	private              Dao<RocketDetail, Integer> m_rocketDetailDao = null;
+	private              Dao<Agency, Integer>       m_agencyDao       = null;
 
 	public DatabaseHelper( Context context )
 	{
@@ -55,6 +57,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper
 			TableUtils.createTable( connectionSource, Mission.class );
 			TableUtils.createTable( connectionSource, Rocket.class );
 			TableUtils.createTable( connectionSource, RocketDetail.class );
+			TableUtils.createTable( connectionSource, Agency.class );
 		}
 		catch( SQLException e )
 		{
@@ -75,6 +78,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper
 			TableUtils.dropTable( connectionSource, Mission.class, true );
 			TableUtils.dropTable( connectionSource, Rocket.class, true );
 			TableUtils.dropTable( connectionSource, RocketDetail.class, true );
+			TableUtils.dropTable( connectionSource, Agency.class, true );
 			// after we drop the old databases, we create the new ones
 			onCreate( db, connectionSource );
 		}
@@ -128,6 +132,15 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper
 			m_rocketDao = getDao( Rocket.class );
 		}
 		return m_rocketDao;
+	}
+
+	public Dao<Agency, Integer> getAgencyDao() throws SQLException
+	{
+		if( m_agencyDao == null )
+		{
+			m_agencyDao = getDao( Agency.class );
+		}
+		return m_agencyDao;
 	}
 
 	public Dao<RocketDetail, Integer> getRocketDetailDao() throws SQLException

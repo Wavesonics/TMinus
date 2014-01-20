@@ -14,6 +14,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.darkrockstudios.apps.tminus.database.DatabaseHelper;
+import com.darkrockstudios.apps.tminus.launchlibrary.Agency;
 import com.darkrockstudios.apps.tminus.launchlibrary.Launch;
 import com.darkrockstudios.apps.tminus.launchlibrary.LaunchLibraryGson;
 import com.darkrockstudios.apps.tminus.launchlibrary.LaunchLibraryUrls;
@@ -230,6 +231,7 @@ public class LaunchUpdateService extends Service
 					final Dao<Pad, Integer> padDao = databaseHelper.getPadDao();
 					final Dao<Mission, Integer> missionDao = databaseHelper.getMissionDao();
 					final Dao<Rocket, Integer> rocketDao = databaseHelper.getRocketDao();
+					final Dao<Agency, Integer> agencyDao = databaseHelper.getAgencyDao();
 
 					int numUpdated = 0;
 
@@ -258,7 +260,7 @@ public class LaunchUpdateService extends Service
 														                                      .cancelAlarmsForLaunch( launch,
 														                                                              LaunchUpdateService.this );
 											                                      }
-
+/*
 											                                      locationDao
 													                                      .createOrUpdate( launch.pad.location );
 											                                      padDao
@@ -272,7 +274,16 @@ public class LaunchUpdateService extends Service
 
 											                                      rocketDao
 													                                      .createOrUpdate( launch.rocket );
-
+*/
+/*
+											                                      if( launch.pad.agencies != null )
+											                                      {
+												                                      for( Agency agency : launch.pad.agencies )
+												                                      {
+													                                      agencyDao.createOrUpdate( agency );
+												                                      }
+											                                      }
+*/
 											                                      // This must be run after all the others are created so the IDs of the child objects can be set
 											                                      launchDao.createOrUpdate( launch );
 

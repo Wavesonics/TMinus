@@ -17,7 +17,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.darkrockstudios.apps.tminus.LaunchUpdateService;
-import com.darkrockstudios.apps.tminus.PullToRefreshProvider;
 import com.darkrockstudios.apps.tminus.R;
 import com.darkrockstudios.apps.tminus.R.layout;
 import com.darkrockstudios.apps.tminus.database.DatabaseHelper;
@@ -35,8 +34,9 @@ import java.util.List;
 
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 import de.keyboardsurfer.android.widget.crouton.Style;
-import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher;
+import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
+import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 
 /**
  * A list fragment representing a list of Launches. This fragment
@@ -47,7 +47,7 @@ import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
  * Activities containing this fragment MUST implement the {@link Callbacks}
  * interface.
  */
-public class LaunchListFragment extends ListFragment implements PullToRefreshAttacher.OnRefreshListener
+public class LaunchListFragment extends ListFragment implements OnRefreshListener
 {
 	private static final String TAG                   = LaunchListFragment.class.getSimpleName();
 	public static final  String ARG_PREVIOUS_LAUNCHES = LaunchListFragment.class.getPackage() + ".PREVIOUS_LAUNCHES";
@@ -75,7 +75,8 @@ public class LaunchListFragment extends ListFragment implements PullToRefreshAtt
 	private Callbacks m_callbacks         = s_dummyCallbacks;
 	private int       m_activatedPosition = ListView.INVALID_POSITION;
 	private LaunchUpdateReceiver  m_updateReceiver;
-	private PullToRefreshAttacher m_pullToRefreshAttacher;
+
+	private PullToRefreshLayout m_ptrLayout;
 
 	public static LaunchListFragment newInstance( boolean previousLaunches )
 	{
@@ -122,12 +123,8 @@ public class LaunchListFragment extends ListFragment implements PullToRefreshAtt
 	{
 		View view = inflater.inflate( R.layout.fragment_launch_list, null );
 
-		if( m_pullToRefreshAttacher != null )
-		{
-			PullToRefreshLayout ptrLayout =
-					(PullToRefreshLayout) view.findViewById( R.id.LAUNCHLIST_pull_to_refresh );
-			ptrLayout.setPullToRefreshAttacher( m_pullToRefreshAttacher, this );
-		}
+		m_ptrLayout = (PullToRefreshLayout) view.findViewById( R.id.LAUNCHLIST_pull_to_refresh );
+		ActionBarPullToRefresh.from( getActivity() ).allChildrenArePullable().listener( this ).setup( m_ptrLayout );
 
 		return view;
 	}
@@ -163,11 +160,6 @@ public class LaunchListFragment extends ListFragment implements PullToRefreshAtt
 		else
 		{
 			m_callbacks = (Callbacks) activity;
-		}
-
-		if( activity instanceof PullToRefreshProvider )
-		{
-			m_pullToRefreshAttacher = ((PullToRefreshProvider) activity).getPullToRefreshAttacher();
 		}
 
 		m_updateReceiver = new LaunchUpdateReceiver();
@@ -334,10 +326,7 @@ public class LaunchListFragment extends ListFragment implements PullToRefreshAtt
 
 	private void hideLoadingIndicators()
 	{
-		if( m_pullToRefreshAttacher != null )
-		{
-			m_pullToRefreshAttacher.setRefreshComplete();
-		}
+		m_ptrLayout.setRefreshComplete();
 
 		Activity activity = getActivity();
 		if( activity != null )

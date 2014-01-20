@@ -41,7 +41,7 @@ import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher;
  * to listen for item selections.
  */
 public class LaunchListActivity extends NavigationDatabaseActivity
-		implements Callbacks, PullToRefreshProvider, ActionBar.OnNavigationListener
+		implements Callbacks, ActionBar.OnNavigationListener
 {
 	private static final String TAG                            = LaunchListActivity.class.getSimpleName();
 	private static final String TAG_LAUNCH_LIST                = "LaunchList";
@@ -68,8 +68,6 @@ public class LaunchListActivity extends NavigationDatabaseActivity
 		m_navigationSpinnerInitialized = false;
 
 		setupNavigationSpinner();
-
-		m_pullToRefreshAttacher = PullToRefreshAttacher.get( this );
 
 		setUpcomingLaunchesFragment();
 
@@ -166,8 +164,8 @@ public class LaunchListActivity extends NavigationDatabaseActivity
 			LaunchDetailFragment fragment = new LaunchDetailFragment();
 			fragment.setArguments( arguments );
 			getSupportFragmentManager().beginTransaction()
-					.replace( R.id.COMMON_detail_fragment_container, fragment )
-					.commit();
+			                           .replace( R.id.COMMON_detail_fragment_container, fragment )
+			                           .commit();
 		}
 		else
 		{
@@ -260,12 +258,6 @@ public class LaunchListActivity extends NavigationDatabaseActivity
 		LocationDetailFragment locationDetailFragment =
 				LocationDetailFragment.newInstance( pad.location.id, pad.id, true, true );
 		locationDetailFragment.show( getSupportFragmentManager(), "dialog" );
-	}
-
-	@Override
-	public PullToRefreshAttacher getPullToRefreshAttacher()
-	{
-		return m_pullToRefreshAttacher;
 	}
 
 	public void rocketImageClicked( View v )
