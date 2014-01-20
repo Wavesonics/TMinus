@@ -9,6 +9,7 @@ public class LaunchLibraryUrls
 	private static final String SCHEME        = "http";
 	private static final String HOST          = "launchlibrary.net";
 	private static final String PLATFORM_STUB = "ll";
+	private static final String API_VERSION_STUB = "v2";
 
 	private static final String FORMAT = "json";
 
@@ -22,7 +23,7 @@ public class LaunchLibraryUrls
 
 	private static String getBaseUrl()
 	{
-		return SCHEME + "://" + HOST + "/" + PLATFORM_STUB;
+		return SCHEME + "://" + HOST + '/' + PLATFORM_STUB + '/' + API_VERSION_STUB;
 	}
 
 	private static String getUrlForMethod( String method )
@@ -50,7 +51,7 @@ public class LaunchLibraryUrls
 		}
 
 		String methodUrl = getUrlForMethod( NEXT );
-		methodUrl += "/" + n;
+		//methodUrl += "/" + n;
 
 		return methodUrl;
 	}
