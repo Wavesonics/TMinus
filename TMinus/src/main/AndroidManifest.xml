@@ -21,13 +21,13 @@
         android:required="true"/>
 
     <application
-        android:name="com.darkrockstudios.apps.tminus.TMinusApplication"
+        android:name=".TMinusApplication"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
         <activity
-            android:name="com.darkrockstudios.apps.tminus.LaunchListActivity"
+            android:name=".LaunchListActivity"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -35,15 +35,15 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.darkrockstudios.apps.tminus.RocketBrowserActivity"
+            android:name=".RocketBrowserActivity"
             android:label="@string/title_activity_rocket_list">
         </activity>
         <activity
-            android:name="com.darkrockstudios.apps.tminus.LocationBrowserActivity"
+            android:name=".LocationBrowserActivity"
             android:label="@string/title_activity_launch_locations">
         </activity>
         <activity
-            android:name="com.darkrockstudios.apps.tminus.LaunchDetailActivity"
+            android:name=".LaunchDetailActivity"
             android:label="@string/title_launch_detail"
             android:parentActivityName=".LaunchListActivity">
             <meta-data
@@ -51,7 +51,7 @@
                 android:value=".LaunchListActivity"/>
         </activity>
         <activity
-            android:name="com.darkrockstudios.apps.tminus.CountDownActivity"
+            android:name=".CountDownActivity"
             android:label="@string/title_activity_count_down"
             android:theme="@style/CountDownTheme">
         </activity>

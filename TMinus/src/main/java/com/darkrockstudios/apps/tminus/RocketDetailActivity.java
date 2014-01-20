@@ -2,13 +2,13 @@ package com.darkrockstudios.apps.tminus;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.NavUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 
 import com.darkrockstudios.apps.tminus.fragments.RocketDetailFragment;
+import com.darkrockstudios.apps.tminus.misc.UpNavUtil;
 
 /**
  * Created by Adam on 7/14/13.
@@ -70,7 +70,7 @@ public class RocketDetailActivity extends DatabaseActivity
 		switch( item.getItemId() )
 		{
 			case android.R.id.home:
-				NavUtils.navigateUpFromSameTask( this );
+				UpNavUtil.standardUp( this );
 				handled = true;
 				break;
 			case R.id.action_settings:

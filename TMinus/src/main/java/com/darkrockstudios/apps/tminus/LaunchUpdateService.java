@@ -46,7 +46,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class LaunchUpdateService extends Service
 {
-	private static final String TAG                              = LaunchUpdateService.class.getSimpleName();
+	private static final String TAG = LaunchUpdateService.class.getSimpleName();
 
 	public static final String ACTION_LAUNCH_LIST_UPDATED       =
 			LaunchUpdateService.class.getPackage() + ".ACTION_LAUNCH_LIST_UPDATED";
@@ -186,7 +186,11 @@ public class LaunchUpdateService extends Service
 		public void onErrorResponse( VolleyError error )
 		{
 			Log.i( TAG, "Failed to retrieve Launches from sever." );
-			Log.i( TAG, error.getMessage() );
+			String errorMessage = error.getMessage();
+			if( errorMessage != null )
+			{
+				Log.i( TAG, "VolleyError: " + errorMessage );
+			}
 			sendFailureBroadcast();
 
 			stopService();
