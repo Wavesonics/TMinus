@@ -14,25 +14,22 @@ repositories {
 
 dependencies {
     // Google Play Services
-    compile 'com.google.android.gms:play-services:3.2.65'
+    compile 'com.google.android.gms:play-services:4.1.32'
 
     // Support Libraries
-    compile 'com.android.support:support-v4:18.0.0'
-    compile 'com.android.support:appcompat-v7:18.0.0'
-    compile 'com.android.support:gridlayout-v7:18.0.0'
-    compile 'com.android.support:support-v13:18.0.0'
+    compile 'com.android.support:support-v4:19.0.1'
+    compile 'com.android.support:appcompat-v7:19.0.1'
+    compile 'com.android.support:gridlayout-v7:19.0.1'
+    compile 'com.android.support:support-v13:19.0.1'
 
     compile 'com.google.code.gson:gson:2.2.4'
+    compile 'de.keyboardsurfer.android.widget:crouton:1.8.2'
+    compile 'com.github.chrisbanes.actionbarpulltorefresh:library:0.9.3'
+    compile 'com.jakewharton:butterknife:4.0.1'
+    compile 'joda-time:joda-time:2.3'
 
-    compile('de.keyboardsurfer.android.widget:crouton:1.8.1') {
-        exclude module: 'support-v4'
-        compile 'com.android.support:support-v4:18.0.0'
-    }
-
-    compile 'com.github.chrisbanes.actionbarpulltorefresh:library:0.8@aar'
-
-    compile 'com.j256.ormlite:ormlite-core:4.47'
-    compile 'com.j256.ormlite:ormlite-android:4.47'
+    compile 'com.j256.ormlite:ormlite-core:4.48'
+    compile 'com.j256.ormlite:ormlite-android:4.48'
 
     compile files('libs/volley.jar')
     compile files('libs/CWAC-WakefulIntentService.jar')
