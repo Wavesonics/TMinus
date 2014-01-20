@@ -165,9 +165,9 @@ public class LaunchDetailFragment extends Fragment implements Listener, RocketDe
 			m_rocketContainer =
 					(ViewGroup) rootView.findViewById( id.LAUNCHDETAIL_rocket_container );
 
-			m_rocketImage.setLoadingImageResId( R.drawable.rocket_image_loading );
-			//m_rocketImage.setErrorImageResId( R.drawable.rocket_image_loading );
-			//m_rocketImage.setDefaultImageResId( R.drawable.rocket_image_loading );
+			//m_rocketImage.setLoadingImageResId( R.drawable.rocket_image_loading );
+			m_rocketImage.setErrorImageResId( R.drawable.launch_detail_no_rocket_image );
+			m_rocketImage.setDefaultImageResId( R.drawable.rocket_image_loading );
 
 			loadLaunch();
 		}

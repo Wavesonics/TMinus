@@ -22,6 +22,8 @@ import com.darkrockstudios.apps.tminus.R.layout;
 import com.darkrockstudios.apps.tminus.database.DatabaseHelper;
 import com.darkrockstudios.apps.tminus.launchlibrary.Launch;
 import com.darkrockstudios.apps.tminus.misc.Utilities;
+import com.haarman.listviewanimations.swinginadapters.AnimationAdapter;
+import com.haarman.listviewanimations.swinginadapters.prepared.ScaleInAnimationAdapter;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.PreparedQuery;
@@ -122,6 +124,12 @@ public class LaunchListFragment extends ListFragment implements OnRefreshListene
 	                          Bundle savedInstanceState )
 	{
 		View view = inflater.inflate( R.layout.fragment_launch_list, null );
+
+		AnimationAdapter animationAdapter = new ScaleInAnimationAdapter( m_adapter );
+		setListAdapter( animationAdapter );
+
+		ListView listView = (ListView) view.findViewById( android.R.id.list );
+		animationAdapter.setAbsListView( listView );
 
 		m_ptrLayout = (PullToRefreshLayout) view.findViewById( R.id.LAUNCHLIST_pull_to_refresh );
 		ActionBarPullToRefresh.from( getActivity() ).allChildrenArePullable().listener( this ).setup( m_ptrLayout );

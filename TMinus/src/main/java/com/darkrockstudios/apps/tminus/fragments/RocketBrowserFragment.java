@@ -23,6 +23,8 @@ import com.darkrockstudios.apps.tminus.launchlibrary.Rocket;
 import com.darkrockstudios.apps.tminus.misc.Preferences;
 import com.darkrockstudios.apps.tminus.updatetasks.DataUpdaterService;
 import com.darkrockstudios.apps.tminus.updatetasks.RocketUpdateTask;
+import com.haarman.listviewanimations.swinginadapters.AnimationAdapter;
+import com.haarman.listviewanimations.swinginadapters.prepared.ScaleInAnimationAdapter;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.PreparedQuery;
@@ -75,10 +77,6 @@ public class RocketBrowserFragment extends ListFragment implements OnRefreshList
 	public void onCreate( Bundle savedInstanceState )
 	{
 		super.onCreate( savedInstanceState );
-
-		m_adapter = new RocketListAdapter( getActivity() );
-
-		setListAdapter( m_adapter );
 	}
 
 	@Override
@@ -87,8 +85,14 @@ public class RocketBrowserFragment extends ListFragment implements OnRefreshList
 	{
 		View view = inflater.inflate( R.layout.fragment_rocket_list, null );
 
-		m_ptrLayout =
-				(PullToRefreshLayout) view.findViewById( R.id.ROCKETLIST_pull_to_refresh );
+		m_adapter = new RocketListAdapter( getActivity() );
+		AnimationAdapter animationAdapter = new ScaleInAnimationAdapter( m_adapter );
+		setListAdapter( animationAdapter );
+
+		ListView listView = (ListView) view.findViewById( android.R.id.list );
+		animationAdapter.setAbsListView( listView );
+
+		m_ptrLayout = (PullToRefreshLayout) view.findViewById( R.id.ROCKETLIST_pull_to_refresh );
 
 		ActionBarPullToRefresh.from( getActivity() ).allChildrenArePullable().listener( this ).setup( m_ptrLayout );
 

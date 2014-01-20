@@ -39,12 +39,10 @@ public class Launch implements Serializable
 	@DatabaseField
 	public Date net;
 
-	@DatabaseField(canBeNull = true, foreign = true, foreignAutoCreate = true,
-	               foreignAutoRefresh = true)
+	@DatabaseField(canBeNull = true, foreign = true, foreignAutoCreate = true, foreignAutoRefresh = true)
 	public Mission mission;
 
-	@DatabaseField(canBeNull = false, foreign = true, foreignAutoCreate = true,
-	               foreignAutoRefresh = true)
+	@DatabaseField(canBeNull = false, foreign = true, foreignAutoCreate = true, foreignAutoRefresh = true)
 	public Rocket rocket;
 
 	@DatabaseField(canBeNull = false, foreign = true, foreignAutoCreate = true, foreignAutoRefresh = true)

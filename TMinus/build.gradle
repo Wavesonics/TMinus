@@ -25,6 +25,7 @@ dependencies {
     compile 'com.google.code.gson:gson:2.2.4'
     compile 'de.keyboardsurfer.android.widget:crouton:1.8.2'
     compile 'com.github.chrisbanes.actionbarpulltorefresh:library:0.9.3'
+    compile 'com.nhaarman.listviewanimations:library:2.5.2'
     compile 'com.jakewharton:butterknife:4.0.1'
     compile 'joda-time:joda-time:2.3'
 
