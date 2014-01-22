@@ -6,17 +6,17 @@ package com.darkrockstudios.apps.tminus.launchlibrary;
  */
 public class LaunchLibraryUrls
 {
-	private static final String SCHEME        = "http";
-	private static final String HOST          = "launchlibrary.net";
-	private static final String PLATFORM_STUB = "ll";
-	private static final String API_VERSION_STUB = "v2";
+	private static final String SCHEME           = "http";
+	private static final String HOST             = "launchlibrary.net";
+	private static final String PLATFORM_STUB    = "ll";
+	private static final String API_VERSION_STUB = "dev";
 
 	private static final String FORMAT = "json";
 
-	private static final String PAD_LIST = "padlist";
-	private static final String ROCKETS  = "rockets";
-	private static final String NEXT     = "next";
-	private static final String LAST = "last";
+	private static final String LOCATIONS = "locations";
+	private static final String ROCKETS   = "rockets";
+	private static final String NEXT      = "next";
+	private static final String LAST      = "last";
 
 	private static final int NEXT_LAUNCH_LIMIT = 20;
 	private static final int LAST_LAUNCH_LIMIT = 20;
@@ -35,7 +35,7 @@ public class LaunchLibraryUrls
 
 	public static String padList()
 	{
-		return getUrlForMethod( PAD_LIST );
+		return getUrlForMethod( LOCATIONS );
 	}
 
 	public static String rockets()
@@ -51,7 +51,7 @@ public class LaunchLibraryUrls
 		}
 
 		String methodUrl = getUrlForMethod( NEXT );
-		//methodUrl += "/" + n;
+		methodUrl += "/" + n;
 
 		return methodUrl;
 	}

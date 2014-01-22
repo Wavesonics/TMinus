@@ -227,6 +227,7 @@ public class LaunchUpdateService extends Service
 				try
 				{
 					final Dao<Launch, Integer> launchDao = databaseHelper.getLaunchDao();
+
 					final Dao<Location, Integer> locationDao = databaseHelper.getLocationDao();
 					final Dao<Pad, Integer> padDao = databaseHelper.getPadDao();
 					final Dao<Mission, Integer> missionDao = databaseHelper.getMissionDao();
@@ -235,7 +236,7 @@ public class LaunchUpdateService extends Service
 
 					int numUpdated = 0;
 
-					final JSONArray launchListArray = launchListObj.getJSONArray( "launch" );
+					final JSONArray launchListArray = launchListObj.getJSONArray( "launches" );
 					for( int ii = 0; ii < launchListArray.length(); ++ii )
 					{
 						try
@@ -260,11 +261,12 @@ public class LaunchUpdateService extends Service
 														                                      .cancelAlarmsForLaunch( launch,
 														                                                              LaunchUpdateService.this );
 											                                      }
-/*
-											                                      locationDao
-													                                      .createOrUpdate( launch.pad.location );
-											                                      padDao
-													                                      .createOrUpdate( launch.pad );
+
+											                                      locationDao.createOrUpdate( launch.location );
+											                                      for( Pad pad : launch.location.pads )
+											                                      {
+												                                      padDao.createOrUpdate( pad );
+											                                      }
 
 											                                      if( launch.mission != null )
 											                                      {
@@ -274,7 +276,7 @@ public class LaunchUpdateService extends Service
 
 											                                      rocketDao
 													                                      .createOrUpdate( launch.rocket );
-*/
+
 /*
 											                                      if( launch.pad.agencies != null )
 											                                      {
@@ -349,14 +351,11 @@ public class LaunchUpdateService extends Service
 		{
 			final Launch launch = gson.fromJson( launchObj.toString(), Launch.class );
 
-			JSONObject locationObj = launchObj.getJSONObject( "location" );
-			final Location location = gson.fromJson( locationObj.toString(), Location.class );
-
-			JSONObject padObj = locationObj.getJSONObject( "pad" );
-			final Pad pad = gson.fromJson( padObj.toString(), Pad.class );
-			pad.location = location;
-
-			launch.pad = pad;
+			// We need to hook up the parent child relationship for the database
+			for( Pad pad : launch.location.pads )
+			{
+				pad.location = launch.location;
+			}
 
 			return launch;
 		}

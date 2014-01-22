@@ -56,7 +56,7 @@ public class LocationUpdateTask extends UpdateTask
 					final Dao<Location, Integer> locInfoDao = databaseHelper.getLocationDao();
 					final Dao<Pad, Integer> locationDao = databaseHelper.getPadDao();
 
-					JSONArray locations = response.getJSONArray( "location" );
+					JSONArray locations = response.getJSONArray( "locations" );
 					if( locations != null && locations.length() > 0 )
 					{
 						final Gson gson = LaunchLibraryGson.create();

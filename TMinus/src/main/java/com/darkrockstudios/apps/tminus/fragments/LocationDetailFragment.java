@@ -262,7 +262,7 @@ public class LocationDetailFragment extends DialogFragment implements AdapterVie
 				m_locationName.setText( m_location.name );
 
 				int flagResourceId = Utilities
-						                     .getFlagResource( m_location.countrycode );
+						                     .getFlagResource( m_location.countryCode );
 				m_locationName.setCompoundDrawablesWithIntrinsicBounds( flagResourceId, 0, 0, 0 );
 			}
 

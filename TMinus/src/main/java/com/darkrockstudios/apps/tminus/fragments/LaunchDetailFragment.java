@@ -30,6 +30,7 @@ import com.darkrockstudios.apps.tminus.RocketDetailUpdateService;
 import com.darkrockstudios.apps.tminus.TMinusApplication;
 import com.darkrockstudios.apps.tminus.database.RocketDetail;
 import com.darkrockstudios.apps.tminus.launchlibrary.Launch;
+import com.darkrockstudios.apps.tminus.launchlibrary.Pad;
 import com.darkrockstudios.apps.tminus.loaders.LaunchLoader;
 import com.darkrockstudios.apps.tminus.loaders.LaunchLoader.Listener;
 import com.darkrockstudios.apps.tminus.loaders.RocketDetailLoader;
@@ -217,6 +218,8 @@ public class LaunchDetailFragment extends Fragment implements Listener, RocketDe
 					getString( R.string.CALENDAR_event_description, m_launchItem.rocket.name,
 					           m_launchItem.rocket.configuration );
 
+			Pad pad = m_launchItem.location.pads.iterator().next();
+
 			Intent intent = new Intent( Intent.ACTION_INSERT )
 					                .setData( Events.CONTENT_URI )
 					                .putExtra( CalendarContract.EXTRA_EVENT_BEGIN_TIME, m_launchItem.net.getTime() )
@@ -224,7 +227,7 @@ public class LaunchDetailFragment extends Fragment implements Listener, RocketDe
 					                           m_launchItem.windowend.getTime() )
 					                .putExtra( Events.TITLE, title )
 					                .putExtra( Events.DESCRIPTION, description )
-					                .putExtra( Events.EVENT_LOCATION, m_launchItem.pad.name )
+					                .putExtra( Events.EVENT_LOCATION, pad.name )
 					                .putExtra( Events.AVAILABILITY, Events.AVAILABILITY_BUSY );
 			startActivity( intent );
 		}
@@ -287,11 +290,13 @@ public class LaunchDetailFragment extends Fragment implements Listener, RocketDe
 			final TextView status = (TextView) rootView.findViewById( R.id.LAUNCHDETAIL_status );
 			status.setText( Utilities.getStatusText( m_launchItem, rootView.getContext() ) );
 
+			Pad pad = m_launchItem.location.pads.iterator().next();
+
 			final TextView location =
 					(TextView) rootView.findViewById( R.id.LAUNCHDETAIL_location );
-			location.setText( m_launchItem.pad.name );
+			location.setText( pad.name );
 			int flagResourceId = Utilities
-					                     .getFlagResource( m_launchItem.pad.location.countrycode );
+					                     .getFlagResource( pad.location.countryCode );
 			location.setCompoundDrawablesWithIntrinsicBounds( 0, 0, flagResourceId, 0 );
 
 			final TextView windowLabel =
@@ -435,8 +440,10 @@ public class LaunchDetailFragment extends Fragment implements Listener, RocketDe
 				missionDescription = getString( R.string.LAUNCHDETAIL_share_no_mission );
 			}
 
+			Pad pad = m_launchItem.location.pads.iterator().next();
+
 			body = getString( R.string.LAUNCHDETAIL_share_details, missionDescription,
-			                  m_launchItem.pad.name, m_launchItem.net );
+			                  pad.name, m_launchItem.net );
 		}
 
 		return body;
@@ -465,9 +472,11 @@ public class LaunchDetailFragment extends Fragment implements Listener, RocketDe
 
 			if( m_locationContainer != null )
 			{
+				Pad pad = m_launchItem.location.pads.iterator().next();
+
 				LocationDetailFragment locationDetailFragment = LocationDetailFragment
-						                                                .newInstance( m_launchItem.pad.location.id,
-						                                                              m_launchItem.pad.id,
+						                                                .newInstance( pad.location.id,
+						                                                              pad.id,
 						                                                              isTabletLayout,
 						                                                              true );
 				getChildFragmentManager().beginTransaction()

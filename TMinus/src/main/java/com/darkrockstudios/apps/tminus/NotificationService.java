@@ -15,6 +15,7 @@ import com.darkrockstudios.apps.tminus.R.string;
 import com.darkrockstudios.apps.tminus.database.DatabaseHelper;
 import com.darkrockstudios.apps.tminus.fragments.LaunchDetailFragment;
 import com.darkrockstudios.apps.tminus.launchlibrary.Launch;
+import com.darkrockstudios.apps.tminus.launchlibrary.Pad;
 import com.darkrockstudios.apps.tminus.misc.Preferences;
 import com.darkrockstudios.apps.tminus.misc.TminusUri;
 import com.darkrockstudios.apps.tminus.misc.Utilities;
@@ -93,9 +94,11 @@ public class NotificationService extends WakefulIntentService
 		builder.setSmallIcon( R.drawable.ic_stat_rocket );
 		builder.setAutoCancel( true );
 
+		Pad pad = launch.location.pads.iterator().next();
+
 		final String summary = getString( string.NOTIFICATION_reminder_summary, launch.name, Utilities
 				                                                                                     .getDateText( launch.net ),
-		                                  launch.pad.name );
+		                                  pad.name );
 		builder.setStyle( new NotificationCompat.BigTextStyle()
 				                  .bigText( summary ) );
 
@@ -133,9 +136,11 @@ public class NotificationService extends WakefulIntentService
 		builder.setPriority( Notification.PRIORITY_HIGH );
 		builder.setAutoCancel( true );
 
+		Pad pad = launch.location.pads.iterator().next();
+
 		final String summary = getString( string.NOTIFICATION_launch_imminent_summary, launch.name, Utilities
 				                                                                                            .getDateText( launch.net ),
-		                                  launch.pad.name );
+		                                  pad.name );
 		builder.setStyle( new NotificationCompat.BigTextStyle().bigText( summary ) );
 
 		Intent launchDetailIntent = new Intent( this, CountDownActivity.class );

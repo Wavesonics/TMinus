@@ -1,7 +1,10 @@
 package com.darkrockstudios.apps.tminus.launchlibrary;
 
 import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
+
+import java.util.Collection;
 
 /**
  * Created by Adam on 8/19/13.
@@ -26,5 +29,8 @@ public class Location
 	public String wikiURL;
 
 	@DatabaseField
-	public String countrycode;
+	public String countryCode;
+
+	@ForeignCollectionField(eager = true)
+	public Collection<Pad> pads;
 }

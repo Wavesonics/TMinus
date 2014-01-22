@@ -54,7 +54,7 @@ public class RocketUpdateTask extends UpdateTask
 				{
 					final Dao<Rocket, Integer> rocketDao = databaseHelper.getRocketDao();
 
-					JSONArray rockets = response.getJSONArray( "rocket" );
+					JSONArray rockets = response.getJSONArray( "rockets" );
 					if( rockets != null && rockets.length() > 0 )
 					{
 						final Gson gson = LaunchLibraryGson.create();
