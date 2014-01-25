@@ -89,7 +89,7 @@ public class UpdateAlarmsService extends WakefulIntentService
 		{
 			try
 			{
-				final Dao<Launch, Integer> launchDao = databaseHelper.getLaunchDao();
+				final Dao<Launch, Integer> launchDao = databaseHelper.getDao( Launch.class );
 				final QueryBuilder<Launch, Integer> queryBuilder = launchDao.queryBuilder();
 				final PreparedQuery<Launch> query = queryBuilder.orderBy( "net", true ).prepare();
 
@@ -136,7 +136,7 @@ public class UpdateAlarmsService extends WakefulIntentService
 	private void setLaunchUpdateAlarm( AlarmManager alarmManager, long updateFrequency )
 	{
 		Log.d( TAG, "Setting the auto-update alarm for Launches every " + TimeUnit.MILLISECONDS
-		                                                                          .toHours( updateFrequency ) + " hours" );
+				                                                                  .toHours( updateFrequency ) + " hours" );
 
 		final long now = new Date().getTime();
 		alarmManager

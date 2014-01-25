@@ -5,7 +5,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.darkrockstudios.apps.tminus.database.DatabaseHelper;
-import com.darkrockstudios.apps.tminus.database.RocketDetail;
+import com.darkrockstudios.apps.tminus.database.tables.RocketDetail;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.Dao;
 
@@ -45,7 +45,7 @@ public class RocketDetailLoader extends AsyncTask<Integer, Void, RocketDetail>
 				try
 				{
 
-					Dao<RocketDetail, Integer> rocketDetailDao = databaseHelper.getRocketDetailDao();
+					Dao<RocketDetail, Integer> rocketDetailDao = databaseHelper.getDao( RocketDetail.class );
 					rocketDetail = rocketDetailDao.queryForId( m_rocketId );
 				}
 				catch( SQLException e )

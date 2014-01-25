@@ -22,4 +22,12 @@
         tools:text="Configuration"
         android:id="@+id/ROCKETLISTITEM_rocket_configuration"
         android:layout_gravity="left|center_vertical"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceListItemSmall"
+        tools:text="Agencies"
+        android:id="@+id/ROCKETLISTITEM_rocket_agencies"
+        android:layout_gravity="left|center_vertical"/>
 </LinearLayout>

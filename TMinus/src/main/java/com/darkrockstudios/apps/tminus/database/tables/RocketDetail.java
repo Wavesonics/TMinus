@@ -1,4 +1,4 @@
-package com.darkrockstudios.apps.tminus.database;
+package com.darkrockstudios.apps.tminus.database.tables;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;

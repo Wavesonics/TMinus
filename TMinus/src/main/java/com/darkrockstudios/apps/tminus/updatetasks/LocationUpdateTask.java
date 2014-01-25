@@ -53,8 +53,8 @@ public class LocationUpdateTask extends UpdateTask
 			{
 				try
 				{
-					final Dao<Location, Integer> locInfoDao = databaseHelper.getLocationDao();
-					final Dao<Pad, Integer> locationDao = databaseHelper.getPadDao();
+					final Dao<Location, Integer> locInfoDao = databaseHelper.getDao( Location.class );
+					final Dao<Pad, Integer> locationDao = databaseHelper.getDao( Pad.class );
 
 					JSONArray locations = response.getJSONArray( "locations" );
 					if( locations != null && locations.length() > 0 )

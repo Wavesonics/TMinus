@@ -49,8 +49,10 @@ public class RocketLoader extends AsyncTask<Integer, Void, Rocket>
 		{
 			try
 			{
-				Dao<Rocket, Integer> rocketDao = databaseHelper.getRocketDao();
+				Dao<Rocket, Integer> rocketDao = databaseHelper.getDao( Rocket.class );
 				rocket = rocketDao.queryForId( m_rocketId );
+
+				rocket.refreshFamily( databaseHelper );
 			}
 			catch( SQLException e )
 			{

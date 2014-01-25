@@ -4,6 +4,7 @@ import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * Created by Adam on 6/23/13.
@@ -43,6 +44,5 @@ public class Pad implements Serializable
 	@DatabaseField
 	public String mapURL;
 
-	//@ForeignCollectionField(eager = true)
-	//public Collection<Agency> agencies;
+	public List<Agency> agencies;
 }

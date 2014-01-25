@@ -19,6 +19,7 @@ import android.widget.TextView;
 
 import com.darkrockstudios.apps.tminus.R;
 import com.darkrockstudios.apps.tminus.database.DatabaseHelper;
+import com.darkrockstudios.apps.tminus.launchlibrary.Agency;
 import com.darkrockstudios.apps.tminus.launchlibrary.Rocket;
 import com.darkrockstudios.apps.tminus.misc.Preferences;
 import com.darkrockstudios.apps.tminus.updatetasks.DataUpdaterService;
@@ -35,6 +36,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 import de.keyboardsurfer.android.widget.crouton.Style;
 import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
@@ -221,11 +224,16 @@ public class RocketBrowserFragment extends ListFragment implements OnRefreshList
 
 				try
 				{
-					Dao<Rocket, Integer> rocketDao = databaseHelper.getRocketDao();
+					Dao<Rocket, Integer> rocketDao = databaseHelper.getDao( Rocket.class );
 					QueryBuilder<Rocket, Integer> queryBuilder = rocketDao.queryBuilder();
-					PreparedQuery<Rocket> query = queryBuilder.orderBy( "name", true ).prepare();
+					PreparedQuery<Rocket> query = queryBuilder.orderBy( "family_id", true ).prepare();
 
 					List<Rocket> results = rocketDao.query( query );
+					for( Rocket rocket : results )
+					{
+						rocket.refreshFamily( databaseHelper );
+					}
+
 					if( results != null && results.size() > 0 )
 					{
 						m_adapter.addAll( results );
@@ -297,6 +305,23 @@ public class RocketBrowserFragment extends ListFragment implements OnRefreshList
 		refresh();
 	}
 
+	static class ViewHolder
+	{
+		@InjectView(R.id.ROCKETLISTITEM_rocket_name)
+		TextView rocketNameView;
+
+		@InjectView(R.id.ROCKETLISTITEM_rocket_configuration)
+		TextView rocketConfigurationView;
+
+		@InjectView(R.id.ROCKETLISTITEM_rocket_agencies)
+		TextView rocketAgenciesView;
+
+		public ViewHolder( final View view )
+		{
+			ButterKnife.inject( this, view );
+		}
+	}
+
 	private static class RocketListAdapter extends ArrayAdapter<Rocket>
 	{
 		public RocketListAdapter( Context context )
@@ -316,14 +341,31 @@ public class RocketBrowserFragment extends ListFragment implements OnRefreshList
 			{
 				LayoutInflater inflater = LayoutInflater.from( getContext() );
 				view = inflater.inflate( R.layout.row_rocket_list_item, parent, false );
+
+				ViewHolder viewHolder = new ViewHolder( view );
+				view.setTag( viewHolder );
 			}
+
+			ViewHolder viewHolder = (ViewHolder) view.getTag();
 
 			Rocket rocket = getItem( pos );
 
-			TextView rocketNameView = (TextView) view.findViewById( R.id.ROCKETLISTITEM_rocket_name );
-			rocketNameView.setText( rocket.name );
+			viewHolder.rocketNameView.setText( rocket.name );
 
-			TextView rockeConfigurationView = (TextView) view.findViewById( R.id.ROCKETLISTITEM_rocket_configuration );
+			String agencies = "";
+			if( rocket.family != null && rocket.family.agencies != null )
+			{
+				for( Agency agency : rocket.family.agencies )
+				{
+					if( agency.abbrev != null )
+					{
+						agencies += " " + agency.abbrev;
+					}
+				}
+			}
+
+			viewHolder.rocketAgenciesView.setText( agencies );
+
 			final String configuration;
 			if( rocket.configuration != null && rocket.configuration.trim().length() > 0 )
 			{
@@ -333,7 +375,7 @@ public class RocketBrowserFragment extends ListFragment implements OnRefreshList
 			{
 				configuration = getContext().getString( R.string.ROCKETLIST_item_no_configuration );
 			}
-			rockeConfigurationView.setText( configuration );
+			viewHolder.rocketConfigurationView.setText( configuration );
 
 			return view;
 		}

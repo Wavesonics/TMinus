@@ -52,7 +52,7 @@ public class RocketUpdateTask extends UpdateTask
 			{
 				try
 				{
-					final Dao<Rocket, Integer> rocketDao = databaseHelper.getRocketDao();
+					final Dao<Rocket, Integer> rocketDao = databaseHelper.getDao( Rocket.class );
 
 					JSONArray rockets = response.getJSONArray( "rockets" );
 					if( rockets != null && rockets.length() > 0 )

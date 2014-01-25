@@ -93,7 +93,7 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
 			{
 				try
 				{
-					final Dao<Launch, Integer> launchDao = databaseHelper.getLaunchDao();
+					final Dao<Launch, Integer> launchDao = databaseHelper.getDao( Launch.class );
 					for( final Launch launch : launchDao )
 					{
 						UpdateAlarmsService.cancelAlarmsForLaunch( launch, m_context );

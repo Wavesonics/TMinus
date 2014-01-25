@@ -84,8 +84,8 @@ public class LocationBrowserFragment extends Fragment implements GoogleMap.OnInf
 		//View map = view.findViewById( R.id.LOCATIONBROWSER_map_container );
 		SupportMapFragment mapFragment = createMap();
 		getChildFragmentManager().beginTransaction()
-				.add( R.id.LOCATIONBROWSER_map_container, mapFragment, MAP_FRAGMENT_TAG )
-				.commit();
+		                         .add( R.id.LOCATIONBROWSER_map_container, mapFragment, MAP_FRAGMENT_TAG )
+		                         .commit();
 
 		boolean shouldRefresh = false;
 		final SharedPreferences preferences = PreferenceManager
@@ -269,7 +269,7 @@ public class LocationBrowserFragment extends Fragment implements GoogleMap.OnInf
 				{
 					try
 					{
-						Dao<Pad, Integer> locationDao = databaseHelper.getPadDao();
+						Dao<Pad, Integer> locationDao = databaseHelper.getDao( Pad.class );
 						QueryBuilder<Pad, Integer> builder = locationDao.queryBuilder();
 						builder.groupBy( "location_id" );
 						builder.orderBy( "name", true );

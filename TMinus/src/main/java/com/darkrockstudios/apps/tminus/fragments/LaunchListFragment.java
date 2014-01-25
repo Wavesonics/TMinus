@@ -72,11 +72,11 @@ public class LaunchListFragment extends ListFragment implements OnRefreshListene
 		}
 	};
 
-	private boolean m_previousLaunches;
+	private boolean              m_previousLaunches;
 	private ArrayAdapter<Launch> m_adapter;
 	private Callbacks m_callbacks         = s_dummyCallbacks;
 	private int       m_activatedPosition = ListView.INVALID_POSITION;
-	private LaunchUpdateReceiver  m_updateReceiver;
+	private LaunchUpdateReceiver m_updateReceiver;
 
 	private PullToRefreshLayout m_ptrLayout;
 
@@ -254,7 +254,7 @@ public class LaunchListFragment extends ListFragment implements OnRefreshListene
 
 				try
 				{
-					Dao<Launch, Integer> launchDao = databaseHelper.getLaunchDao();
+					Dao<Launch, Integer> launchDao = databaseHelper.getDao( Launch.class );
 					QueryBuilder<Launch, Integer> queryBuilder = launchDao.queryBuilder();
 					final PreparedQuery<Launch> query;
 

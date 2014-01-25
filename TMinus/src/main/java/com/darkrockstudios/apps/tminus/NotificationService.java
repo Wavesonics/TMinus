@@ -61,7 +61,7 @@ public class NotificationService extends WakefulIntentService
 			{
 				try
 				{
-					Dao<Launch, Integer> launchDao = databaseHelper.getLaunchDao();
+					Dao<Launch, Integer> launchDao = databaseHelper.getDao( Launch.class );
 					Launch launch = launchDao.queryForId( launchId );
 
 					if( notificationType == EXTRA_NOTIFICATION_TYPE_REMINDER )

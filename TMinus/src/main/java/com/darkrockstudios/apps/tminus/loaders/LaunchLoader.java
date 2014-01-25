@@ -44,7 +44,7 @@ public class LaunchLoader extends AsyncTask<Integer, Void, Launch>
 			{
 				try
 				{
-					Dao<Launch, Integer> launchDao = databaseHelper.getLaunchDao();
+					Dao<Launch, Integer> launchDao = databaseHelper.getDao( Launch.class );
 					launch = launchDao.queryForId( ids[ 0 ] );
 				}
 				catch( SQLException e )

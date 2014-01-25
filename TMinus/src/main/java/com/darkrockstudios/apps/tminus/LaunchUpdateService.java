@@ -14,6 +14,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.darkrockstudios.apps.tminus.database.DatabaseHelper;
+import com.darkrockstudios.apps.tminus.database.tables.AgencyPad;
+import com.darkrockstudios.apps.tminus.database.tables.AgencyRocket;
 import com.darkrockstudios.apps.tminus.launchlibrary.Agency;
 import com.darkrockstudios.apps.tminus.launchlibrary.Launch;
 import com.darkrockstudios.apps.tminus.launchlibrary.LaunchLibraryGson;
@@ -22,6 +24,7 @@ import com.darkrockstudios.apps.tminus.launchlibrary.Location;
 import com.darkrockstudios.apps.tminus.launchlibrary.Mission;
 import com.darkrockstudios.apps.tminus.launchlibrary.Pad;
 import com.darkrockstudios.apps.tminus.launchlibrary.Rocket;
+import com.darkrockstudios.apps.tminus.launchlibrary.RocketFamily;
 import com.darkrockstudios.apps.tminus.misc.Preferences;
 import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
@@ -226,13 +229,16 @@ public class LaunchUpdateService extends Service
 			{
 				try
 				{
-					final Dao<Launch, Integer> launchDao = databaseHelper.getLaunchDao();
+					final Dao<Launch, Integer> launchDao = databaseHelper.getDao( Launch.class );
 
-					final Dao<Location, Integer> locationDao = databaseHelper.getLocationDao();
-					final Dao<Pad, Integer> padDao = databaseHelper.getPadDao();
-					final Dao<Mission, Integer> missionDao = databaseHelper.getMissionDao();
-					final Dao<Rocket, Integer> rocketDao = databaseHelper.getRocketDao();
-					final Dao<Agency, Integer> agencyDao = databaseHelper.getAgencyDao();
+					final Dao<Location, Integer> locationDao = databaseHelper.getDao( Location.class );
+					final Dao<Pad, Integer> padDao = databaseHelper.getDao( Pad.class );
+					final Dao<Mission, Integer> missionDao = databaseHelper.getDao( Mission.class );
+					final Dao<Rocket, Integer> rocketDao = databaseHelper.getDao( Rocket.class );
+					final Dao<RocketFamily, Integer> rocketFamilyDao = databaseHelper.getDao( RocketFamily.class );
+					final Dao<Agency, Integer> agencyDao = databaseHelper.getDao( Agency.class );
+					final Dao<AgencyRocket, Integer> agencyRocketDao = databaseHelper.getDao( AgencyRocket.class );
+					final Dao<AgencyPad, Integer> agencyPadDao = databaseHelper.getDao( AgencyPad.class );
 
 					int numUpdated = 0;
 
@@ -262,10 +268,45 @@ public class LaunchUpdateService extends Service
 														                                                              LaunchUpdateService.this );
 											                                      }
 
+											                                      rocketFamilyDao
+													                                      .createOrUpdate( launch.rocket.family );
+											                                      rocketDao.createOrUpdate( launch.rocket );
+
+											                                      if( launch.rocket.family.agencies != null )
+											                                      {
+												                                      for( Agency agency : launch.rocket.family.agencies )
+												                                      {
+													                                      agencyDao.createOrUpdate( agency );
+
+													                                      AgencyRocket
+															                                      agencyRocket =
+															                                      new AgencyRocket( agency,
+															                                                        launch.rocket.family );
+													                                      agencyRocketDao
+															                                      .createOrUpdate( agencyRocket );
+												                                      }
+											                                      }
+
 											                                      locationDao.createOrUpdate( launch.location );
+
 											                                      for( Pad pad : launch.location.pads )
 											                                      {
 												                                      padDao.createOrUpdate( pad );
+
+												                                      if( pad.agencies != null )
+												                                      {
+													                                      for( Agency agency : pad.agencies )
+													                                      {
+														                                      agencyDao
+																                                      .createOrUpdate( agency );
+
+														                                      AgencyPad agencyProperty =
+																                                      new AgencyPad( agency,
+																                                                     pad );
+														                                      agencyPadDao
+																                                      .createOrUpdate( agencyProperty );
+													                                      }
+												                                      }
 											                                      }
 
 											                                      if( launch.mission != null )
@@ -274,24 +315,13 @@ public class LaunchUpdateService extends Service
 														                                      .createOrUpdate( launch.mission );
 											                                      }
 
-											                                      rocketDao
-													                                      .createOrUpdate( launch.rocket );
-
-/*
-											                                      if( launch.pad.agencies != null )
-											                                      {
-												                                      for( Agency agency : launch.pad.agencies )
-												                                      {
-													                                      agencyDao.createOrUpdate( agency );
-												                                      }
-											                                      }
-*/
 											                                      // This must be run after all the others are created so the IDs of the child objects can be set
 											                                      launchDao.createOrUpdate( launch );
 
 											                                      return null;
 										                                      }
 									                                      } );
+
 									++numUpdated;
 								}
 								catch( SQLException e )
@@ -386,7 +416,7 @@ public class LaunchUpdateService extends Service
 			{
 				try
 				{
-					final Dao<Launch, Integer> launchDao = databaseHelper.getLaunchDao();
+					final Dao<Launch, Integer> launchDao = databaseHelper.getDao( Launch.class );
 
 					DeleteBuilder<Launch, Integer> builder = launchDao.deleteBuilder();
 					builder.where().lt( "net", getOldLaunchThreshold() );

@@ -28,7 +28,7 @@ import com.darkrockstudios.apps.tminus.R;
 import com.darkrockstudios.apps.tminus.R.id;
 import com.darkrockstudios.apps.tminus.RocketDetailUpdateService;
 import com.darkrockstudios.apps.tminus.TMinusApplication;
-import com.darkrockstudios.apps.tminus.database.RocketDetail;
+import com.darkrockstudios.apps.tminus.database.tables.RocketDetail;
 import com.darkrockstudios.apps.tminus.launchlibrary.Launch;
 import com.darkrockstudios.apps.tminus.launchlibrary.Pad;
 import com.darkrockstudios.apps.tminus.loaders.LaunchLoader;

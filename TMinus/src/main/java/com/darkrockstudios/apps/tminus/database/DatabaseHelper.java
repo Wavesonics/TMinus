@@ -10,18 +10,25 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import com.darkrockstudios.apps.tminus.BuildConfig;
+import com.darkrockstudios.apps.tminus.database.tables.AgencyPad;
+import com.darkrockstudios.apps.tminus.database.tables.AgencyRocket;
+import com.darkrockstudios.apps.tminus.database.tables.RocketDetail;
 import com.darkrockstudios.apps.tminus.launchlibrary.Agency;
 import com.darkrockstudios.apps.tminus.launchlibrary.Launch;
 import com.darkrockstudios.apps.tminus.launchlibrary.Location;
 import com.darkrockstudios.apps.tminus.launchlibrary.Mission;
 import com.darkrockstudios.apps.tminus.launchlibrary.Pad;
 import com.darkrockstudios.apps.tminus.launchlibrary.Rocket;
+import com.darkrockstudios.apps.tminus.launchlibrary.RocketFamily;
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 
+import java.io.File;
 import java.sql.SQLException;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Database helper class used to manage the creation and upgrading of your database. This class also provides
@@ -29,20 +36,19 @@ import java.sql.SQLException;
  */
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper
 {
-	private static final String                     TAG               = DatabaseHelper.class.getSimpleName();
-	private static final String                     DATABASE_NAME     = "TMinus.db";
-	private static final int                        DATABASE_VERSION  = 8;
-	private              Dao<Launch, Integer>       m_launchDao       = null;
-	private              Dao<Location, Integer>     m_locationDao     = null;
-	private              Dao<Pad, Integer>          m_padDao          = null;
-	private              Dao<Mission, Integer>      m_missionDao      = null;
-	private              Dao<Rocket, Integer>       m_rocketDao       = null;
-	private              Dao<RocketDetail, Integer> m_rocketDetailDao = null;
-	private              Dao<Agency, Integer>       m_agencyDao       = null;
+	private static final String TAG              = DatabaseHelper.class.getSimpleName();
+	private static final String DATABASE_NAME    = "TMinus.db";
+	private static final int    DATABASE_VERSION = 8;
+
+	private ConcurrentHashMap<Class, Dao> m_dao;
 
 	public DatabaseHelper( Context context )
 	{
-		super( context, DATABASE_NAME, null, DATABASE_VERSION );
+		super( context,
+		       (BuildConfig.DEBUG ? context.getExternalFilesDir( null ).getAbsolutePath() + File.separator + DATABASE_NAME :
+		        DATABASE_NAME),
+		       null,
+		       DATABASE_VERSION );
 	}
 
 	@Override
@@ -56,8 +62,11 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper
 			TableUtils.createTable( connectionSource, Pad.class );
 			TableUtils.createTable( connectionSource, Mission.class );
 			TableUtils.createTable( connectionSource, Rocket.class );
+			TableUtils.createTable( connectionSource, RocketFamily.class );
 			TableUtils.createTable( connectionSource, RocketDetail.class );
 			TableUtils.createTable( connectionSource, Agency.class );
+			TableUtils.createTable( connectionSource, AgencyRocket.class );
+			TableUtils.createTable( connectionSource, AgencyPad.class );
 		}
 		catch( SQLException e )
 		{
@@ -77,8 +86,12 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper
 			TableUtils.dropTable( connectionSource, Pad.class, true );
 			TableUtils.dropTable( connectionSource, Mission.class, true );
 			TableUtils.dropTable( connectionSource, Rocket.class, true );
+			TableUtils.dropTable( connectionSource, RocketFamily.class, true );
 			TableUtils.dropTable( connectionSource, RocketDetail.class, true );
 			TableUtils.dropTable( connectionSource, Agency.class, true );
+			TableUtils.dropTable( connectionSource, AgencyRocket.class, true );
+			TableUtils.dropTable( connectionSource, AgencyPad.class, true );
+
 			// after we drop the old databases, we create the new ones
 			onCreate( db, connectionSource );
 		}
@@ -89,77 +102,9 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper
 		}
 	}
 
-	public Dao<Launch, Integer> getLaunchDao() throws SQLException
-	{
-		if( m_launchDao == null )
-		{
-			m_launchDao = getDao( Launch.class );
-		}
-		return m_launchDao;
-	}
-
-	public Dao<Pad, Integer> getPadDao() throws SQLException
-	{
-		if( m_padDao == null )
-		{
-			m_padDao = getDao( Pad.class );
-		}
-		return m_padDao;
-	}
-
-	public Dao<Location, Integer> getLocationDao() throws SQLException
-	{
-		if( m_locationDao == null )
-		{
-			m_locationDao = getDao( Location.class );
-		}
-		return m_locationDao;
-	}
-
-	public Dao<Mission, Integer> getMissionDao() throws SQLException
-	{
-		if( m_missionDao == null )
-		{
-			m_missionDao = getDao( Mission.class );
-		}
-		return m_missionDao;
-	}
-
-	public Dao<Rocket, Integer> getRocketDao() throws SQLException
-	{
-		if( m_rocketDao == null )
-		{
-			m_rocketDao = getDao( Rocket.class );
-		}
-		return m_rocketDao;
-	}
-
-	public Dao<Agency, Integer> getAgencyDao() throws SQLException
-	{
-		if( m_agencyDao == null )
-		{
-			m_agencyDao = getDao( Agency.class );
-		}
-		return m_agencyDao;
-	}
-
-	public Dao<RocketDetail, Integer> getRocketDetailDao() throws SQLException
-	{
-		if( m_rocketDetailDao == null )
-		{
-			m_rocketDetailDao = getDao( RocketDetail.class );
-		}
-		return m_rocketDetailDao;
-	}
-
 	@Override
 	public void close()
 	{
 		super.close();
-		m_launchDao = null;
-		m_padDao = null;
-		m_missionDao = null;
-		m_rocketDao = null;
-		m_rocketDetailDao = null;
 	}
 }

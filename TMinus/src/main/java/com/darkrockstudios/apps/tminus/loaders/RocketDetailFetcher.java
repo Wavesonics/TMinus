@@ -9,7 +9,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.darkrockstudios.apps.tminus.TMinusApplication;
 import com.darkrockstudios.apps.tminus.database.DatabaseHelper;
-import com.darkrockstudios.apps.tminus.database.RocketDetail;
+import com.darkrockstudios.apps.tminus.database.tables.RocketDetail;
 import com.darkrockstudios.apps.tminus.launchlibrary.Rocket;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.Dao;
@@ -267,7 +267,7 @@ public class RocketDetailFetcher
 				{
 					final int rocketId = m_listener.getRocketId();
 
-					Dao<RocketDetail, Integer> rocketDetailDao = databaseHelper.getRocketDetailDao();
+					Dao<RocketDetail, Integer> rocketDetailDao = databaseHelper.getDao( RocketDetail.class );
 					RocketDetail rocketDetail = rocketDetailDao.queryForId( rocketId );
 					if( rocketDetail == null )
 					{
@@ -455,7 +455,7 @@ public class RocketDetailFetcher
 				{
 					final int rocketId = m_listener.getRocketId();
 
-					Dao<RocketDetail, Integer> rocketDetailDao = databaseHelper.getRocketDetailDao();
+					Dao<RocketDetail, Integer> rocketDetailDao = databaseHelper.getDao( RocketDetail.class );
 					RocketDetail rocketDetail = rocketDetailDao.queryForId( rocketId );
 					if( rocketDetail == null )
 					{

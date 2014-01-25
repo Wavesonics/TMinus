@@ -23,7 +23,7 @@ import com.darkrockstudios.apps.tminus.R;
 import com.darkrockstudios.apps.tminus.R.string;
 import com.darkrockstudios.apps.tminus.RocketDetailUpdateService;
 import com.darkrockstudios.apps.tminus.TMinusApplication;
-import com.darkrockstudios.apps.tminus.database.RocketDetail;
+import com.darkrockstudios.apps.tminus.database.tables.RocketDetail;
 import com.darkrockstudios.apps.tminus.launchlibrary.Rocket;
 import com.darkrockstudios.apps.tminus.loaders.RocketDetailLoader;
 import com.darkrockstudios.apps.tminus.loaders.RocketDetailLoader.Listener;
@@ -43,16 +43,16 @@ import de.keyboardsurfer.android.widget.crouton.Style;
  */
 public class RocketDetailFragment extends DialogFragment implements Listener, RocketLoadListener, Utilities.ZoomAnimationHandler
 {
-	public static final String TAG         = LaunchDetailFragment.class.getSimpleName();
-	public static final String ARG_ITEM_ID = "item_id";
+	public static final String TAG          = LaunchDetailFragment.class.getSimpleName();
+	public static final String ARG_ITEM_ID  = "item_id";
 	public static final String ARG_NO_IMAGE = "no_image";
 
 	private File                       m_dataDirectory;
 	private Rocket                     m_rocket;
 	private RocketDetail               m_rocketDetail;
-	private View             m_containerView;
+	private View                       m_containerView;
 	private NetworkImageView           m_rocketImage;
-	private NetworkImageView m_rocketImageExpanded;
+	private NetworkImageView           m_rocketImageExpanded;
 	private TextView                   m_rocketName;
 	private TextView                   m_rocketConfiguration;
 	private TextView                   m_rocketSummary;

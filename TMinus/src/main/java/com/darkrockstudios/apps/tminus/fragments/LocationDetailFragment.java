@@ -51,13 +51,13 @@ public class LocationDetailFragment extends DialogFragment implements AdapterVie
 	public static final String TAG =
 			LocationDetailFragment.class.getSimpleName();
 
-	public static final  int    ARG_UNSET_ID         = -1;
-	public static final  String ARG_LOCATION_ID      = "location_id";
-	public static final  String ARG_PAD_ID           = "pad_id";
+	public static final  int    ARG_UNSET_ID            = -1;
+	public static final  String ARG_LOCATION_ID         = "location_id";
+	public static final  String ARG_PAD_ID              = "pad_id";
 	public static final  String ARG_MAP_CONTROL_ENABLED = "map_control_enabled";
-	public static final  String ARG_ONLY_DISPLAY_MAP = "only_display_map";
+	public static final  String ARG_ONLY_DISPLAY_MAP    = "only_display_map";
 	private static final String MAP_FRAGMENT_TAG        = "MapFragment";
-	private static final float  PAD_ZOOM             = 16.0f;
+	private static final float  PAD_ZOOM                = 16.0f;
 
 	private static final LatLng DEFAULT_LOCATION = new LatLng( 37.523506, -77.412109 );
 	private Location       m_location;
@@ -124,8 +124,8 @@ public class LocationDetailFragment extends DialogFragment implements AdapterVie
 
 			SupportMapFragment mapFragment = createMap();
 			getChildFragmentManager().beginTransaction()
-					.add( R.id.LOCATIONDETAIL_map_container, mapFragment, MAP_FRAGMENT_TAG )
-					.commit();
+			                         .add( R.id.LOCATIONDETAIL_map_container, mapFragment, MAP_FRAGMENT_TAG )
+			                         .commit();
 
 			if( !shouldOnlyDisplayMap() )
 			{
@@ -438,7 +438,7 @@ public class LocationDetailFragment extends DialogFragment implements AdapterVie
 				{
 					try
 					{
-						Dao<Pad, Integer> padDao = databaseHelper.getPadDao();
+						Dao<Pad, Integer> padDao = databaseHelper.getDao( Pad.class );
 						QueryBuilder<Pad, Integer> queryBuilder = padDao.queryBuilder();
 						queryBuilder.where().eq( "location_id", locationId );
 
@@ -503,7 +503,7 @@ public class LocationDetailFragment extends DialogFragment implements AdapterVie
 				{
 					try
 					{
-						Dao<Location, Integer> locationDao = databaseHelper.getLocationDao();
+						Dao<Location, Integer> locationDao = databaseHelper.getDao( Location.class );
 						location = locationDao.queryForId( ids[ 0 ] );
 					}
 					catch( SQLException e )
