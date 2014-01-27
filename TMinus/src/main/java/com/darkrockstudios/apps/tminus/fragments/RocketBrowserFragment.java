@@ -28,11 +28,11 @@ import com.haarman.listviewanimations.swinginadapters.AnimationAdapter;
 import com.haarman.listviewanimations.swinginadapters.prepared.ScaleInAnimationAdapter;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.Dao;
-import com.j256.ormlite.stmt.PreparedQuery;
 import com.j256.ormlite.stmt.QueryBuilder;
 
 import java.sql.SQLException;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -59,7 +59,11 @@ public class RocketBrowserFragment extends ListFragment implements OnRefreshList
 	private ArrayAdapter<Rocket> m_adapter;
 	private static final long UPDATE_THRESHOLD = TimeUnit.DAYS.toMillis( 7 );
 
-	private PullToRefreshLayout m_ptrLayout;
+	@InjectView(R.id.ROCKETLIST_pull_to_refresh)
+	PullToRefreshLayout m_ptrLayout;
+
+	@InjectView(android.R.id.list)
+	ListView m_listView;
 
 	private static Callbacks s_dummyCallbacks = new Callbacks()
 	{
@@ -87,13 +91,13 @@ public class RocketBrowserFragment extends ListFragment implements OnRefreshList
 	                          Bundle savedInstanceState )
 	{
 		View view = inflater.inflate( R.layout.fragment_rocket_list, null );
+		ButterKnife.inject( this, view );
 
 		m_adapter = new RocketListAdapter( getActivity() );
 		AnimationAdapter animationAdapter = new ScaleInAnimationAdapter( m_adapter );
 		setListAdapter( animationAdapter );
 
-		ListView listView = (ListView) view.findViewById( android.R.id.list );
-		animationAdapter.setAbsListView( listView );
+		animationAdapter.setAbsListView( m_listView );
 
 		m_ptrLayout = (PullToRefreshLayout) view.findViewById( R.id.ROCKETLIST_pull_to_refresh );
 
@@ -175,6 +179,13 @@ public class RocketBrowserFragment extends ListFragment implements OnRefreshList
 	}
 
 	@Override
+	public void onDestroyView()
+	{
+		super.onDestroyView();
+		ButterKnife.reset( this );
+	}
+
+	@Override
 	public void onListItemClick( ListView listView, View view, int position, long id )
 	{
 		super.onListItemClick( listView, view, position, id );
@@ -226,9 +237,10 @@ public class RocketBrowserFragment extends ListFragment implements OnRefreshList
 				{
 					Dao<Rocket, Integer> rocketDao = databaseHelper.getDao( Rocket.class );
 					QueryBuilder<Rocket, Integer> queryBuilder = rocketDao.queryBuilder();
-					PreparedQuery<Rocket> query = queryBuilder.orderBy( "family_id", true ).prepare();
+					//PreparedQuery<Rocket> query = queryBuilder.orderBy( "family_id", true ).prepare();
 
-					List<Rocket> results = rocketDao.query( query );
+					List<Rocket> results = rocketDao.queryForAll();
+
 					for( Rocket rocket : results )
 					{
 						rocket.refreshFamily( databaseHelper );
@@ -355,11 +367,16 @@ public class RocketBrowserFragment extends ListFragment implements OnRefreshList
 			String agencies = "";
 			if( rocket.family != null && rocket.family.agencies != null )
 			{
-				for( Agency agency : rocket.family.agencies )
+				for( Iterator<Agency> it = rocket.family.agencies.iterator(); it.hasNext(); )
 				{
+					Agency agency = it.next();
 					if( agency.abbrev != null )
 					{
-						agencies += " " + agency.abbrev;
+						agencies += agency.abbrev;
+						if( it.hasNext() )
+						{
+							agencies += ", ";
+						}
 					}
 				}
 			}
@@ -375,6 +392,7 @@ public class RocketBrowserFragment extends ListFragment implements OnRefreshList
 			{
 				configuration = getContext().getString( R.string.ROCKETLIST_item_no_configuration );
 			}
+
 			viewHolder.rocketConfigurationView.setText( configuration );
 
 			return view;
