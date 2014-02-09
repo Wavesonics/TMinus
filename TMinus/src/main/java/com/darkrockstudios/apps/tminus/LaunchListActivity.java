@@ -160,7 +160,7 @@ public class LaunchListActivity extends NavigationDatabaseActivity
 			// adding or replacing the detail fragment using a
 			// fragment transaction.
 			Bundle arguments = new Bundle();
-			arguments.putSerializable( LaunchDetailFragment.ARG_ITEM_ID, launch.id );
+			arguments.putInt( LaunchDetailFragment.ARG_ITEM_ID, launch.id );
 			LaunchDetailFragment fragment = new LaunchDetailFragment();
 			fragment.setArguments( arguments );
 			getSupportFragmentManager().beginTransaction()

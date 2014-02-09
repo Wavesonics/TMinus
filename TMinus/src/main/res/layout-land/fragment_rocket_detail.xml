@@ -53,11 +53,12 @@
                 android:padding="@dimen/rocket_detail_padding"
                 android:scrollbarStyle="outsideOverlay">
 
-            <TextView
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="@string/ROCKETDETAIL_loading_summary"
+                    android:textIsSelectable="true"
                     android:id="@+id/ROCKETDETAIL_details"
                     android:singleLine="false"/>
             </ScrollView>
@@ -66,7 +67,7 @@
 
     <com.android.volley.toolbox.NetworkImageView
         android:id="@+id/ROCKETDETAIL_expanded_rocket_image"
-        android:visibility="invisible"
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center"

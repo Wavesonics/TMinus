@@ -11,7 +11,6 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
-import android.support.v4.app.NavUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,6 +18,7 @@ import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.darkrockstudios.apps.tminus.R.id;
+import com.darkrockstudios.apps.tminus.fragments.LaunchDetailFragment;
 import com.darkrockstudios.apps.tminus.launchlibrary.Launch;
 import com.darkrockstudios.apps.tminus.loaders.LaunchLoader;
 import com.darkrockstudios.apps.tminus.misc.Preferences;
@@ -42,7 +42,7 @@ public class CountDownActivity extends Activity implements LaunchLoader.Listener
 	private Launch    m_launch;
 
 	@Override
-	protected void onCreate( Bundle savedInstanceState )
+	protected void onCreate( final Bundle savedInstanceState )
 	{
 		super.onCreate( savedInstanceState );
 		getWindow().addFlags( WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON );
@@ -54,6 +54,13 @@ public class CountDownActivity extends Activity implements LaunchLoader.Listener
 		{
 			getWindow().addFlags( WindowManager.LayoutParams.FLAG_FULLSCREEN );
 			getActionBar().hide();
+		}
+
+		final ActionBar actionBar = getActionBar();
+		if( actionBar != null )
+		{
+			actionBar.setHomeButtonEnabled( true );
+			actionBar.setDisplayHomeAsUpEnabled( true );
 		}
 
 		setContentView( R.layout.activity_count_down );
@@ -93,16 +100,30 @@ public class CountDownActivity extends Activity implements LaunchLoader.Listener
 	}
 
 	@Override
-	public boolean onOptionsItemSelected( MenuItem item )
+	public boolean onOptionsItemSelected( final MenuItem item )
 	{
 		final boolean handled;
 		// Handle item selection
 		switch( item.getItemId() )
 		{
 			case android.R.id.home:
-				NavUtils.navigateUpTo( this, new Intent( this, LaunchListActivity.class ) );
+			{
+				final Intent intent;
+				if( m_launch != null )
+				{
+					intent = new Intent( this, LaunchDetailActivity.class );
+					intent.putExtra( LaunchDetailFragment.ARG_ITEM_ID, m_launch.id );
+				}
+				else
+				{
+					intent = new Intent( this, LaunchListActivity.class );
+				}
+
+				startActivity( intent );
+
 				handled = true;
-				break;
+			}
+			break;
 			case id.action_settings:
 			{
 				Intent intent = new Intent( this, SettingsActivity.class );
@@ -126,7 +147,7 @@ public class CountDownActivity extends Activity implements LaunchLoader.Listener
 		}
 	}
 
-	public void screenTouched( View view )
+	public void screenTouched( final View view )
 	{
 		WindowManager.LayoutParams attrs = getWindow().getAttributes();
 
@@ -232,14 +253,14 @@ public class CountDownActivity extends Activity implements LaunchLoader.Listener
 	}
 
 	@Override
-	public boolean onCreateOptionsMenu( Menu menu )
+	public boolean onCreateOptionsMenu( final Menu menu )
 	{
 		getMenuInflater().inflate( R.menu.count_down, menu );
 		return true;
 	}
 
 	@Override
-	public void launchLoaded( Launch launch )
+	public void launchLoaded( final Launch launch )
 	{
 		m_launch = launch;
 

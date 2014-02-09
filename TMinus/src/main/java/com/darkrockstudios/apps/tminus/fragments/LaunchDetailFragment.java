@@ -41,6 +41,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+import butterknife.Optional;
+
 /**
  * A fragment representing a single Launch detail screen.
  * This fragment is either contained in a {@link com.darkrockstudios.apps.tminus.LaunchListActivity}
@@ -55,19 +59,42 @@ public class LaunchDetailFragment extends Fragment implements Listener, RocketDe
 	private static final String LOCATION_FRAGMENT_TAG       = "LocationFragmentTag";
 	private static final String ROCKET_FRAGMENT_TAG         = "RocketFragmentTag";
 	private static final long   DISPLAY_COUNTDOWN_THRESHOLD = TimeUnit.DAYS.toMillis( 2 );
-	private ShareActionProvider        m_shareActionProvider;
-	private Launch                     m_launchItem;
-	private RocketDetail               m_rocketDetail;
-	private TimeReceiver               m_timeReceiver;
-	private NetworkImageView           m_rocketImage;
-	private NetworkImageView           m_rocketImageExpanded;
-	private ViewGroup                  m_locationContainer;
-	private ViewGroup                  m_rocketContainer;
-	private View                       m_containerView;
-	private View                       m_contentView;
-	private View                       m_progressBar;
-	private View                       m_countDownContainer;
-	private View                       m_rocketDetailButton;
+	private ShareActionProvider m_shareActionProvider;
+	private Launch              m_launchItem;
+	private RocketDetail        m_rocketDetail;
+	private TimeReceiver        m_timeReceiver;
+
+	@InjectView(R.id.LAUNCHDETAIL_mission_image)
+	NetworkImageView m_rocketImage;
+
+	@InjectView(R.id.LAUNCHDETAIL_expanded_rocket_image)
+	NetworkImageView m_rocketImageExpanded;
+
+	@InjectView(R.id.LAUNCHDETAIL_location_container)
+	ViewGroup m_locationContainer;
+
+	@Optional
+	@InjectView(R.id.LAUNCHDETAIL_rocket_container)
+	ViewGroup m_rocketContainer;
+
+	@InjectView(R.id.LAUNCHDETAIL_container_view)
+	View m_containerView;
+
+	@InjectView(R.id.LAUNCHDETAIL_content_view)
+	View m_contentView;
+
+	@InjectView(R.id.progressBar)
+	View m_progressBar;
+
+	@InjectView(R.id.LAUNCHDETAIL_imminent_launch_container)
+	View m_countDownContainer;
+
+	@InjectView(R.id.LAUNCHDETAIL_rocket_detail_button)
+	View m_rocketDetailButton;
+
+	@InjectView(R.id.LAUNCHDETAIL_mission_name)
+	TextView m_missionName;
+
 	private RocketDetailUpdateReceiver m_rocketDetailUpdateReceiver;
 
 	private Animator m_currentAnimator;
@@ -97,8 +124,7 @@ public class LaunchDetailFragment extends Fragment implements Listener, RocketDe
 
 		setHasOptionsMenu( true );
 
-		m_shortAnimationDuration =
-				getResources().getInteger( android.R.integer.config_shortAnimTime );
+		m_shortAnimationDuration = getResources().getInteger( android.R.integer.config_shortAnimTime );
 	}
 
 	@Override
@@ -129,6 +155,28 @@ public class LaunchDetailFragment extends Fragment implements Listener, RocketDe
 	}
 
 	@Override
+	public View onCreateView( LayoutInflater inflater, ViewGroup container,
+	                          Bundle savedInstanceState )
+	{
+		View rootView = inflater.inflate( R.layout.fragment_launch_detail, container, false );
+
+		if( rootView != null )
+		{
+			ButterKnife.inject( this, rootView );
+
+			m_countDownContainer.setVisibility( View.GONE );
+
+			//m_rocketImage.setLoadingImageResId( R.drawable.rocket_image_loading );
+			m_rocketImage.setErrorImageResId( R.drawable.launch_detail_no_rocket_image );
+			m_rocketImage.setDefaultImageResId( R.drawable.launch_detail_no_rocket_image );
+
+			loadLaunch();
+		}
+
+		return rootView;
+	}
+
+	@Override
 	public void onDetach()
 	{
 		super.onDetach();
@@ -143,37 +191,10 @@ public class LaunchDetailFragment extends Fragment implements Listener, RocketDe
 	}
 
 	@Override
-	public View onCreateView( LayoutInflater inflater, ViewGroup container,
-	                          Bundle savedInstanceState )
+	public void onDestroyView()
 	{
-		View rootView = inflater.inflate( R.layout.fragment_launch_detail, container, false );
-
-		if( rootView != null )
-		{
-			m_containerView = rootView.findViewById( id.LAUNCHDETAIL_container_view );
-			m_contentView = rootView.findViewById( R.id.LAUNCHDETAIL_content_view );
-			m_progressBar = rootView.findViewById( R.id.progressBar );
-			m_countDownContainer =
-					rootView.findViewById( R.id.LAUNCHDETAIL_imminent_launch_container );
-			m_countDownContainer.setVisibility( View.GONE );
-			m_rocketDetailButton = rootView.findViewById( R.id.LAUNCHDETAIL_rocket_detail_button );
-			m_rocketImage =
-					(NetworkImageView) rootView.findViewById( R.id.LAUNCHDETAIL_mission_image );
-			m_rocketImageExpanded = (NetworkImageView) rootView
-					                                           .findViewById( R.id.LAUNCHDETAIL_expanded_rocket_image );
-			m_locationContainer =
-					(ViewGroup) rootView.findViewById( id.LAUNCHDETAIL_location_container );
-			m_rocketContainer =
-					(ViewGroup) rootView.findViewById( id.LAUNCHDETAIL_rocket_container );
-
-			//m_rocketImage.setLoadingImageResId( R.drawable.rocket_image_loading );
-			m_rocketImage.setErrorImageResId( R.drawable.launch_detail_no_rocket_image );
-			m_rocketImage.setDefaultImageResId( R.drawable.rocket_image_loading );
-
-			loadLaunch();
-		}
-
-		return rootView;
+		super.onDestroyView();
+		ButterKnife.reset( this );
 	}
 
 	@Override
@@ -272,9 +293,7 @@ public class LaunchDetailFragment extends Fragment implements Listener, RocketDe
 		{
 			final View rootView = getView();
 
-			final TextView name =
-					(TextView) rootView.findViewById( R.id.LAUNCHDETAIL_mission_name );
-			name.setText( m_launchItem.name );
+			m_missionName.setText( m_launchItem.name );
 
 			final TextView description =
 					(TextView) rootView.findViewById( R.id.LAUNCHDETAIL_mission_description );
@@ -330,7 +349,7 @@ public class LaunchDetailFragment extends Fragment implements Listener, RocketDe
 			{
 				ImageLoader imageLoader = new ImageLoader( TMinusApplication.getRequestQueue(),
 				                                           TMinusApplication.getBitmapCache() );
-				//m_rocketImage.setImageUrl( m_rocketDetail.imageUrl, imageLoader );
+				m_rocketImage.setImageUrl( m_rocketDetail.imageUrl, imageLoader );
 				m_rocketImageExpanded.setImageUrl( m_rocketDetail.imageUrl, imageLoader );
 			}
 
@@ -593,7 +612,6 @@ public class LaunchDetailFragment extends Fragment implements Listener, RocketDe
 
 						activity.setProgressBarIndeterminateVisibility( false );
 					}
-
 				}
 				else if( RocketDetailUpdateService.ACTION_ROCKET_DETAIL_UPDATE_FAILED
 						         .equals( intent.getAction() ) )

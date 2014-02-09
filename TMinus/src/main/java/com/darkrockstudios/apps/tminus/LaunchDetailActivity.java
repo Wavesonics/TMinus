@@ -19,7 +19,7 @@ public class LaunchDetailActivity extends DatabaseActivity
 	private int m_launchId;
 
 	@Override
-	protected void onCreate( Bundle savedInstanceState )
+	protected void onCreate( final Bundle savedInstanceState )
 	{
 		super.onCreate( savedInstanceState );
 		requestWindowFeature( Window.FEATURE_INDETERMINATE_PROGRESS );
@@ -41,14 +41,14 @@ public class LaunchDetailActivity extends DatabaseActivity
 	}
 
 	@Override
-	public boolean onCreateOptionsMenu( Menu menu )
+	public boolean onCreateOptionsMenu( final Menu menu )
 	{
 		getMenuInflater().inflate( R.menu.settings, menu );
 		return true;
 	}
 
 	@Override
-	public boolean onOptionsItemSelected( MenuItem item )
+	public boolean onOptionsItemSelected( final MenuItem item )
 	{
 		boolean handled;
 
@@ -85,7 +85,7 @@ public class LaunchDetailActivity extends DatabaseActivity
 		return launchId;
 	}
 
-	public void countDownClicked( View v )
+	public void countDownClicked( final View v )
 	{
 		if( m_launchId >= 0 )
 		{
@@ -95,7 +95,7 @@ public class LaunchDetailActivity extends DatabaseActivity
 		}
 	}
 
-	public void rocketDetailsClicked( View v )
+	public void rocketDetailsClicked( final View v )
 	{
 		Rocket rocket = (Rocket) v.getTag();
 
@@ -105,7 +105,7 @@ public class LaunchDetailActivity extends DatabaseActivity
 		context.startActivity( intent );
 	}
 
-	public void locationDetailsClicked( View v )
+	public void locationDetailsClicked( final View v )
 	{
 		Pad pad = (Pad) v.getTag();
 
@@ -115,7 +115,7 @@ public class LaunchDetailActivity extends DatabaseActivity
 		context.startActivity( intent );
 	}
 
-	public void rocketImageClicked( View v )
+	public void rocketImageClicked( final View v )
 	{
 		LaunchDetailFragment fragment =
 				(LaunchDetailFragment) getSupportFragmentManager()
