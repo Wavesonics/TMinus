@@ -207,9 +207,10 @@ public class RocketDetailFetcher
 		private static final Pattern GENERAL_LINK_PATTERN = Pattern.compile( "\\[\\[(.*?:)?(.*?)(\\|.*?)?\\]\\]" );
 		private static final Pattern SIMPLE_LINK_PATTERN  = Pattern.compile( "\\[\\[([^|]*?)\\]\\]" );
 		private static final Pattern ASSET_PATTERN        = Pattern.compile( "\\[\\[[a-zA-Z]+:(.*?)\\]\\]" );
-		private static final Pattern REF_PATTERN          = Pattern.compile( "(<ref>.*?</ref>)" );
-		private static final Pattern CITE_PATTERN         = Pattern.compile( "(\\{\\{cite.*?\\}\\})" );
-		private static final Pattern CONVERT_PATTERN      = Pattern.compile( "\\{\\{convert\\|([0-9]+)\\|([a-zA-Z]+)\\}\\}" );
+		private static final Pattern REF_PATTERN     = Pattern.compile( "(<ref>.*?</ref>)", Pattern.CASE_INSENSITIVE );
+		private static final Pattern CITE_PATTERN    = Pattern.compile( "(\\{\\{cite.*?\\}\\})", Pattern.CASE_INSENSITIVE );
+		private static final Pattern CONVERT_PATTERN =
+				Pattern.compile( "\\{\\{convert\\|([0-9]+)\\|([a-zA-Z]+)\\}\\}", Pattern.CASE_INSENSITIVE );
 		private static final Pattern BOLD_PATTERN         = Pattern.compile( "'''(.+?)'''" );
 		private static final Pattern ITALICS_PATTERN      = Pattern.compile( "''(.+?)''" );
 
