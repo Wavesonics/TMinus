@@ -31,14 +31,14 @@ public class RocketLoader extends AsyncTask<Integer, Void, Rocket>
 	private final RocketLoadListener m_listener;
 	private       int                m_rocketId;
 
-	public RocketLoader( RocketLoadListener listener, Context context )
+	public RocketLoader( final RocketLoadListener listener, final Context context )
 	{
 		m_listener = listener;
 		m_context = context;
 	}
 
 	@Override
-	protected Rocket doInBackground( Integer... ids )
+	protected Rocket doInBackground( final Integer... ids )
 	{
 		Rocket rocket = null;
 
@@ -54,7 +54,7 @@ public class RocketLoader extends AsyncTask<Integer, Void, Rocket>
 
 				rocket.refreshFamily( databaseHelper );
 			}
-			catch( SQLException e )
+			catch( final SQLException e )
 			{
 				e.printStackTrace();
 			}
@@ -66,7 +66,7 @@ public class RocketLoader extends AsyncTask<Integer, Void, Rocket>
 	}
 
 	@Override
-	protected void onPostExecute( Rocket result )
+	protected void onPostExecute( final Rocket result )
 	{
 		if( m_listener != null )
 		{

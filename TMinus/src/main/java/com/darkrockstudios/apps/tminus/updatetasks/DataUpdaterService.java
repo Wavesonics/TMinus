@@ -33,6 +33,10 @@ public class DataUpdaterService extends IntentService
 			{
 				updateTask = new LocationUpdateTask( this );
 			}
+			else if( updateType.equals( RocketDetailUpdateTask.UPDATE_TYPE ) )
+			{
+				updateTask = new RocketDetailUpdateTask( this, intent.getData() );
+			}
 			else
 			{
 				updateTask = null;

@@ -26,7 +26,6 @@ import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 import com.darkrockstudios.apps.tminus.R;
 import com.darkrockstudios.apps.tminus.R.id;
-import com.darkrockstudios.apps.tminus.RocketDetailUpdateService;
 import com.darkrockstudios.apps.tminus.TMinusApplication;
 import com.darkrockstudios.apps.tminus.database.tables.RocketDetail;
 import com.darkrockstudios.apps.tminus.launchlibrary.Launch;
@@ -35,7 +34,10 @@ import com.darkrockstudios.apps.tminus.loaders.LaunchLoader;
 import com.darkrockstudios.apps.tminus.loaders.LaunchLoader.Listener;
 import com.darkrockstudios.apps.tminus.loaders.RocketDetailLoader;
 import com.darkrockstudios.apps.tminus.misc.Preferences;
+import com.darkrockstudios.apps.tminus.misc.TminusUri;
 import com.darkrockstudios.apps.tminus.misc.Utilities;
+import com.darkrockstudios.apps.tminus.updatetasks.DataUpdaterService;
+import com.darkrockstudios.apps.tminus.updatetasks.RocketDetailUpdateTask;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -108,7 +110,7 @@ public class LaunchDetailFragment extends Fragment implements Listener, RocketDe
 	{
 	}
 
-	public static LaunchDetailFragment newInstance( int launchId )
+	public static LaunchDetailFragment newInstance( final int launchId )
 	{
 		Bundle arguments = new Bundle();
 		arguments.putInt( LaunchDetailFragment.ARG_ITEM_ID, launchId );
@@ -118,7 +120,7 @@ public class LaunchDetailFragment extends Fragment implements Listener, RocketDe
 	}
 
 	@Override
-	public void onCreate( Bundle savedInstanceState )
+	public void onCreate( final Bundle savedInstanceState )
 	{
 		super.onCreate( savedInstanceState );
 
@@ -136,7 +138,7 @@ public class LaunchDetailFragment extends Fragment implements Listener, RocketDe
 	}
 
 	@Override
-	public void onAttach( Activity activity )
+	public void onAttach( final Activity activity )
 	{
 		super.onAttach( activity );
 
@@ -146,17 +148,16 @@ public class LaunchDetailFragment extends Fragment implements Listener, RocketDe
 		activity.registerReceiver( m_timeReceiver, intentFilter );
 
 		m_rocketDetailUpdateReceiver = new RocketDetailUpdateReceiver();
-		IntentFilter m_rocketDetailUpdateIntentFilter = new IntentFilter();
-		m_rocketDetailUpdateIntentFilter
-				.addAction( RocketDetailUpdateService.ACTION_ROCKET_DETAIL_UPDATED );
-		m_rocketDetailUpdateIntentFilter
-				.addAction( RocketDetailUpdateService.ACTION_ROCKET_DETAIL_UPDATE_FAILED );
-		activity.registerReceiver( m_rocketDetailUpdateReceiver, m_rocketDetailUpdateIntentFilter );
+		IntentFilter filter = new IntentFilter();
+		filter.addAction( RocketDetailUpdateTask.ACTION_ROCKET_DETAILS_UPDATED );
+		filter.addAction( RocketDetailUpdateTask.ACTION_ROCKET_DETAILS_UPDATE_FAILED );
+		filter.addDataScheme( TminusUri.SCHEME );
+		activity.registerReceiver( m_rocketDetailUpdateReceiver, filter );
 	}
 
 	@Override
-	public View onCreateView( LayoutInflater inflater, ViewGroup container,
-	                          Bundle savedInstanceState )
+	public View onCreateView( final LayoutInflater inflater, final ViewGroup container,
+	                          final Bundle savedInstanceState )
 	{
 		View rootView = inflater.inflate( R.layout.fragment_launch_detail, container, false );
 
@@ -198,7 +199,7 @@ public class LaunchDetailFragment extends Fragment implements Listener, RocketDe
 	}
 
 	@Override
-	public void onCreateOptionsMenu( Menu menu, MenuInflater inflater )
+	public void onCreateOptionsMenu( final Menu menu, final MenuInflater inflater )
 	{
 		inflater.inflate( R.menu.launch_detail, menu );
 
@@ -213,7 +214,7 @@ public class LaunchDetailFragment extends Fragment implements Listener, RocketDe
 	}
 
 	@Override
-	public boolean onOptionsItemSelected( MenuItem item )
+	public boolean onOptionsItemSelected( final MenuItem item )
 	{
 		final boolean handled;
 
@@ -469,7 +470,7 @@ public class LaunchDetailFragment extends Fragment implements Listener, RocketDe
 	}
 
 	@Override
-	public void launchLoaded( Launch launch )
+	public void launchLoaded( final Launch launch )
 	{
 		m_launchItem = launch;
 
@@ -526,7 +527,7 @@ public class LaunchDetailFragment extends Fragment implements Listener, RocketDe
 	}
 
 	@Override
-	public void rocketDetailLoaded( RocketDetail rocketDetail )
+	public void rocketDetailLoaded( final RocketDetail rocketDetail )
 	{
 		m_rocketDetail = rocketDetail;
 
@@ -534,22 +535,24 @@ public class LaunchDetailFragment extends Fragment implements Listener, RocketDe
 	}
 
 	@Override
-	public void rocketDetailMissing( int rocketId )
+	public void rocketDetailMissing( final int rocketId )
 	{
 		final Activity activity = getActivity();
 		if( activity != null && m_launchItem != null )
 		{
-			fetchRocketDetails();
+			startRocketDetailsUpdate();
 		}
 	}
 
-	private void fetchRocketDetails()
+	private void startRocketDetailsUpdate()
 	{
-		final Activity activity = getActivity();
-		if( activity != null && m_launchItem != null )
+		Activity activity = getActivity();
+		if( m_launchItem != null && m_launchItem.rocket != null && activity != null && isAdded() )
 		{
-			Intent intent = new Intent( activity, RocketDetailUpdateService.class );
-			intent.putExtra( RocketDetailUpdateService.EXTRA_ROCKET_ID, m_launchItem.rocket.id );
+			Intent intent = new Intent( activity, DataUpdaterService.class );
+			intent.setData( TminusUri.buildRocketUri( m_launchItem.rocket.id ) );
+			intent.putExtra( DataUpdaterService.EXTRA_UPDATE_TYPE, RocketDetailUpdateTask.UPDATE_TYPE );
+
 			activity.startService( intent );
 		}
 	}
@@ -565,7 +568,7 @@ public class LaunchDetailFragment extends Fragment implements Listener, RocketDe
 	}
 
 	@Override
-	public void setCurrentAnimator( Animator animator )
+	public void setCurrentAnimator( final Animator animator )
 	{
 		m_currentAnimator = animator;
 	}
@@ -579,7 +582,7 @@ public class LaunchDetailFragment extends Fragment implements Listener, RocketDe
 	private class TimeReceiver extends BroadcastReceiver
 	{
 		@Override
-		public void onReceive( Context context, Intent intent )
+		public void onReceive( final Context context, final Intent intent )
 		{
 			updateTimeViews();
 		}
@@ -588,19 +591,18 @@ public class LaunchDetailFragment extends Fragment implements Listener, RocketDe
 	private class RocketDetailUpdateReceiver extends BroadcastReceiver
 	{
 		@Override
-		public void onReceive( Context context, Intent intent )
+		public void onReceive( final Context context, final Intent intent )
 		{
 			final Activity activity = getActivity();
 			if( activity != null && isAdded() )
 			{
-				if( RocketDetailUpdateService.ACTION_ROCKET_DETAIL_UPDATED
+				if( RocketDetailUpdateTask.ACTION_ROCKET_DETAILS_UPDATED
 						    .equals( intent.getAction() ) )
 				{
 					Log.i( TAG,
 					       "Received Rocket Detail update SUCCESS broadcast, will update the UI now." );
 
-					final int rocketId =
-							intent.getIntExtra( RocketDetailUpdateService.EXTRA_ROCKET_ID, -1 );
+					final int rocketId = TminusUri.extractRocketId( intent.getData() );
 					if( rocketId > 0 )
 					{
 						Log.i( TAG, "Rocket Detail fetch completely successfully for rocket id: " +
@@ -613,13 +615,12 @@ public class LaunchDetailFragment extends Fragment implements Listener, RocketDe
 						activity.setProgressBarIndeterminateVisibility( false );
 					}
 				}
-				else if( RocketDetailUpdateService.ACTION_ROCKET_DETAIL_UPDATE_FAILED
+				else if( RocketDetailUpdateTask.ACTION_ROCKET_DETAILS_UPDATE_FAILED
 						         .equals( intent.getAction() ) )
 				{
 					Log.w( TAG, "Received Rocket Detail update FAILURE broadcast." );
 
-					final int rocketId =
-							intent.getIntExtra( RocketDetailUpdateService.EXTRA_ROCKET_ID, -1 );
+					final int rocketId = TminusUri.extractRocketId( intent.getData() );
 					if( rocketId > 0 )
 					{
 						Log.w( TAG,

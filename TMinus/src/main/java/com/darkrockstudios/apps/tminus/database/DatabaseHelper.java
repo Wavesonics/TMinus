@@ -42,7 +42,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper
 
 	private ConcurrentHashMap<Class, Dao> m_dao;
 
-	public DatabaseHelper( Context context )
+	public DatabaseHelper( final Context context )
 	{
 		super( context,
 		       (BuildConfig.DEBUG ? context.getExternalFilesDir( null ).getAbsolutePath() + File.separator + DATABASE_NAME :
@@ -52,7 +52,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper
 	}
 
 	@Override
-	public void onCreate( SQLiteDatabase db, ConnectionSource connectionSource )
+	public void onCreate( final SQLiteDatabase db, final ConnectionSource connectionSource )
 	{
 		try
 		{
@@ -68,7 +68,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper
 			TableUtils.createTable( connectionSource, AgencyRocket.class );
 			TableUtils.createTable( connectionSource, AgencyPad.class );
 		}
-		catch( SQLException e )
+		catch( final SQLException e )
 		{
 			Log.e( DatabaseHelper.class.getName(), "Can't create database", e );
 			throw new RuntimeException( e );
@@ -76,7 +76,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper
 	}
 
 	@Override
-	public void onUpgrade( SQLiteDatabase db, ConnectionSource connectionSource, int oldVersion, int newVersion )
+	public void onUpgrade( final SQLiteDatabase db, final ConnectionSource connectionSource, final int oldVersion, final int newVersion )
 	{
 		try
 		{
@@ -95,7 +95,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper
 			// after we drop the old databases, we create the new ones
 			onCreate( db, connectionSource );
 		}
-		catch( SQLException e )
+		catch( final SQLException e )
 		{
 			Log.e( DatabaseHelper.class.getName(), "Can't drop databases", e );
 			throw new RuntimeException( e );

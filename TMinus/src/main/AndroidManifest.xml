@@ -4,7 +4,7 @@
           android:versionCode="18"
           android:versionName="0.14">
 
-<uses-sdk
+    <uses-sdk
         android:minSdkVersion="14"
         android:targetSdkVersion="18"/>
 
@@ -95,7 +95,6 @@
         <service android:name=".UpdateAlarmsService"/>
         <service android:name=".NotificationService"/>
         <service android:name=".LaunchUpdateService"/>
-        <service android:name=".RocketDetailUpdateService"/>
         <service android:name=".updatetasks.DataUpdaterService"/>
     </application>
 

@@ -44,7 +44,6 @@ public class RocketDetailLoader extends AsyncTask<Integer, Void, RocketDetail>
 			{
 				try
 				{
-
 					Dao<RocketDetail, Integer> rocketDetailDao = databaseHelper.getDao( RocketDetail.class );
 					rocketDetail = rocketDetailDao.queryForId( m_rocketId );
 				}

@@ -151,8 +151,11 @@ public class LocationBrowserFragment extends Fragment implements GoogleMap.OnInf
 		m_locationClickListener = null;
 
 		Activity activity = getActivity();
-		activity.unregisterReceiver( m_updateReceiver );
-		m_updateReceiver = null;
+		if( m_updateReceiver != null && activity != null )
+		{
+			activity.unregisterReceiver( m_updateReceiver );
+			m_updateReceiver = null;
+		}
 	}
 
 	public void refresh()

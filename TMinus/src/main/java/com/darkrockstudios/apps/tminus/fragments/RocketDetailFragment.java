@@ -21,7 +21,6 @@ import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 import com.darkrockstudios.apps.tminus.R;
 import com.darkrockstudios.apps.tminus.R.string;
-import com.darkrockstudios.apps.tminus.RocketDetailUpdateService;
 import com.darkrockstudios.apps.tminus.TMinusApplication;
 import com.darkrockstudios.apps.tminus.database.tables.RocketDetail;
 import com.darkrockstudios.apps.tminus.launchlibrary.Rocket;
@@ -29,10 +28,16 @@ import com.darkrockstudios.apps.tminus.loaders.RocketDetailLoader;
 import com.darkrockstudios.apps.tminus.loaders.RocketDetailLoader.Listener;
 import com.darkrockstudios.apps.tminus.loaders.RocketLoader;
 import com.darkrockstudios.apps.tminus.loaders.RocketLoader.RocketLoadListener;
+import com.darkrockstudios.apps.tminus.misc.TminusUri;
 import com.darkrockstudios.apps.tminus.misc.Utilities;
+import com.darkrockstudios.apps.tminus.updatetasks.DataUpdaterService;
+import com.darkrockstudios.apps.tminus.updatetasks.RocketDetailUpdateTask;
 
 import java.io.File;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+import butterknife.Optional;
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 import de.keyboardsurfer.android.widget.crouton.Style;
 
@@ -47,17 +52,31 @@ public class RocketDetailFragment extends DialogFragment implements Listener, Ro
 	public static final String ARG_ITEM_ID  = "item_id";
 	public static final String ARG_NO_IMAGE = "no_image";
 
-	private File                       m_dataDirectory;
-	private Rocket                     m_rocket;
-	private RocketDetail               m_rocketDetail;
-	private View                       m_containerView;
-	private NetworkImageView           m_rocketImage;
-	private NetworkImageView           m_rocketImageExpanded;
-	private TextView                   m_rocketName;
-	private TextView                   m_rocketConfiguration;
-	private TextView                   m_rocketSummary;
+	private File         m_dataDirectory;
+	private Rocket       m_rocket;
+	private RocketDetail m_rocketDetail;
+
+	@InjectView(R.id.ROCKETDETAIL_container)
+	View m_containerView;
+
+	@Optional
+	@InjectView(R.id.ROCKETDETAIL_rocket_image)
+	NetworkImageView m_rocketImage;
+
+	@Optional
+	@InjectView(R.id.ROCKETDETAIL_expanded_rocket_image)
+	NetworkImageView m_rocketImageExpanded;
+
+	@InjectView(R.id.ROCKETDETAIL_name)
+	TextView m_rocketName;
+
+	@InjectView(R.id.ROCKETDETAIL_configuration)
+	TextView m_rocketConfiguration;
+
+	@InjectView(R.id.ROCKETDETAIL_details)
+	TextView m_rocketSummary;
+
 	private RocketDetailUpdateReceiver m_updateReceiver;
-	private IntentFilter               m_updateIntentFilter;
 
 	private Animator m_currentAnimator;
 	private int      m_shortAnimationDuration;
@@ -66,7 +85,7 @@ public class RocketDetailFragment extends DialogFragment implements Listener, Ro
 	{
 	}
 
-	public static RocketDetailFragment newInstance( int rocketId, boolean noImage )
+	public static RocketDetailFragment newInstance( final int rocketId, final boolean noImage )
 	{
 		RocketDetailFragment rocketDetailFragment = new RocketDetailFragment();
 
@@ -79,7 +98,27 @@ public class RocketDetailFragment extends DialogFragment implements Listener, Ro
 	}
 
 	@Override
-	public void onCreate( Bundle savedInstanceState )
+	public void onAttach( final Activity activity )
+	{
+		super.onAttach( activity );
+
+		String dataDirPath = activity.getApplicationInfo().dataDir;
+		m_dataDirectory = new File( dataDirPath );
+
+		Log.d( TAG, "registering for events" );
+
+		m_updateReceiver = new RocketDetailUpdateReceiver();
+		IntentFilter filter = new IntentFilter();
+		filter.addAction( RocketDetailUpdateTask.ACTION_ROCKET_DETAILS_UPDATED );
+		filter.addAction( RocketDetailUpdateTask.ACTION_ROCKET_DETAILS_UPDATE_FAILED );
+		filter.addDataScheme( TminusUri.SCHEME );
+		activity.registerReceiver( m_updateReceiver, filter );
+
+		Log.d( TAG, "registering for events" );
+	}
+
+	@Override
+	public void onCreate( final Bundle savedInstanceState )
 	{
 		super.onCreate( savedInstanceState );
 
@@ -90,8 +129,8 @@ public class RocketDetailFragment extends DialogFragment implements Listener, Ro
 	}
 
 	@Override
-	public View onCreateView( LayoutInflater inflater, ViewGroup container,
-	                          Bundle savedInstanceState )
+	public View onCreateView( final LayoutInflater inflater, final ViewGroup container,
+	                          final Bundle savedInstanceState )
 	{
 		Dialog dialog = getDialog();
 		if( dialog != null )
@@ -112,15 +151,12 @@ public class RocketDetailFragment extends DialogFragment implements Listener, Ro
 
 		if( rootView != null )
 		{
-			m_containerView = rootView.findViewById( R.id.ROCKETDETAIL_container );
-			m_rocketImage =
-					(NetworkImageView) rootView.findViewById( R.id.ROCKETDETAIL_rocket_image );
-			m_rocketImageExpanded = (NetworkImageView) rootView
-					                                           .findViewById( R.id.ROCKETDETAIL_expanded_rocket_image );
-			m_rocketName = (TextView) rootView.findViewById( R.id.ROCKETDETAIL_name );
-			m_rocketConfiguration =
-					(TextView) rootView.findViewById( R.id.ROCKETDETAIL_configuration );
-			m_rocketSummary = (TextView) rootView.findViewById( R.id.ROCKETDETAIL_details );
+			ButterKnife.inject( this, rootView );
+
+			if( m_rocketImage != null )
+			{
+				m_rocketImage.setDefaultImageResId( R.drawable.launch_detail_no_rocket_image );
+			}
 
 			loadRocket();
 		}
@@ -129,28 +165,23 @@ public class RocketDetailFragment extends DialogFragment implements Listener, Ro
 	}
 
 	@Override
-	public void onAttach( Activity activity )
-	{
-		super.onAttach( activity );
-
-		String dataDirPath = activity.getApplicationInfo().dataDir;
-		m_dataDirectory = new File( dataDirPath );
-
-		m_updateReceiver = new RocketDetailUpdateReceiver();
-		m_updateIntentFilter = new IntentFilter();
-		m_updateIntentFilter.addAction( RocketDetailUpdateService.ACTION_ROCKET_DETAIL_UPDATED );
-		m_updateIntentFilter.addAction( RocketDetailUpdateService.ACTION_ROCKET_DETAIL_UPDATE_FAILED );
-		activity.registerReceiver( m_updateReceiver, m_updateIntentFilter );
-	}
-
-	@Override
 	public void onDetach()
 	{
 		super.onDetach();
 
 		Activity activity = getActivity();
-		activity.unregisterReceiver( m_updateReceiver );
-		m_updateReceiver = null;
+		if( m_updateReceiver != null && activity != null )
+		{
+			activity.unregisterReceiver( m_updateReceiver );
+			m_updateReceiver = null;
+		}
+	}
+
+	@Override
+	public void onDestroyView()
+	{
+		super.onDestroyView();
+		ButterKnife.reset( this );
 	}
 
 	private void updateViews()
@@ -164,11 +195,20 @@ public class RocketDetailFragment extends DialogFragment implements Listener, Ro
 			{
 				if( m_rocketImage != null )
 				{
-					ImageLoader imageLoader = new ImageLoader( TMinusApplication
-							                                           .getRequestQueue(), TMinusApplication.getBitmapCache() );
-					m_rocketImage.setImageUrl( m_rocketDetail.imageUrl, imageLoader );
+					if( m_rocketDetail.imageUrl != null )
+					{
+						ImageLoader imageLoader = new ImageLoader( TMinusApplication
+								                                           .getRequestQueue(),
+						                                           TMinusApplication.getBitmapCache() );
+						m_rocketImage.setImageUrl( m_rocketDetail.imageUrl, imageLoader );
+						m_rocketImage.setEnabled( true );
 
-					m_rocketImageExpanded.setImageUrl( m_rocketDetail.imageUrl, imageLoader );
+						m_rocketImageExpanded.setImageUrl( m_rocketDetail.imageUrl, imageLoader );
+					}
+					else
+					{
+						m_rocketImage.setEnabled( false );
+					}
 				}
 
 				if( m_rocketDetail.summary != null )
@@ -205,7 +245,7 @@ public class RocketDetailFragment extends DialogFragment implements Listener, Ro
 	}
 
 	@Override
-	public void rocketLoaded( Rocket rocket )
+	public void rocketLoaded( final Rocket rocket )
 	{
 		m_rocket = rocket;
 
@@ -220,25 +260,25 @@ public class RocketDetailFragment extends DialogFragment implements Listener, Ro
 	}
 
 	@Override
-	public void rocketLoadFailed( int rocketId )
+	public void rocketLoadFailed( final int rocketId )
 	{
-		// TODO: Handle rocket load failure
+		m_rocketSummary.setText( R.string.ROCKETDETAIL_no_summary );
 	}
 
 	@Override
-	public void rocketDetailLoaded( RocketDetail rocketDetail )
+	public void rocketDetailLoaded( final RocketDetail rocketDetail )
 	{
 		m_rocketDetail = rocketDetail;
 		updateViews();
 	}
 
 	@Override
-	public void rocketDetailMissing( int rocketId )
+	public void rocketDetailMissing( final int rocketId )
 	{
 		final Activity activity = getActivity();
 		if( activity != null && m_rocket != null )
 		{
-			fetchRocketDetails();
+			startRocketDetailsUpdate();
 		}
 	}
 
@@ -255,13 +295,15 @@ public class RocketDetailFragment extends DialogFragment implements Listener, Ro
 		return displayImage;
 	}
 
-	private void fetchRocketDetails()
+	private void startRocketDetailsUpdate()
 	{
-		final Activity activity = getActivity();
-		if( activity != null && m_rocket != null )
+		Activity activity = getActivity();
+		if( m_rocket != null && activity != null && isAdded() )
 		{
-			Intent intent = new Intent( activity, RocketDetailUpdateService.class );
-			intent.putExtra( RocketDetailUpdateService.EXTRA_ROCKET_ID, m_rocket.id );
+			Intent intent = new Intent( activity, DataUpdaterService.class );
+			intent.setData( TminusUri.buildRocketUri( m_rocket.id ) );
+			intent.putExtra( DataUpdaterService.EXTRA_UPDATE_TYPE, RocketDetailUpdateTask.UPDATE_TYPE );
+
 			activity.startService( intent );
 		}
 	}
@@ -277,7 +319,7 @@ public class RocketDetailFragment extends DialogFragment implements Listener, Ro
 	}
 
 	@Override
-	public void setCurrentAnimator( Animator animator )
+	public void setCurrentAnimator( final Animator animator )
 	{
 		m_currentAnimator = animator;
 	}
@@ -291,16 +333,18 @@ public class RocketDetailFragment extends DialogFragment implements Listener, Ro
 	private class RocketDetailUpdateReceiver extends BroadcastReceiver
 	{
 		@Override
-		public void onReceive( Context context, Intent intent )
+		public void onReceive( final Context context, final Intent intent )
 		{
+			Log.d( TAG, "onReceive " + intent );
+
 			final Activity activity = getActivity();
 			if( activity != null && isAdded() )
 			{
-				if( RocketDetailUpdateService.ACTION_ROCKET_DETAIL_UPDATED.equals( intent.getAction() ) )
+				if( RocketDetailUpdateTask.ACTION_ROCKET_DETAILS_UPDATED.equals( intent.getAction() ) )
 				{
 					Log.i( TAG, "Received Rocket Detail update SUCCESS broadcast, will update the UI now." );
 
-					final int rocketId = intent.getIntExtra( RocketDetailUpdateService.EXTRA_ROCKET_ID, -1 );
+					final int rocketId = TminusUri.extractRocketId( intent.getData() );
 					if( rocketId > 0 )
 					{
 						Log.i( TAG, "Rocket Detail fetch completely successfully for rocket id: " + rocketId );
@@ -313,11 +357,11 @@ public class RocketDetailFragment extends DialogFragment implements Listener, Ro
 						       .show();
 					}
 				}
-				else if( RocketDetailUpdateService.ACTION_ROCKET_DETAIL_UPDATE_FAILED.equals( intent.getAction() ) )
+				else if( RocketDetailUpdateTask.ACTION_ROCKET_DETAILS_UPDATE_FAILED.equals( intent.getAction() ) )
 				{
 					Log.w( TAG, "Received Rocket Detail update FAILURE broadcast." );
 
-					final int rocketId = intent.getIntExtra( RocketDetailUpdateService.EXTRA_ROCKET_ID, -1 );
+					final int rocketId = TminusUri.extractRocketId( intent.getData() );
 					if( rocketId > 0 )
 					{
 						Log.w( TAG, "Rocket Detail fetch completely failed for rocket id: " + rocketId );

@@ -35,13 +35,13 @@ public class RocketUpdateTask extends UpdateTask
 	public static final String ACTION_ROCKET_LIST_UPDATE_FAILED =
 			RocketUpdateTask.class.getPackage() + ".ACTION_ROCKET_LIST_UPDATE_FAILED";
 
-	public RocketUpdateTask( Context context )
+	public RocketUpdateTask( final Context context )
 	{
 		super( context );
 	}
 
 	@Override
-	public boolean handleData( JSONObject response )
+	public boolean handleData( final JSONObject response )
 	{
 		boolean success = false;
 
@@ -74,11 +74,11 @@ public class RocketUpdateTask extends UpdateTask
 						success = true;
 					}
 				}
-				catch( JSONException e )
+				catch( final JSONException e )
 				{
 					e.printStackTrace();
 				}
-				catch( SQLException e )
+				catch( final SQLException e )
 				{
 					e.printStackTrace();
 				}
