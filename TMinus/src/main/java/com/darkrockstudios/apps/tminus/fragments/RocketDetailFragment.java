@@ -156,6 +156,8 @@ public class RocketDetailFragment extends DialogFragment implements Listener, Ro
 			if( m_rocketImage != null )
 			{
 				m_rocketImage.setDefaultImageResId( R.drawable.launch_detail_no_rocket_image );
+				// Disable until an image is loaded
+				m_rocketImage.setEnabled( false );
 			}
 
 			loadRocket();
