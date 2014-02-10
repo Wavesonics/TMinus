@@ -58,7 +58,7 @@ public class LaunchListActivity extends NavigationDatabaseActivity
 	private boolean m_navigationSpinnerInitialized;
 
 	@Override
-	protected void onCreate( Bundle savedInstanceState )
+	protected void onCreate( final Bundle savedInstanceState )
 	{
 		super.onCreate( savedInstanceState );
 		requestWindowFeature( Window.FEATURE_INDETERMINATE_PROGRESS );
@@ -112,7 +112,7 @@ public class LaunchListActivity extends NavigationDatabaseActivity
 	}
 
 	@Override
-	public boolean onCreateOptionsMenu( Menu menu )
+	public boolean onCreateOptionsMenu( final Menu menu )
 	{
 		final MenuInflater inflater = getMenuInflater();
 		inflater.inflate( R.menu.settings, menu );
@@ -122,26 +122,26 @@ public class LaunchListActivity extends NavigationDatabaseActivity
 	}
 
 	@Override
-	public boolean onOptionsItemSelected( MenuItem item )
+	public boolean onOptionsItemSelected( final MenuItem item )
 	{
 		final boolean handled;
 
-		// Handle item selection
-		switch( item.getItemId() )
+		if( !CommonMenuHandler.onOptionsItemSelected( item, this ) )
 		{
-			case R.id.action_refresh:
-				refreshLaunchList();
-				handled = true;
-				break;
-			case R.id.action_settings:
+			switch( item.getItemId() )
 			{
-				Intent intent = new Intent( this, SettingsActivity.class );
-				startActivity( intent );
-				handled = true;
+				case R.id.action_refresh:
+					refreshLaunchList();
+					handled = true;
+					break;
+				default:
+					handled = super.onOptionsItemSelected( item );
+					break;
 			}
-			break;
-			default:
-				handled = super.onOptionsItemSelected( item );
+		}
+		else
+		{
+			handled = true;
 		}
 
 		return handled;
@@ -152,7 +152,7 @@ public class LaunchListActivity extends NavigationDatabaseActivity
 	 * indicating that the item with the given ID was selected.
 	 */
 	@Override
-	public void onItemSelected( Launch launch )
+	public void onItemSelected( final Launch launch )
 	{
 		if( m_twoPane )
 		{
@@ -178,7 +178,7 @@ public class LaunchListActivity extends NavigationDatabaseActivity
 	}
 
 	@Override
-	public void onRestoreInstanceState( Bundle savedInstanceState )
+	public void onRestoreInstanceState( final Bundle savedInstanceState )
 	{
 		final ActionBar actionBar = getActionBar();
 		if( savedInstanceState.containsKey( STATE_SELECTED_NAVIGATION_ITEM ) && actionBar != null )
@@ -189,7 +189,7 @@ public class LaunchListActivity extends NavigationDatabaseActivity
 	}
 
 	@Override
-	public void onSaveInstanceState( Bundle outState )
+	public void onSaveInstanceState( final Bundle outState )
 	{
 		final ActionBar actionBar = getActionBar();
 		if( actionBar != null )
@@ -227,7 +227,7 @@ public class LaunchListActivity extends NavigationDatabaseActivity
 		launchListFragment.refresh();
 	}
 
-	public void countDownClicked( View v )
+	public void countDownClicked( final View v )
 	{
 		LaunchDetailFragment launchDetailFragment = (LaunchDetailFragment) getSupportFragmentManager()
 				                                                                   .findFragmentById( R.id.COMMON_detail_fragment_container );
@@ -243,7 +243,7 @@ public class LaunchListActivity extends NavigationDatabaseActivity
 		}
 	}
 
-	public void rocketDetailsClicked( View v )
+	public void rocketDetailsClicked( final View v )
 	{
 		Rocket rocket = (Rocket) v.getTag();
 
@@ -251,7 +251,7 @@ public class LaunchListActivity extends NavigationDatabaseActivity
 		rocketDetailFragment.show( getSupportFragmentManager(), "dialog" );
 	}
 
-	public void locationDetailsClicked( View v )
+	public void locationDetailsClicked( final View v )
 	{
 		Pad pad = (Pad) v.getTag();
 
@@ -260,7 +260,7 @@ public class LaunchListActivity extends NavigationDatabaseActivity
 		locationDetailFragment.show( getSupportFragmentManager(), "dialog" );
 	}
 
-	public void rocketImageClicked( View v )
+	public void rocketImageClicked( final View v )
 	{
 		LaunchDetailFragment fragment = (LaunchDetailFragment) getSupportFragmentManager()
 				                                                       .findFragmentById( R.id.COMMON_detail_fragment_container );
@@ -272,7 +272,7 @@ public class LaunchListActivity extends NavigationDatabaseActivity
 	}
 
 	@Override
-	public boolean onNavigationItemSelected( int itemPosition, long itemId )
+	public boolean onNavigationItemSelected( final int itemPosition, final long itemId )
 	{
 		final boolean handled;
 

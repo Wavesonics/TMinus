@@ -2,6 +2,7 @@
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="default_padding">16dp</dimen>
     <dimen name="nav_list_padding">10dp</dimen>
     <dimen name="nav_list_width">240dp</dimen>
     <dimen name="launch_list_padding">16dp</dimen>
@@ -14,4 +15,5 @@
     <dimen name="location_detail_padding">8dp</dimen>
     <dimen name="rocket_detail_padding">16dp</dimen>
     <dimen name="rocket_list_padding">16dp</dimen>
+    <dimen name="about_fragment_spacing">16dp</dimen>
 </resources>

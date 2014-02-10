@@ -38,26 +38,26 @@ public class LocationBrowserActivity extends NavigationDatabaseActivity implemen
 	}
 
 	@Override
-	public boolean onOptionsItemSelected( MenuItem item )
+	public boolean onOptionsItemSelected( final MenuItem item )
 	{
 		final boolean handled;
 
-		// Handle item selection
-		switch( item.getItemId() )
+		if( !CommonMenuHandler.onOptionsItemSelected( item, this ) )
 		{
-			case R.id.action_refresh:
-				refreshLocationList();
-				handled = true;
-				break;
-			case R.id.action_settings:
+			switch( item.getItemId() )
 			{
-				Intent intent = new Intent( this, SettingsActivity.class );
-				startActivity( intent );
-				handled = true;
+				case R.id.action_refresh:
+					refreshLocationList();
+					handled = true;
+					break;
+				default:
+					handled = super.onOptionsItemSelected( item );
+					break;
 			}
-			break;
-			default:
-				handled = super.onOptionsItemSelected( item );
+		}
+		else
+		{
+			handled = true;
 		}
 
 		return handled;

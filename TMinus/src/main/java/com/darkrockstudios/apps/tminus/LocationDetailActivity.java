@@ -38,8 +38,8 @@ public class LocationDetailActivity extends DatabaseActivity
 				LocationDetailFragment locationDetailFragment =
 						LocationDetailFragment.newInstance( locationId, padId, true, false );
 				getSupportFragmentManager().beginTransaction()
-						.add( R.id.location_detail_container, locationDetailFragment, FRAGMENT_TAG )
-						.commit();
+				                           .add( R.id.location_detail_container, locationDetailFragment, FRAGMENT_TAG )
+				                           .commit();
 			}
 		}
 	}
@@ -80,26 +80,26 @@ public class LocationDetailActivity extends DatabaseActivity
 	}
 
 	@Override
-	public boolean onOptionsItemSelected( MenuItem item )
+	public boolean onOptionsItemSelected( final MenuItem item )
 	{
 		final boolean handled;
 
-		// Handle item selection
-		switch( item.getItemId() )
+		if( !CommonMenuHandler.onOptionsItemSelected( item, this ) )
 		{
-			case android.R.id.home:
-				UpNavUtil.standardUp( this );
-				handled = true;
-				break;
-			case R.id.action_settings:
+			switch( item.getItemId() )
 			{
-				Intent intent = new Intent( this, SettingsActivity.class );
-				startActivity( intent );
-				handled = true;
+				case android.R.id.home:
+					UpNavUtil.standardUp( this );
+					handled = true;
+					break;
+				default:
+					handled = super.onOptionsItemSelected( item );
+					break;
 			}
-			break;
-			default:
-				handled = super.onOptionsItemSelected( item );
+		}
+		else
+		{
+			handled = true;
 		}
 
 		return handled;

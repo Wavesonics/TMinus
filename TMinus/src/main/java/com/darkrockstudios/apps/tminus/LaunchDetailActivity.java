@@ -11,7 +11,6 @@ import android.view.Window;
 import com.darkrockstudios.apps.tminus.fragments.LaunchDetailFragment;
 import com.darkrockstudios.apps.tminus.launchlibrary.Pad;
 import com.darkrockstudios.apps.tminus.launchlibrary.Rocket;
-import com.darkrockstudios.apps.tminus.misc.UpNavUtil;
 
 public class LaunchDetailActivity extends DatabaseActivity
 {
@@ -34,8 +33,8 @@ public class LaunchDetailActivity extends DatabaseActivity
 				// using a fragment transaction.
 				LaunchDetailFragment fragment = LaunchDetailFragment.newInstance( m_launchId );
 				getSupportFragmentManager().beginTransaction()
-						.add( R.id.COMMON_detail_fragment_container, fragment, FRAGMENT_TAG )
-						.commit();
+				                           .add( R.id.COMMON_detail_fragment_container, fragment, FRAGMENT_TAG )
+				                           .commit();
 			}
 		}
 	}
@@ -50,23 +49,15 @@ public class LaunchDetailActivity extends DatabaseActivity
 	@Override
 	public boolean onOptionsItemSelected( final MenuItem item )
 	{
-		boolean handled;
+		final boolean handled;
 
-		switch( item.getItemId() )
+		if( !CommonMenuHandler.onOptionsItemSelected( item, this ) )
 		{
-			case android.R.id.home:
-				UpNavUtil.standardUp( this );
-				handled = true;
-				break;
-			case R.id.action_settings:
-			{
-				Intent intent = new Intent( this, SettingsActivity.class );
-				startActivity( intent );
-				handled = true;
-			}
-			break;
-			default:
-				handled = super.onOptionsItemSelected( item );
+			handled = super.onOptionsItemSelected( item );
+		}
+		else
+		{
+			handled = true;
 		}
 
 		return handled;

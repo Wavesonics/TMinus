@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/default_padding">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="@string/about_body_header"
+            android:layout_gravity="left|center_vertical"
+            android:linksClickable="true"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="@string/about_body_bio"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/about_body_email"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:autoLink="email"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/about_body_website"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:autoLink="web"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/about_fragment_spacing"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/about_body_market"
+                android:id="@+id/textView2"
+                android:autoLink="web"
+                android:layout_weight="1"/>
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/about_body_market_button"
+                android:id="@+id/ABOUT_market_button"/>
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/about_fragment_spacing"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/about_body_open_source"
+            android:id="@+id/textView4"
+            android:textStyle="bold"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/ABOUT_github_logo"
+                android:src="@drawable/github"/>
+
+            <TableLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:layout_marginLeft="@dimen/about_fragment_spacing"
+                android:layout_toRightOf="@id/ABOUT_github_logo"
+                android:layout_alignBottom="@+id/ABOUT_github_logo"
+                android:layout_alignTop="@id/ABOUT_github_logo"
+                android:showDividers="middle">
+
+                <TextView
+                    android:id="@+id/ABOUT_github_android"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="@string/about_body_github_android"
+                    android:linksClickable="true"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"/>
+
+            </TableLayout>
+
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/ABOUT_feedback"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/about_fragment_spacing"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/about_body_feedback"
+            android:linksClickable="true"/>
+
+        <TextView
+            android:id="@+id/ABOUT_app_version"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/about_fragment_spacing"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:layout_gravity="right"
+            tools:text="v1.0"/>
+
+    </LinearLayout>
+</ScrollView>

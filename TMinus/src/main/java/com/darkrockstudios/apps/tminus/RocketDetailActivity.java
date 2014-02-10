@@ -21,7 +21,7 @@ public class RocketDetailActivity extends DatabaseActivity
 	public static final  String ARG_ITEM_ID  = "item_id";
 	private int m_rocketId;
 
-	public void onCreate( Bundle savedInstanceState )
+	public void onCreate( final Bundle savedInstanceState )
 	{
 		super.onCreate( savedInstanceState );
 		requestWindowFeature( Window.FEATURE_INDETERMINATE_PROGRESS );
@@ -36,8 +36,8 @@ public class RocketDetailActivity extends DatabaseActivity
 				// using a fragment transaction.
 				RocketDetailFragment rocketDetailFragment = RocketDetailFragment.newInstance( m_rocketId, false );
 				getSupportFragmentManager().beginTransaction()
-						.add( R.id.rocket_detail_container, rocketDetailFragment, FRAGMENT_TAG )
-						.commit();
+				                           .add( R.id.rocket_detail_container, rocketDetailFragment, FRAGMENT_TAG )
+				                           .commit();
 			}
 		}
 	}
@@ -56,38 +56,39 @@ public class RocketDetailActivity extends DatabaseActivity
 	}
 
 	@Override
-	public boolean onCreateOptionsMenu( Menu menu )
+	public boolean onCreateOptionsMenu( final Menu menu )
 	{
 		getMenuInflater().inflate( R.menu.settings, menu );
 		return true;
 	}
 
 	@Override
-	public boolean onOptionsItemSelected( MenuItem item )
+	public boolean onOptionsItemSelected( final MenuItem item )
 	{
-		boolean handled;
+		final boolean handled;
 
-		switch( item.getItemId() )
+		if( !CommonMenuHandler.onOptionsItemSelected( item, this ) )
 		{
-			case android.R.id.home:
-				UpNavUtil.standardUp( this );
-				handled = true;
-				break;
-			case R.id.action_settings:
+			switch( item.getItemId() )
 			{
-				Intent intent = new Intent( this, SettingsActivity.class );
-				startActivity( intent );
-				handled = true;
+				case android.R.id.home:
+					UpNavUtil.standardUp( this );
+					handled = true;
+					break;
+				default:
+					handled = super.onOptionsItemSelected( item );
+					break;
 			}
-			break;
-			default:
-				handled = super.onOptionsItemSelected( item );
+		}
+		else
+		{
+			handled = true;
 		}
 
 		return handled;
 	}
 
-	public void rocketImageClicked( View v )
+	public void rocketImageClicked( final View v )
 	{
 		RocketDetailFragment fragment =
 				(RocketDetailFragment) getSupportFragmentManager()
