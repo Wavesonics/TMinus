@@ -4,7 +4,7 @@
           android:versionCode="19"
           android:versionName="0.15">
 
-<uses-sdk
+    <uses-sdk
         android:minSdkVersion="14"
         android:targetSdkVersion="18"/>
 
@@ -36,7 +36,7 @@
             android:value="@string/google_maps_api_key"/>
 
         <activity
-            android:name=".LaunchListActivity"
+            android:name=".experiences.launch.browse.LaunchListActivity"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -44,42 +44,42 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".RocketBrowserActivity"
+            android:name=".experiences.rocket.browse.RocketBrowserActivity"
             android:label="@string/title_activity_rocket_list">
         </activity>
         <activity
-            android:name=".LocationBrowserActivity"
+            android:name=".experiences.location.browse.LocationBrowserActivity"
             android:label="@string/title_activity_launch_locations">
         </activity>
         <activity
-            android:name=".LaunchDetailActivity"
+            android:name=".experiences.launch.detail.LaunchDetailActivity"
             android:label="@string/title_launch_detail"
-            android:parentActivityName=".LaunchListActivity">
+            android:parentActivityName=".experiences.launch.browse.LaunchListActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".LaunchListActivity"/>
         </activity>
         <activity
-            android:name=".CountDownActivity"
+            android:name=".experiences.countdown.CountDownActivity"
             android:label="@string/title_activity_count_down"
             android:theme="@style/CountDownTheme">
         </activity>
         <activity
-            android:name=".SettingsActivity"
+            android:name=".experiences.settings.SettingsActivity"
             android:label="@string/title_activity_settings"
             android:theme="@android:style/Theme.Holo"/>
         <activity
-            android:name=".RocketDetailActivity"
+            android:name=".experiences.rocket.detail.RocketDetailActivity"
             android:label="@string/title_activity_rocket_detail"
-            android:parentActivityName=".RocketBrowserActivity">
+            android:parentActivityName=".experiences.rocket.browse.RocketBrowserActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".RocketBrowserActivity"/>
         </activity>
         <activity
-            android:name=".LocationDetailActivity"
+            android:name=".experiences.location.detail.LocationDetailActivity"
             android:label="@string/title_activity_location_detail"
-            android:parentActivityName=".LocationBrowserActivity">
+            android:parentActivityName=".experiences.location.browse.LocationBrowserActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".LocationBrowserActivity"/>
@@ -95,7 +95,7 @@
         <service android:name=".UpdateAlarmsService"/>
         <service android:name=".NotificationService"/>
         <service android:name=".LaunchUpdateService"/>
-        <service android:name=".updatetasks.DataUpdaterService"/>
+        <service android:name=".dataupdate.DataUpdaterService"/>
     </application>
 
 </manifest>

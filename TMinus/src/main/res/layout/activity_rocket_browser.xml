@@ -10,7 +10,7 @@
     <!-- The main content view -->
     <fragment
         android:id="@+id/launch_list"
-        android:name="com.darkrockstudios.apps.tminus.fragments.LocationBrowserFragment"
+        android:name="com.darkrockstudios.apps.tminus.experiences.location.browse.fragments.LocationBrowserFragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         tools:context=".LaunchListActivity"

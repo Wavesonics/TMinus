@@ -10,7 +10,7 @@
     <!-- The main content view -->
     <fragment
         android:tag="LocationBrowser"
-        android:name="com.darkrockstudios.apps.tminus.fragments.LocationBrowserFragment"
+        android:name="com.darkrockstudios.apps.tminus.experiences.location.browse.fragments.LocationBrowserFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".LocationBrowserActivity"
