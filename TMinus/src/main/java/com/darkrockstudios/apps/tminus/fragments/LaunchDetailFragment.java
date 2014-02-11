@@ -66,12 +66,14 @@ public class LaunchDetailFragment extends Fragment implements Listener, RocketDe
 	private RocketDetail        m_rocketDetail;
 	private TimeReceiver        m_timeReceiver;
 
+	@Optional
 	@InjectView(R.id.LAUNCHDETAIL_mission_image)
 	NetworkImageView m_rocketImage;
 
 	@InjectView(R.id.LAUNCHDETAIL_expanded_rocket_image)
 	NetworkImageView m_rocketImageExpanded;
 
+	@Optional
 	@InjectView(R.id.LAUNCHDETAIL_location_container)
 	ViewGroup m_locationContainer;
 
@@ -79,9 +81,11 @@ public class LaunchDetailFragment extends Fragment implements Listener, RocketDe
 	@InjectView(R.id.LAUNCHDETAIL_rocket_container)
 	ViewGroup m_rocketContainer;
 
+	@Optional
 	@InjectView(R.id.LAUNCHDETAIL_container_view)
 	View m_containerView;
 
+	@Optional
 	@InjectView(R.id.LAUNCHDETAIL_content_view)
 	View m_contentView;
 
@@ -91,6 +95,7 @@ public class LaunchDetailFragment extends Fragment implements Listener, RocketDe
 	@InjectView(R.id.LAUNCHDETAIL_imminent_launch_container)
 	View m_countDownContainer;
 
+	@Optional
 	@InjectView(R.id.LAUNCHDETAIL_rocket_detail_button)
 	View m_rocketDetailButton;
 

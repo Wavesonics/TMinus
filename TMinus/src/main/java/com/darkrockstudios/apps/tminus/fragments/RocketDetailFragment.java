@@ -56,6 +56,7 @@ public class RocketDetailFragment extends DialogFragment implements Listener, Ro
 	private Rocket       m_rocket;
 	private RocketDetail m_rocketDetail;
 
+	@Optional
 	@InjectView(R.id.ROCKETDETAIL_container)
 	View m_containerView;
 
