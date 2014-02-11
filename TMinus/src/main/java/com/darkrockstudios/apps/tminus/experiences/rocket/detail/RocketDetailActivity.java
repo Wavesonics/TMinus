@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.Window;
 
 import com.darkrockstudios.apps.tminus.R;
-import com.darkrockstudios.apps.tminus.baseactivities.DatabaseActivity;
+import com.darkrockstudios.apps.tminus.base.activities.DatabaseActivity;
 import com.darkrockstudios.apps.tminus.experiences.rocket.detail.fragments.RocketDetailFragment;
 import com.darkrockstudios.apps.tminus.misc.CommonMenuHandler;
 import com.darkrockstudios.apps.tminus.misc.UpNavUtil;

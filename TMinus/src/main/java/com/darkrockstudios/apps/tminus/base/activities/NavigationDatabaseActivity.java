@@ -1,4 +1,4 @@
-package com.darkrockstudios.apps.tminus.baseactivities;
+package com.darkrockstudios.apps.tminus.base.activities;
 
 import android.app.ActionBar;
 import android.app.Activity;
@@ -19,6 +19,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.darkrockstudios.apps.tminus.R;
+import com.darkrockstudios.apps.tminus.experiences.agency.browse.AgencyBrowserActivity;
 import com.darkrockstudios.apps.tminus.experiences.launch.browse.LaunchListActivity;
 import com.darkrockstudios.apps.tminus.experiences.location.browse.LocationBrowserActivity;
 import com.darkrockstudios.apps.tminus.experiences.rocket.browse.RocketBrowserActivity;
@@ -61,26 +62,19 @@ public abstract class NavigationDatabaseActivity extends DatabaseActivity
 	private class NavigationItemClickListener implements AdapterView.OnItemClickListener
 	{
 		@Override
-		public void onItemClick( AdapterView<?> parent, View view, int position, long id )
+		public void onItemClick( final AdapterView<?> parent, final View view, final int position, final long id )
 		{
 			final Intent intent;
-			switch( position )
+
+			NavigationItem item = (NavigationItem) parent.getItemAtPosition( position );
+			if( item != null )
 			{
-				case 0:
-					intent = new Intent( NavigationDatabaseActivity.this, LaunchListActivity.class );
-					intent.setFlags( Intent.FLAG_ACTIVITY_CLEAR_TOP );
-					break;
-				case 1:
-					intent = new Intent( NavigationDatabaseActivity.this, RocketBrowserActivity.class );
-					intent.setFlags( Intent.FLAG_ACTIVITY_CLEAR_TOP );
-					break;
-				case 2:
-					intent = new Intent( NavigationDatabaseActivity.this, LocationBrowserActivity.class );
-					intent.setFlags( Intent.FLAG_ACTIVITY_CLEAR_TOP );
-					break;
-				default:
-					intent = null;
-					break;
+				intent = new Intent( NavigationDatabaseActivity.this, item.m_activityClass );
+				intent.setFlags( Intent.FLAG_ACTIVITY_CLEAR_TOP );
+			}
+			else
+			{
+				intent = null;
 			}
 
 			if( intent != null )
@@ -95,9 +89,11 @@ public abstract class NavigationDatabaseActivity extends DatabaseActivity
 	{
 		public String   m_title;
 		public Drawable m_iconResource;
+		public Class    m_activityClass;
 
-		public NavigationItem( Context context, int titleResourceId, int iconResourceId )
+		public NavigationItem( final Context context, final Class activityClass, final int titleResourceId, final int iconResourceId )
 		{
+			m_activityClass = activityClass;
 			m_title = context.getString( titleResourceId );
 			m_iconResource = context.getResources().getDrawable( iconResourceId );
 		}
@@ -105,24 +101,36 @@ public abstract class NavigationDatabaseActivity extends DatabaseActivity
 
 	private class NavigationListAdapter extends ArrayAdapter<NavigationItem>
 	{
-		public NavigationListAdapter( Context context )
+		public NavigationListAdapter( final Context context )
 		{
 			super( context, R.layout.row_navigation_item, R.id.NAVDRAWER_nav_item_title );
 
-			NavigationItem launchListItem = new NavigationItem( context, R.string.NAVDRAWER_item_title_launch_list,
+			NavigationItem launchListItem = new NavigationItem( context,
+			                                                    LaunchListActivity.class,
+			                                                    R.string.NAVDRAWER_item_title_launch_list,
 			                                                    R.drawable.ic_navdrawer_launch_list );
 			add( launchListItem );
 
-			NavigationItem rocketListItem = new NavigationItem( context, R.string.NAVDRAWER_item_title_rocket_list,
+			NavigationItem rocketListItem = new NavigationItem( context,
+			                                                    RocketBrowserActivity.class,
+			                                                    R.string.NAVDRAWER_item_title_rocket_list,
 			                                                    R.drawable.ic_navdrawer_rocket_list );
 			add( rocketListItem );
 
-			NavigationItem locationListItem = new NavigationItem( context, R.string.NAVDRAWER_item_title_location_list,
+			NavigationItem locationListItem = new NavigationItem( context,
+			                                                      LocationBrowserActivity.class,
+			                                                      R.string.NAVDRAWER_item_title_location_list,
 			                                                      R.drawable.ic_navdrawer_location_list );
 			add( locationListItem );
+
+			NavigationItem agencyListItem = new NavigationItem( context,
+			                                                    AgencyBrowserActivity.class,
+			                                                    R.string.NAVDRAWER_item_title_agency_list,
+			                                                    R.drawable.ic_navdrawer_location_list );
+			add( agencyListItem );
 		}
 
-		public View getView( int position, View convertView, ViewGroup parent )
+		public View getView( final int position, final View convertView, final ViewGroup parent )
 		{
 			final View row;
 			if( convertView == null )
@@ -154,7 +162,7 @@ public abstract class NavigationDatabaseActivity extends DatabaseActivity
 
 	private class NavigationDrawerToggle extends ActionBarDrawerToggle
 	{
-		public NavigationDrawerToggle( Activity activity, DrawerLayout drawerLayout, int drawerImageRes, int openDrawerContentDescRes, int closeDrawerContentDescRes )
+		public NavigationDrawerToggle( final Activity activity, final DrawerLayout drawerLayout, final int drawerImageRes, final int openDrawerContentDescRes, final int closeDrawerContentDescRes )
 		{
 			super( activity, drawerLayout, drawerImageRes, openDrawerContentDescRes, closeDrawerContentDescRes );
 		}
@@ -162,7 +170,7 @@ public abstract class NavigationDatabaseActivity extends DatabaseActivity
 		/**
 		 * Called when a drawer has settled in a completely closed state.
 		 */
-		public void onDrawerClosed( View view )
+		public void onDrawerClosed( final View view )
 		{
 			ActionBar actionBar = getActionBar();
 			if( actionBar != null )
@@ -175,7 +183,7 @@ public abstract class NavigationDatabaseActivity extends DatabaseActivity
 		/**
 		 * Called when a drawer has settled in a completely open state.
 		 */
-		public void onDrawerOpened( View drawerView )
+		public void onDrawerOpened( final View drawerView )
 		{
 			ActionBar actionBar = getActionBar();
 			if( actionBar != null )
@@ -187,7 +195,7 @@ public abstract class NavigationDatabaseActivity extends DatabaseActivity
 	}
 
 	@Override
-	public boolean onOptionsItemSelected( MenuItem item )
+	public boolean onOptionsItemSelected( final MenuItem item )
 	{
 		boolean handled = m_drawerToggle.onOptionsItemSelected( item );
 		if( !handled )
@@ -211,7 +219,7 @@ public abstract class NavigationDatabaseActivity extends DatabaseActivity
 	}
 
 	@Override
-	protected void onPostCreate( Bundle savedInstanceState )
+	protected void onPostCreate( final Bundle savedInstanceState )
 	{
 		super.onPostCreate( savedInstanceState );
 		// Sync the toggle state after onRestoreInstanceState has occurred.
@@ -219,7 +227,7 @@ public abstract class NavigationDatabaseActivity extends DatabaseActivity
 	}
 
 	@Override
-	public void onConfigurationChanged( Configuration newConfig )
+	public void onConfigurationChanged( final Configuration newConfig )
 	{
 		super.onConfigurationChanged( newConfig );
 		m_drawerToggle.onConfigurationChanged( newConfig );

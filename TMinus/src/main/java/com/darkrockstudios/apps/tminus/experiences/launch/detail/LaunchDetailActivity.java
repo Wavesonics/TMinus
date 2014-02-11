@@ -9,7 +9,7 @@ import android.view.View;
 import android.view.Window;
 
 import com.darkrockstudios.apps.tminus.R;
-import com.darkrockstudios.apps.tminus.baseactivities.DatabaseActivity;
+import com.darkrockstudios.apps.tminus.base.activities.DatabaseActivity;
 import com.darkrockstudios.apps.tminus.experiences.countdown.CountDownActivity;
 import com.darkrockstudios.apps.tminus.experiences.launch.detail.fragments.LaunchDetailFragment;
 import com.darkrockstudios.apps.tminus.experiences.location.detail.LocationDetailActivity;

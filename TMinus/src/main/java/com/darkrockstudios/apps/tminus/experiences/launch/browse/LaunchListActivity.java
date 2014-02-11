@@ -13,7 +13,7 @@ import android.view.Window;
 import android.widget.ArrayAdapter;
 
 import com.darkrockstudios.apps.tminus.R;
-import com.darkrockstudios.apps.tminus.baseactivities.NavigationDatabaseActivity;
+import com.darkrockstudios.apps.tminus.base.activities.NavigationDatabaseActivity;
 import com.darkrockstudios.apps.tminus.experiences.countdown.CountDownActivity;
 import com.darkrockstudios.apps.tminus.experiences.launch.browse.fragments.LaunchListFragment;
 import com.darkrockstudios.apps.tminus.experiences.launch.browse.fragments.LaunchListFragment.Callbacks;

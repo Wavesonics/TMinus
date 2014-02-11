@@ -1,4 +1,4 @@
-package com.darkrockstudios.apps.tminus.baseactivities;
+package com.darkrockstudios.apps.tminus.base.activities;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;

@@ -8,7 +8,6 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,14 +17,13 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.darkrockstudios.apps.tminus.R;
+import com.darkrockstudios.apps.tminus.base.fragments.BaseBrowserFragment;
 import com.darkrockstudios.apps.tminus.database.DatabaseHelper;
 import com.darkrockstudios.apps.tminus.dataupdate.DataUpdaterService;
 import com.darkrockstudios.apps.tminus.experiences.rocket.browse.dataupdate.RocketUpdateTask;
 import com.darkrockstudios.apps.tminus.launchlibrary.Agency;
 import com.darkrockstudios.apps.tminus.launchlibrary.Rocket;
 import com.darkrockstudios.apps.tminus.misc.Preferences;
-import com.haarman.listviewanimations.swinginadapters.AnimationAdapter;
-import com.haarman.listviewanimations.swinginadapters.prepared.ScaleInAnimationAdapter;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.QueryBuilder;
@@ -40,35 +38,29 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 import de.keyboardsurfer.android.widget.crouton.Style;
-import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
-import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
-import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 
 /**
  * Created by Adam on 10/13/13.
  */
-public class RocketBrowserFragment extends ListFragment implements OnRefreshListener
+public class RocketBrowserFragment extends BaseBrowserFragment
 {
 	private static final String TAG = RocketBrowserFragment.class.getSimpleName();
 
-	private static final String STATE_ACTIVATED_POSITION = "activated_position";
-
-	private Callbacks m_callbacks = s_dummyCallbacks;
 	private RocketUpdateReceiver m_updateReceiver;
-	private int m_activatedPosition = ListView.INVALID_POSITION;
+
 	private ArrayAdapter<Rocket> m_adapter;
 	private static final long UPDATE_THRESHOLD = TimeUnit.DAYS.toMillis( 7 );
 
-	@InjectView(R.id.ROCKETLIST_pull_to_refresh)
-	PullToRefreshLayout m_ptrLayout;
+	public interface Callbacks
+	{
+		public void onItemSelected( Rocket rocket );
+	}
 
-	@InjectView(android.R.id.list)
-	ListView m_listView;
-
+	private        Callbacks m_callbacks      = s_dummyCallbacks;
 	private static Callbacks s_dummyCallbacks = new Callbacks()
 	{
 		@Override
-		public void onItemSelected( Rocket rocket )
+		public void onItemSelected( final Rocket rocket )
 		{
 		}
 	};
@@ -81,42 +73,21 @@ public class RocketBrowserFragment extends ListFragment implements OnRefreshList
 	}
 
 	@Override
-	public void onCreate( Bundle savedInstanceState )
+	public View onCreateView( final LayoutInflater inflater, final ViewGroup container,
+	                          final Bundle savedInstanceState )
 	{
-		super.onCreate( savedInstanceState );
-	}
-
-	@Override
-	public View onCreateView( LayoutInflater inflater, ViewGroup container,
-	                          Bundle savedInstanceState )
-	{
-		View view = inflater.inflate( R.layout.fragment_rocket_list, null );
-		ButterKnife.inject( this, view );
+		View view = super.onCreateView( inflater, container, savedInstanceState );
 
 		m_adapter = new RocketListAdapter( getActivity() );
-		AnimationAdapter animationAdapter = new ScaleInAnimationAdapter( m_adapter );
-		setListAdapter( animationAdapter );
-
-		animationAdapter.setAbsListView( m_listView );
-
-		m_ptrLayout = (PullToRefreshLayout) view.findViewById( R.id.ROCKETLIST_pull_to_refresh );
-
-		ActionBarPullToRefresh.from( getActivity() ).allChildrenArePullable().listener( this ).setup( m_ptrLayout );
+		setListAdapter( m_adapter );
 
 		return view;
 	}
 
 	@Override
-	public void onViewCreated( View view, Bundle savedInstanceState )
+	public void onViewCreated( final View view, final Bundle savedInstanceState )
 	{
 		super.onViewCreated( view, savedInstanceState );
-
-		// Restore the previously serialized activated item position.
-		if( savedInstanceState != null
-		    && savedInstanceState.containsKey( STATE_ACTIVATED_POSITION ) )
-		{
-			setActivatedPosition( savedInstanceState.getInt( STATE_ACTIVATED_POSITION ) );
-		}
 
 		boolean shouldRefresh = !reloadData();
 
@@ -143,7 +114,7 @@ public class RocketBrowserFragment extends ListFragment implements OnRefreshList
 	}
 
 	@Override
-	public void onAttach( Activity activity )
+	public void onAttach( final Activity activity )
 	{
 		super.onAttach( activity );
 
@@ -186,7 +157,7 @@ public class RocketBrowserFragment extends ListFragment implements OnRefreshList
 	}
 
 	@Override
-	public void onListItemClick( ListView listView, View view, int position, long id )
+	public void onListItemClick( final ListView listView, final View view, final int position, final long id )
 	{
 		super.onListItemClick( listView, view, position, id );
 
@@ -194,31 +165,6 @@ public class RocketBrowserFragment extends ListFragment implements OnRefreshList
 		// fragment is attached to one) that an item has been selected.
 		Rocket rocket = (Rocket) listView.getAdapter().getItem( position );
 		m_callbacks.onItemSelected( rocket );
-	}
-
-	@Override
-	public void onSaveInstanceState( Bundle outState )
-	{
-		super.onSaveInstanceState( outState );
-		if( m_activatedPosition != ListView.INVALID_POSITION )
-		{
-			// Serialize and persist the activated item position.
-			outState.putInt( STATE_ACTIVATED_POSITION, m_activatedPosition );
-		}
-	}
-
-	private void setActivatedPosition( int position )
-	{
-		if( position == ListView.INVALID_POSITION )
-		{
-			getListView().setItemChecked( m_activatedPosition, false );
-		}
-		else
-		{
-			getListView().setItemChecked( position, true );
-		}
-
-		m_activatedPosition = position;
 	}
 
 	private boolean reloadData()
@@ -241,7 +187,7 @@ public class RocketBrowserFragment extends ListFragment implements OnRefreshList
 
 					List<Rocket> results = rocketDao.queryForAll();
 
-					for( Rocket rocket : results )
+					for( final Rocket rocket : results )
 					{
 						rocket.refreshFamily( databaseHelper );
 					}
@@ -252,7 +198,7 @@ public class RocketBrowserFragment extends ListFragment implements OnRefreshList
 						dataLoaded = true;
 					}
 				}
-				catch( SQLException e )
+				catch( final SQLException e )
 				{
 					e.printStackTrace();
 				}
@@ -284,39 +230,6 @@ public class RocketBrowserFragment extends ListFragment implements OnRefreshList
 		}
 	}
 
-	/**
-	 * Turns on activate-on-click mode. When this mode is on, list items will be
-	 * given the 'activated' state when touched.
-	 */
-	public void setActivateOnItemClick( boolean activateOnItemClick )
-	{
-		// When setting CHOICE_MODE_SINGLE, ListView will automatically
-		// give items the 'activated' state when touched.
-		getListView().setChoiceMode( activateOnItemClick
-		                             ? ListView.CHOICE_MODE_SINGLE
-		                             : ListView.CHOICE_MODE_NONE );
-	}
-
-	private void hideLoadingIndicators()
-	{
-		if( m_ptrLayout != null )
-		{
-			m_ptrLayout.setRefreshComplete();
-		}
-
-		Activity activity = getActivity();
-		if( activity != null )
-		{
-			activity.setProgressBarIndeterminateVisibility( false );
-		}
-	}
-
-	@Override
-	public void onRefreshStarted( View view )
-	{
-		refresh();
-	}
-
 	static class ViewHolder
 	{
 		@InjectView(R.id.ROCKETLISTITEM_rocket_name)
@@ -336,13 +249,13 @@ public class RocketBrowserFragment extends ListFragment implements OnRefreshList
 
 	private static class RocketListAdapter extends ArrayAdapter<Rocket>
 	{
-		public RocketListAdapter( Context context )
+		public RocketListAdapter( final Context context )
 		{
 			super( context, R.layout.row_rocket_list_item );
 		}
 
 		@Override
-		public View getView( int pos, View convertView, ViewGroup parent )
+		public View getView( final int pos, final View convertView, final ViewGroup parent )
 		{
 			final View view;
 			if( convertView != null )
@@ -399,18 +312,10 @@ public class RocketBrowserFragment extends ListFragment implements OnRefreshList
 		}
 	}
 
-	public interface Callbacks
-	{
-		/**
-		 * Callback for when an item has been selected.
-		 */
-		public void onItemSelected( Rocket rocket );
-	}
-
 	private class RocketUpdateReceiver extends BroadcastReceiver
 	{
 		@Override
-		public void onReceive( Context context, Intent intent )
+		public void onReceive( final Context context, final Intent intent )
 		{
 			final Activity activity = getActivity();
 			if( activity != null && isAdded() )

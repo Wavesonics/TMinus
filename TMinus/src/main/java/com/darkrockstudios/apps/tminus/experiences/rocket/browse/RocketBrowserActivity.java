@@ -10,7 +10,7 @@ import android.view.View;
 import android.view.Window;
 
 import com.darkrockstudios.apps.tminus.R;
-import com.darkrockstudios.apps.tminus.baseactivities.NavigationDatabaseActivity;
+import com.darkrockstudios.apps.tminus.base.activities.NavigationDatabaseActivity;
 import com.darkrockstudios.apps.tminus.experiences.rocket.browse.fragments.RocketBrowserFragment;
 import com.darkrockstudios.apps.tminus.experiences.rocket.detail.RocketDetailActivity;
 import com.darkrockstudios.apps.tminus.experiences.rocket.detail.fragments.RocketDetailFragment;

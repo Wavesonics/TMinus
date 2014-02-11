@@ -14,12 +14,15 @@
     <string name="title_activity_launch_locations">Locations</string>
     <string name="title_activity_rocket_detail">Rocket Detail</string>
     <string name="title_activity_location_detail">Location Detail</string>
+    <string name="title_activity_agency_list">Agencies</string>
+    <string name="title_activity_agency_detail">Agency Detail</string>
 
     <string name="NAVDRAWER_open_description">Open navigation drawer</string>
     <string name="NAVDRAWER_close_description">Close navigation drawer</string>
-    <string name="NAVDRAWER_item_title_launch_list">Launches List</string>
-    <string name="NAVDRAWER_item_title_rocket_list">Browse Rockets</string>
-    <string name="NAVDRAWER_item_title_location_list">Launch Locations</string>
+    <string name="NAVDRAWER_item_title_launch_list">Launches</string>
+    <string name="NAVDRAWER_item_title_rocket_list">Rockets</string>
+    <string name="NAVDRAWER_item_title_location_list">Locations</string>
+    <string name="NAVDRAWER_item_title_agency_list">Agencies</string>
 
     <string name="MENU_share_item">Share</string>
     <string name="MENU_add_to_calendar_item">Add to Calendar</string>

@@ -8,7 +8,7 @@ import android.view.MenuItem;
 import android.view.Window;
 
 import com.darkrockstudios.apps.tminus.R;
-import com.darkrockstudios.apps.tminus.baseactivities.NavigationDatabaseActivity;
+import com.darkrockstudios.apps.tminus.base.activities.NavigationDatabaseActivity;
 import com.darkrockstudios.apps.tminus.experiences.location.browse.fragments.LocationBrowserFragment;
 import com.darkrockstudios.apps.tminus.experiences.location.detail.LocationDetailActivity;
 import com.darkrockstudios.apps.tminus.launchlibrary.Pad;

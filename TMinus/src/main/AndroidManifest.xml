@@ -65,6 +65,10 @@
             android:theme="@style/CountDownTheme">
         </activity>
         <activity
+            android:name=".experiences.agency.browse.AgencyBrowserActivity"
+            android:label="@string/title_activity_launch_locations">
+        </activity>
+        <activity
             android:name=".experiences.settings.SettingsActivity"
             android:label="@string/title_activity_settings"
             android:theme="@android:style/Theme.Holo"/>
