@@ -6,7 +6,9 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.darkrockstudios.apps.tminus.R;
@@ -24,8 +26,16 @@ import butterknife.InjectView;
 /**
  * Created by Adam on 2/10/14.
  */
-public class AgencyBrowserFragment extends BaseBrowserFragment
+public class AgencyBrowserFragment extends BaseBrowserFragment implements AdapterView.OnItemClickListener
 {
+	private static final String ARG_AGENCY_ID = "AgencyId";
+
+	public interface Callbacks
+	{
+		public void onItemSelected( Agency agency );
+	}
+
+	private Callbacks         m_callbacks;
 	private AgencyListAdapter m_adapter;
 
 	public static AgencyBrowserFragment newInstance()
@@ -34,7 +44,19 @@ public class AgencyBrowserFragment extends BaseBrowserFragment
 	}
 
 	@Override
-	public View onCreateView( final LayoutInflater inflater, final ViewGroup container,
+	public void onAttach( final Activity activity )
+	{
+		super.onAttach( activity );
+
+		if( activity instanceof Callbacks )
+		{
+			m_callbacks = (Callbacks) activity;
+		}
+	}
+
+	@Override
+	public View onCreateView( final LayoutInflater inflater,
+	                          final ViewGroup container,
 	                          final Bundle savedInstanceState )
 	{
 		View view = super.onCreateView( inflater, container, savedInstanceState );
@@ -46,11 +68,28 @@ public class AgencyBrowserFragment extends BaseBrowserFragment
 	}
 
 	@Override
+	public void onViewCreated( final View view, final Bundle savedInstanceState )
+	{
+		super.onViewCreated( view, savedInstanceState );
+
+		ListView listView = getListView();
+		listView.setOnItemClickListener( this );
+	}
+
+	@Override
 	public void onResume()
 	{
 		super.onResume();
 
 		refresh();
+	}
+
+	@Override
+	public void onDetach()
+	{
+		super.onDetach();
+
+		m_callbacks = null;
 	}
 
 	public void refresh()
@@ -76,6 +115,16 @@ public class AgencyBrowserFragment extends BaseBrowserFragment
 			{
 				databaseHelper.close();
 			}
+		}
+	}
+
+	@Override
+	public void onItemClick( final AdapterView<?> parent, final View view, final int position, final long id )
+	{
+		if( m_callbacks != null )
+		{
+			Agency agency = m_adapter.getItem( position );
+			m_callbacks.onItemSelected( agency );
 		}
 	}
 

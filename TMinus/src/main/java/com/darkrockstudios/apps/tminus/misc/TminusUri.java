@@ -14,11 +14,12 @@ public class TminusUri
 	public static final String SCHEME               = "tminus";
 	public static final String AUTHORITY            = "tminus.com";
 	public static final String SEGMENT_LAUNCH       = "launch";
-	public static final String SEGMENT_ROCKET = "rocket";
+	public static final String SEGMENT_ROCKET       = "rocket";
+	public static final String SEGMENT_AGENCY       = "agency";
 	public static final String SEGMENT_COUNTDOWN    = "countdown";
 	public static final String SEGMENT_NOTIFICATION = "notification";
 	public static final String SEGMENT_REMINDER     = "reminder";
-	public static final String SEGMENT_IMMINENT = "imminent";
+	public static final String SEGMENT_IMMINENT     = "imminent";
 
 	private static Uri constructBaseUri()
 	{
@@ -36,7 +37,7 @@ public class TminusUri
 	public static Uri buildLaunchCountDown( final int launchId )
 	{
 		return constructBaseUri().buildUpon().appendPath( SEGMENT_LAUNCH ).appendPath( SEGMENT_COUNTDOWN )
-				       .appendPath( launchId + "" ).build();
+		                         .appendPath( launchId + "" ).build();
 	}
 
 	private static Uri constructBaseLaunchNotificationUri()
@@ -115,5 +116,36 @@ public class TminusUri
 		}
 
 		return rocketId;
+	}
+
+	public static Uri buildAgencyUri( final int agencyId )
+	{
+		Uri.Builder builder = constructBaseUri().buildUpon();
+		builder.appendPath( SEGMENT_AGENCY );
+		builder.appendPath( agencyId + "" );
+		return builder.build();
+	}
+
+	public static int extractAgencyId( final Uri uri )
+	{
+		int agencyId = -1;
+
+		if( uri != null && uri.getScheme().equals( SCHEME ) && uri.getAuthority().equals( AUTHORITY ) )
+		{
+			List<String> segments = uri.getPathSegments();
+			if( segments.size() == 2 && segments.get( 0 ).equals( SEGMENT_AGENCY ) )
+			{
+				try
+				{
+					agencyId = Integer.parseInt( segments.get( 1 ) );
+				}
+				catch( final NumberFormatException e )
+				{
+
+				}
+			}
+		}
+
+		return agencyId;
 	}
 }

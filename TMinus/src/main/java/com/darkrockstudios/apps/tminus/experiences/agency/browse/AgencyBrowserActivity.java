@@ -1,5 +1,6 @@
 package com.darkrockstudios.apps.tminus.experiences.agency.browse;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.view.Menu;
@@ -10,12 +11,15 @@ import android.view.Window;
 import com.darkrockstudios.apps.tminus.R;
 import com.darkrockstudios.apps.tminus.base.activities.NavigationDatabaseActivity;
 import com.darkrockstudios.apps.tminus.experiences.agency.browse.fragments.AgencyBrowserFragment;
+import com.darkrockstudios.apps.tminus.experiences.agency.detail.AgencyDetailActivity;
+import com.darkrockstudios.apps.tminus.launchlibrary.Agency;
 import com.darkrockstudios.apps.tminus.misc.CommonMenuHandler;
+import com.darkrockstudios.apps.tminus.misc.TminusUri;
 
 /**
  * Created by Adam on 2/10/14.
  */
-public class AgencyBrowserActivity extends NavigationDatabaseActivity
+public class AgencyBrowserActivity extends NavigationDatabaseActivity implements AgencyBrowserFragment.Callbacks
 {
 	private static final String FRAGMENT_TAG = "LocationBrowser";
 
@@ -100,5 +104,13 @@ public class AgencyBrowserActivity extends NavigationDatabaseActivity
 		AgencyBrowserFragment fragment =
 				(AgencyBrowserFragment) getSupportFragmentManager().findFragmentByTag( FRAGMENT_TAG );
 		fragment.refresh();
+	}
+
+	@Override
+	public void onItemSelected( final Agency agency )
+	{
+		Intent intent = new Intent( this, AgencyDetailActivity.class );
+		intent.setData( TminusUri.buildAgencyUri( agency.id ) );
+		startActivity( intent );
 	}
 }
