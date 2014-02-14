@@ -34,7 +34,7 @@ public class LaunchLibraryUrls
 		return baseUrl;
 	}
 
-	public static String padList()
+	public static String locations()
 	{
 		return getUrlForMethod( LOCATIONS );
 	}

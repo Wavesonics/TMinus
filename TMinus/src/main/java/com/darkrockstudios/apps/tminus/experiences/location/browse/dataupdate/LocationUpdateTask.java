@@ -116,7 +116,7 @@ public class LocationUpdateTask extends UpdateTask
 	@Override
 	public String getRequestUrl()
 	{
-		return LaunchLibraryUrls.padList();
+		return LaunchLibraryUrls.locations();
 	}
 
 	@Override
