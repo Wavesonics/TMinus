@@ -27,7 +27,7 @@ public class LaunchLibraryUrls
 		return SCHEME + "://" + HOST + '/' + PLATFORM_STUB + '/' + API_VERSION_STUB;
 	}
 
-	private static String getUrlForMethod( String method )
+	private static String getUrlForMethod( final String method )
 	{
 		String baseUrl = getBaseUrl();
 		baseUrl += "/" + FORMAT + "/" + method;
@@ -49,7 +49,7 @@ public class LaunchLibraryUrls
 		return getUrlForMethod( AGENCIES );
 	}
 
-	public static String next( int n )
+	public static String next( final int n )
 	{
 		if( n <= 0 || n > NEXT_LAUNCH_LIMIT )
 		{
@@ -62,7 +62,7 @@ public class LaunchLibraryUrls
 		return methodUrl;
 	}
 
-	public static String last( int n )
+	public static String last( final int n )
 	{
 		if( n <= 0 || n > LAST_LAUNCH_LIMIT )
 		{
