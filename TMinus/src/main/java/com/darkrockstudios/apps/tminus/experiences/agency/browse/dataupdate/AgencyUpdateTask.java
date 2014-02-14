@@ -1,4 +1,4 @@
-package com.darkrockstudios.apps.tminus.experiences.rocket.browse.dataupdate;
+package com.darkrockstudios.apps.tminus.experiences.agency.browse.dataupdate;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -7,9 +7,9 @@ import android.util.Log;
 
 import com.darkrockstudios.apps.tminus.database.DatabaseHelper;
 import com.darkrockstudios.apps.tminus.dataupdate.UpdateTask;
+import com.darkrockstudios.apps.tminus.launchlibrary.Agency;
 import com.darkrockstudios.apps.tminus.launchlibrary.LaunchLibraryGson;
 import com.darkrockstudios.apps.tminus.launchlibrary.LaunchLibraryUrls;
-import com.darkrockstudios.apps.tminus.launchlibrary.Rocket;
 import com.darkrockstudios.apps.tminus.misc.Preferences;
 import com.google.gson.Gson;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
@@ -23,20 +23,19 @@ import org.json.JSONObject;
 import java.sql.SQLException;
 
 /**
- * Created by Adam on 10/23/13.
+ * Created by Adam on 2/13/14.
  */
-public class RocketUpdateTask extends UpdateTask
+public class AgencyUpdateTask extends UpdateTask
 {
-	private static final String TAG = RocketUpdateTask.class.getSimpleName();
+	private static final String TAG         = AgencyUpdateTask.class.getSimpleName();
+	public static final  String UPDATE_TYPE = "agencies";
 
-	public static final String UPDATE_TYPE = "rockets";
+	public static final String ACTION_AGENCY_LIST_UPDATED       =
+			AgencyUpdateTask.class.getPackage() + ".ACTION_AGENCY_LIST_UPDATED";
+	public static final String ACTION_AGENCY_LIST_UPDATE_FAILED =
+			AgencyUpdateTask.class.getPackage() + ".ACTION_AGENCY_LIST_UPDATE_FAILED";
 
-	public static final String ACTION_ROCKET_LIST_UPDATED       =
-			RocketUpdateTask.class.getPackage() + ".ACTION_ROCKET_LIST_UPDATED";
-	public static final String ACTION_ROCKET_LIST_UPDATE_FAILED =
-			RocketUpdateTask.class.getPackage() + ".ACTION_ROCKET_LIST_UPDATE_FAILED";
-
-	public RocketUpdateTask( final Context context )
+	public AgencyUpdateTask( final Context context )
 	{
 		super( context );
 	}
@@ -53,40 +52,32 @@ public class RocketUpdateTask extends UpdateTask
 			{
 				try
 				{
-					final Dao<Rocket, Integer> rocketDao = databaseHelper.getDao( Rocket.class );
+					final Dao<Agency, Integer> agencyDao = databaseHelper.getDao( Agency.class );
 
-					JSONArray rockets = response.getJSONArray( "rockets" );
-					if( rockets != null && rockets.length() > 0 )
+					JSONArray agencies = response.getJSONArray( "agencies" );
+					if( agencies != null && agencies.length() > 0 )
 					{
 						final Gson gson = LaunchLibraryGson.create();
 
-						final int n = rockets.length();
+						final int n = agencies.length();
 						for( int ii = 0; ii < n; ++ii )
 						{
-							final Rocket rocket = gson.fromJson( rockets.get( ii ).toString(), Rocket.class );
-							rocketDao.createOrUpdate( rocket );
+							final Agency agency = gson.fromJson( agencies.get( ii ).toString(), Agency.class );
+							agencyDao.createOrUpdate( agency );
 						}
 
 						final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences( getContext() );
-						preferences.edit().putLong( Preferences.KEY_LAST_ROCKET_LIST_UPDATE, DateTime.now().getMillis() )
+						preferences.edit().putLong( Preferences.KEY_LAST_AGENCY_LIST_UPDATE, DateTime.now().getMillis() )
 						           .commit();
 
-						Log.i( TAG, "Rockets after update: " + rocketDao.countOf() );
+						Log.i( TAG, "Agencies after update: " + agencyDao.countOf() );
 
 						success = true;
 					}
 				}
-				catch( final JSONException e )
+				catch( SQLException | JSONException e )
 				{
 					e.printStackTrace();
-				}
-				catch( final SQLException e )
-				{
-					e.printStackTrace();
-				}
-				finally
-				{
-					OpenHelperManager.releaseHelper();
 				}
 			}
 		}
@@ -97,18 +88,18 @@ public class RocketUpdateTask extends UpdateTask
 	@Override
 	public String getRequestUrl()
 	{
-		return LaunchLibraryUrls.rockets();
+		return LaunchLibraryUrls.agencies();
 	}
 
 	@Override
 	public String getSuccessIntentAction()
 	{
-		return ACTION_ROCKET_LIST_UPDATED;
+		return ACTION_AGENCY_LIST_UPDATED;
 	}
 
 	@Override
 	public String getFailureIntentAction()
 	{
-		return ACTION_ROCKET_LIST_UPDATE_FAILED;
+		return ACTION_AGENCY_LIST_UPDATE_FAILED;
 	}
 }

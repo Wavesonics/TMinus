@@ -1,8 +1,14 @@
 package com.darkrockstudios.apps.tminus.experiences.agency.browse.fragments;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,21 +20,33 @@ import android.widget.TextView;
 import com.darkrockstudios.apps.tminus.R;
 import com.darkrockstudios.apps.tminus.base.fragments.BaseBrowserFragment;
 import com.darkrockstudios.apps.tminus.database.DatabaseHelper;
+import com.darkrockstudios.apps.tminus.dataupdate.DataUpdaterService;
+import com.darkrockstudios.apps.tminus.experiences.agency.browse.dataupdate.AgencyUpdateTask;
 import com.darkrockstudios.apps.tminus.launchlibrary.Agency;
+import com.darkrockstudios.apps.tminus.misc.Preferences;
 import com.j256.ormlite.dao.Dao;
+
+import org.joda.time.DateTime;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import de.keyboardsurfer.android.widget.crouton.Crouton;
+import de.keyboardsurfer.android.widget.crouton.Style;
 
 /**
  * Created by Adam on 2/10/14.
  */
 public class AgencyBrowserFragment extends BaseBrowserFragment implements AdapterView.OnItemClickListener
 {
-	private static final String ARG_AGENCY_ID = "AgencyId";
+	private static final String TAG = AgencyBrowserFragment.class.getSimpleName();
+
+	private static final long UPDATE_THRESHOLD = TimeUnit.DAYS.toMillis( 30 );
+
+	private AgencyUpdateReceiver m_updateReceiver;
 
 	public interface Callbacks
 	{
@@ -52,6 +70,13 @@ public class AgencyBrowserFragment extends BaseBrowserFragment implements Adapte
 		{
 			m_callbacks = (Callbacks) activity;
 		}
+
+		m_updateReceiver = new AgencyUpdateReceiver();
+
+		IntentFilter m_updateIntentFilter = new IntentFilter();
+		m_updateIntentFilter.addAction( AgencyUpdateTask.ACTION_AGENCY_LIST_UPDATED );
+		m_updateIntentFilter.addAction( AgencyUpdateTask.ACTION_AGENCY_LIST_UPDATE_FAILED );
+		activity.registerReceiver( m_updateReceiver, m_updateIntentFilter );
 	}
 
 	@Override
@@ -74,26 +99,34 @@ public class AgencyBrowserFragment extends BaseBrowserFragment implements Adapte
 
 		ListView listView = getListView();
 		listView.setOnItemClickListener( this );
+
+		boolean shouldRefresh = !reloadData();
+
+		final SharedPreferences preferences = PreferenceManager
+				                                      .getDefaultSharedPreferences( getActivity() );
+		if( preferences.contains( Preferences.KEY_LAST_AGENCY_LIST_UPDATE ) )
+		{
+			long lastUpdated = preferences.getLong( Preferences.KEY_LAST_AGENCY_LIST_UPDATE, -1 );
+			if( DateTime.now().isAfter( new DateTime( lastUpdated ).plus( UPDATE_THRESHOLD ) ) )
+			{
+				shouldRefresh = true;
+			}
+		}
+		else
+		{
+			shouldRefresh = true;
+		}
+
+		if( shouldRefresh )
+		{
+			refresh();
+		}
 	}
 
-	@Override
-	public void onResume()
+	private boolean reloadData()
 	{
-		super.onResume();
+		boolean dataLoaded = false;
 
-		refresh();
-	}
-
-	@Override
-	public void onDetach()
-	{
-		super.onDetach();
-
-		m_callbacks = null;
-	}
-
-	public void refresh()
-	{
 		m_adapter.clear();
 
 		Activity activity = getActivity();
@@ -106,6 +139,7 @@ public class AgencyBrowserFragment extends BaseBrowserFragment implements Adapte
 				List<Agency> agencies = agencyDao.queryForAll();
 				m_adapter.addAll( agencies );
 				m_adapter.notifyDataSetChanged();
+				dataLoaded = true;
 			}
 			catch( final SQLException e )
 			{
@@ -115,6 +149,43 @@ public class AgencyBrowserFragment extends BaseBrowserFragment implements Adapte
 			{
 				databaseHelper.close();
 			}
+		}
+
+		return dataLoaded;
+	}
+
+	@Override
+	public void onDetach()
+	{
+		super.onDetach();
+
+		m_callbacks = null;
+
+		Activity activity = getActivity();
+		if( activity != null && m_updateReceiver != null )
+		{
+			activity.unregisterReceiver( m_updateReceiver );
+			m_updateReceiver = null;
+		}
+	}
+
+	public void refresh()
+	{
+		requestAgencies();
+	}
+
+	private void requestAgencies()
+	{
+		Activity activity = getActivity();
+		if( activity != null && isAdded() )
+		{
+			Log.d( TAG, "Requesting agencies..." );
+
+			activity.setProgressBarIndeterminateVisibility( true );
+
+			Intent updateIntent = new Intent( activity, DataUpdaterService.class );
+			updateIntent.putExtra( DataUpdaterService.EXTRA_UPDATE_TYPE, AgencyUpdateTask.UPDATE_TYPE );
+			activity.startService( updateIntent );
 		}
 	}
 
@@ -169,6 +240,34 @@ public class AgencyBrowserFragment extends BaseBrowserFragment implements Adapte
 			viewHolder.m_name.setText( agency.name );
 
 			return view;
+		}
+	}
+
+	private class AgencyUpdateReceiver extends BroadcastReceiver
+	{
+		@Override
+		public void onReceive( final Context context, final Intent intent )
+		{
+			final Activity activity = getActivity();
+			if( activity != null && isAdded() )
+			{
+				if( AgencyUpdateTask.ACTION_AGENCY_LIST_UPDATED.equals( intent.getAction() ) )
+				{
+					Log.d( TAG, "Received Agency List update SUCCESS broadcast, will update the UI now." );
+
+					reloadData();
+
+					hideLoadingIndicators();
+					Crouton.makeText( activity, R.string.TOAST_agency_list_update_complete, Style.CONFIRM ).show();
+				}
+				else if( AgencyUpdateTask.ACTION_AGENCY_LIST_UPDATE_FAILED.equals( intent.getAction() ) )
+				{
+					Log.d( TAG, "Received Agency List update FAILURE broadcast." );
+
+					hideLoadingIndicators();
+					Crouton.makeText( activity, R.string.TOAST_agency_list_update_failed, Style.ALERT ).show();
+				}
+			}
 		}
 	}
 }

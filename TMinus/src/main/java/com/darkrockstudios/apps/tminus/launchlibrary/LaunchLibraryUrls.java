@@ -15,6 +15,7 @@ public class LaunchLibraryUrls
 
 	private static final String LOCATIONS = "locations";
 	private static final String ROCKETS   = "rockets";
+	private static final String AGENCIES  = "agencies";
 	private static final String NEXT      = "next";
 	private static final String LAST      = "last";
 
@@ -41,6 +42,11 @@ public class LaunchLibraryUrls
 	public static String rockets()
 	{
 		return getUrlForMethod( ROCKETS );
+	}
+
+	public static String agencies()
+	{
+		return getUrlForMethod( AGENCIES );
 	}
 
 	public static String next( int n )

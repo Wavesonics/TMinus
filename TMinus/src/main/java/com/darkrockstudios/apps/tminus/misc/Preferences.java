@@ -16,5 +16,6 @@ public class Preferences
 	public static final String KEY_ALWAYS_SHOW_COUNT_DOWN         = "always_show_count_down";
 	public static final String KEY_FULLSCREEN_COUNT_DOWN          = "fullscreen_count_down";
 	public static final String KEY_LAST_ROCKET_LIST_UPDATE        = "last_rocket_list_update";
+	public static final String KEY_LAST_AGENCY_LIST_UPDATE        = "last_agency_list_update";
 	public static final String KEY_LAST_LOCATION_LIST_UPDATE      = "last_location_list_update";
 }

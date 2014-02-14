@@ -28,8 +28,9 @@ import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.QueryBuilder;
 
+import org.joda.time.DateTime;
+
 import java.sql.SQLException;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -56,14 +57,7 @@ public class RocketBrowserFragment extends BaseBrowserFragment
 		public void onItemSelected( Rocket rocket );
 	}
 
-	private        Callbacks m_callbacks      = s_dummyCallbacks;
-	private static Callbacks s_dummyCallbacks = new Callbacks()
-	{
-		@Override
-		public void onItemSelected( final Rocket rocket )
-		{
-		}
-	};
+	private Callbacks m_callbacks;
 
 	public static RocketBrowserFragment newInstance()
 	{
@@ -96,8 +90,7 @@ public class RocketBrowserFragment extends BaseBrowserFragment
 		if( preferences.contains( Preferences.KEY_LAST_ROCKET_LIST_UPDATE ) )
 		{
 			long lastUpdated = preferences.getLong( Preferences.KEY_LAST_ROCKET_LIST_UPDATE, -1 );
-			Date now = new Date();
-			if( lastUpdated < now.getTime() - UPDATE_THRESHOLD )
+			if( DateTime.now().isAfter( new DateTime( lastUpdated ).plus( UPDATE_THRESHOLD ) ) )
 			{
 				shouldRefresh = true;
 			}
@@ -141,12 +134,14 @@ public class RocketBrowserFragment extends BaseBrowserFragment
 	{
 		super.onDetach();
 
-		// Reset the active callbacks interface to the dummy implementation.
-		m_callbacks = s_dummyCallbacks;
+		m_callbacks = null;
 
 		Activity activity = getActivity();
-		activity.unregisterReceiver( m_updateReceiver );
-		m_updateReceiver = null;
+		if( activity != null && m_updateReceiver != null )
+		{
+			activity.unregisterReceiver( m_updateReceiver );
+			m_updateReceiver = null;
+		}
 	}
 
 	@Override
@@ -159,12 +154,13 @@ public class RocketBrowserFragment extends BaseBrowserFragment
 	@Override
 	public void onListItemClick( final ListView listView, final View view, final int position, final long id )
 	{
-		super.onListItemClick( listView, view, position, id );
-
-		// Notify the active callbacks interface (the activity, if the
-		// fragment is attached to one) that an item has been selected.
-		Rocket rocket = (Rocket) listView.getAdapter().getItem( position );
-		m_callbacks.onItemSelected( rocket );
+		if( m_callbacks != null )
+		{
+			// Notify the active callbacks interface (the activity, if the
+			// fragment is attached to one) that an item has been selected.
+			Rocket rocket = (Rocket) listView.getAdapter().getItem( position );
+			m_callbacks.onItemSelected( rocket );
+		}
 	}
 
 	private boolean reloadData()
