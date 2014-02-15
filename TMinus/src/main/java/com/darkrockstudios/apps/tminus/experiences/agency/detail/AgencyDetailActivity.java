@@ -2,6 +2,7 @@ package com.darkrockstudios.apps.tminus.experiences.agency.detail;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -41,6 +42,13 @@ public class AgencyDetailActivity extends DatabaseActivity
 				                           .commit();
 			}
 		}
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu( final Menu menu )
+	{
+		getMenuInflater().inflate( R.menu.settings, menu );
+		return true;
 	}
 
 	@Override
