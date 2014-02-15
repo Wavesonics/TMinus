@@ -6,6 +6,7 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.darkrockstudios.apps.tminus.database.DatabaseHelper;
+import com.darkrockstudios.apps.tminus.database.tables.AgencyType;
 import com.darkrockstudios.apps.tminus.dataupdate.UpdateTask;
 import com.darkrockstudios.apps.tminus.launchlibrary.Agency;
 import com.darkrockstudios.apps.tminus.launchlibrary.LaunchLibraryGson;
@@ -52,28 +53,17 @@ public class AgencyUpdateTask extends UpdateTask
 			{
 				try
 				{
-					final Dao<Agency, Integer> agencyDao = databaseHelper.getDao( Agency.class );
+					final Gson gson = LaunchLibraryGson.create();
 
-					JSONArray agencies = response.getJSONArray( "agencies" );
-					if( agencies != null && agencies.length() > 0 )
-					{
-						final Gson gson = LaunchLibraryGson.create();
+					updateTypes( response, databaseHelper, gson );
 
-						final int n = agencies.length();
-						for( int ii = 0; ii < n; ++ii )
-						{
-							final Agency agency = gson.fromJson( agencies.get( ii ).toString(), Agency.class );
-							agencyDao.createOrUpdate( agency );
-						}
+					updateAgencies( response, databaseHelper, gson );
 
-						final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences( getContext() );
-						preferences.edit().putLong( Preferences.KEY_LAST_AGENCY_LIST_UPDATE, DateTime.now().getMillis() )
-						           .commit();
+					final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences( getContext() );
+					preferences.edit().putLong( Preferences.KEY_LAST_AGENCY_LIST_UPDATE, DateTime.now().getMillis() )
+					           .commit();
 
-						Log.i( TAG, "Agencies after update: " + agencyDao.countOf() );
-
-						success = true;
-					}
+					success = true;
 				}
 				catch( SQLException | JSONException e )
 				{
@@ -83,6 +73,41 @@ public class AgencyUpdateTask extends UpdateTask
 		}
 
 		return success;
+	}
+
+	private void updateTypes( final JSONObject response, final DatabaseHelper databaseHelper, final Gson gson ) throws SQLException, JSONException
+	{
+		final Dao<AgencyType, Integer> agencyTypeDao = databaseHelper.getDao( AgencyType.class );
+		JSONArray types = response.getJSONArray( "types" );
+		if( types != null && types.length() > 0 )
+		{
+			final int n = types.length();
+			for( int ii = 0; ii < n; ++ii )
+			{
+				final AgencyType agencyType = gson.fromJson( types.get( ii ).toString(), AgencyType.class );
+				agencyTypeDao.createOrUpdate( agencyType );
+			}
+
+			Log.i( TAG, "Agency Types after update: " + agencyTypeDao.countOf() );
+		}
+	}
+
+	private void updateAgencies( final JSONObject response, final DatabaseHelper databaseHelper, final Gson gson ) throws SQLException, JSONException
+	{
+		JSONArray agencies = response.getJSONArray( "agencies" );
+		if( agencies != null && agencies.length() > 0 )
+		{
+			final Dao<Agency, Integer> agencyDao = databaseHelper.getDao( Agency.class );
+
+			final int n = agencies.length();
+			for( int ii = 0; ii < n; ++ii )
+			{
+				final Agency agency = gson.fromJson( agencies.get( ii ).toString(), Agency.class );
+				agencyDao.createOrUpdate( agency );
+			}
+
+			Log.i( TAG, "Agencies after update: " + agencyDao.countOf() );
+		}
 	}
 
 	@Override

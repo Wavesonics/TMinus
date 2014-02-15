@@ -11,8 +11,10 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.darkrockstudios.apps.tminus.BuildConfig;
+import com.darkrockstudios.apps.tminus.database.tables.AgencyDetail;
 import com.darkrockstudios.apps.tminus.database.tables.AgencyPad;
 import com.darkrockstudios.apps.tminus.database.tables.AgencyRocket;
+import com.darkrockstudios.apps.tminus.database.tables.AgencyType;
 import com.darkrockstudios.apps.tminus.database.tables.RocketDetail;
 import com.darkrockstudios.apps.tminus.launchlibrary.Agency;
 import com.darkrockstudios.apps.tminus.launchlibrary.Launch;
@@ -22,13 +24,11 @@ import com.darkrockstudios.apps.tminus.launchlibrary.Pad;
 import com.darkrockstudios.apps.tminus.launchlibrary.Rocket;
 import com.darkrockstudios.apps.tminus.launchlibrary.RocketFamily;
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
-import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 
 import java.io.File;
 import java.sql.SQLException;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Database helper class used to manage the creation and upgrading of your database. This class also provides
@@ -38,9 +38,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper
 {
 	private static final String TAG              = DatabaseHelper.class.getSimpleName();
 	private static final String DATABASE_NAME    = "TMinus.db";
-	private static final int    DATABASE_VERSION = 8;
-
-	private ConcurrentHashMap<Class, Dao> m_dao;
+	private static final int DATABASE_VERSION = 9;
 
 	public DatabaseHelper( final Context context )
 	{
@@ -67,6 +65,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper
 			TableUtils.createTable( connectionSource, Agency.class );
 			TableUtils.createTable( connectionSource, AgencyRocket.class );
 			TableUtils.createTable( connectionSource, AgencyPad.class );
+			TableUtils.createTable( connectionSource, AgencyType.class );
+			TableUtils.createTable( connectionSource, AgencyDetail.class );
 		}
 		catch( final SQLException e )
 		{
@@ -91,6 +91,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper
 			TableUtils.dropTable( connectionSource, Agency.class, true );
 			TableUtils.dropTable( connectionSource, AgencyRocket.class, true );
 			TableUtils.dropTable( connectionSource, AgencyPad.class, true );
+			TableUtils.dropTable( connectionSource, AgencyType.class, true );
+			TableUtils.dropTable( connectionSource, AgencyDetail.class, true );
 
 			// after we drop the old databases, we create the new ones
 			onCreate( db, connectionSource );
