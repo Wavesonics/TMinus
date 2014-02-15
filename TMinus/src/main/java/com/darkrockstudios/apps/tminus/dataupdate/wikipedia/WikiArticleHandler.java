@@ -27,9 +27,13 @@ public class WikiArticleHandler
 	private static final Pattern GENERAL_LINK_PATTERN = Pattern.compile( "\\[\\[(.*?:)?(.*?)(\\|.*?)?\\]\\]" );
 	private static final Pattern SIMPLE_LINK_PATTERN  = Pattern.compile( "\\[\\[([^|]*?)\\]\\]" );
 	private static final Pattern ASSET_PATTERN        = Pattern.compile( "\\[\\[[a-zA-Z]+:(.*?)\\]\\]" );
-	private static final Pattern REF_PATTERN          = Pattern.compile( "(<ref>.*?</ref>)", Pattern.CASE_INSENSITIVE );
+	private static final Pattern REF_PATTERN          = Pattern.compile( "<ref>.*?</ref>", Pattern.CASE_INSENSITIVE );
 	private static final Pattern CITE_PATTERN         =
-			Pattern.compile( "(\\{\\{cite.*?\\}\\})", Pattern.CASE_INSENSITIVE );
+			Pattern.compile( "\\{\\{cite.*?\\}\\}", Pattern.CASE_INSENSITIVE );
+	private static final Pattern LANG_PATTERN         =
+			Pattern.compile( "\\{\\{lang-[a-z]+[|](.*?)\\}\\}", Pattern.CASE_INSENSITIVE );
+	private static final Pattern COORD_PATTERN        =
+			Pattern.compile( "\\{\\{coord.*?\\}\\}", Pattern.CASE_INSENSITIVE );
 	private static final Pattern CONVERT_PATTERN      =
 			Pattern.compile( "\\{\\{convert\\|([0-9]+)\\|([a-zA-Z]+)\\}\\}", Pattern.CASE_INSENSITIVE );
 	private static final Pattern BOLD_PATTERN         = Pattern.compile( "'''(.+?)'''" );
@@ -77,6 +81,12 @@ public class WikiArticleHandler
 		articleText = matcher.replaceAll( "" );
 
 		matcher = CITE_PATTERN.matcher( articleText );
+		articleText = matcher.replaceAll( "" );
+
+		matcher = LANG_PATTERN.matcher( articleText );
+		articleText = matcher.replaceAll( "$1" );
+
+		matcher = COORD_PATTERN.matcher( articleText );
 		articleText = matcher.replaceAll( "" );
 
 		matcher = CONVERT_PATTERN.matcher( articleText );
