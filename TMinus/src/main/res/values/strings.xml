@@ -72,6 +72,7 @@
     <string name="ROCKETDETAIL_launch_vehicle_title">Launch Vehicle</string>
 
     <string name="AGENCYDETAIL_no_summary">No summary available.</string>
+    <string name="AGENCYDETAIL_loading_summary">Loading agency summary…</string>
 
     <string name="LOCATIONDETAIL_title">Location Detail</string>
 

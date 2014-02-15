@@ -1,5 +1,6 @@
 package com.darkrockstudios.apps.tminus.experiences.agency.detail.fragments;
 
+import android.animation.Animator;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -7,19 +8,24 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.NetworkImageView;
 import com.darkrockstudios.apps.tminus.R;
+import com.darkrockstudios.apps.tminus.TMinusApplication;
 import com.darkrockstudios.apps.tminus.database.DatabaseHelper;
 import com.darkrockstudios.apps.tminus.database.tables.AgencyDetail;
 import com.darkrockstudios.apps.tminus.dataupdate.DataUpdaterService;
 import com.darkrockstudios.apps.tminus.experiences.agency.detail.dataupdate.AgencyDetailUpdateTask;
 import com.darkrockstudios.apps.tminus.launchlibrary.Agency;
 import com.darkrockstudios.apps.tminus.misc.TminusUri;
+import com.darkrockstudios.apps.tminus.misc.Utilities;
 import com.j256.ormlite.dao.Dao;
 
 import java.sql.SQLException;
@@ -32,17 +38,35 @@ import de.keyboardsurfer.android.widget.crouton.Style;
 /**
  * Created by Adam on 2/11/14.
  */
-public class AgencyDetailFragment extends DialogFragment
+public class AgencyDetailFragment extends DialogFragment implements Utilities.ZoomAnimationHandler
 {
-	private static final String TAG = AgencyDetailFragment.class.getSimpleName();
-	public static final String ARG_ITEM_ID = "item_id";
+	private static final String TAG         = AgencyDetailFragment.class.getSimpleName();
+	public static final  String ARG_ITEM_ID = "item_id";
+
+	@InjectView(R.id.AGENCYDETAIL_container)
+	View m_containerView;
 
 	@InjectView(R.id.AGENCYDETAIL_name)
 	TextView m_name;
 
+	@InjectView(R.id.AGENCYDETAIL_abbreviation)
+	TextView m_abbreviation;
+
+	@InjectView(R.id.AGENCYDETAIL_agency_image)
+	NetworkImageView m_agencyImage;
+
+	@InjectView(R.id.AGENCYDETAIL_expanded_agency_image)
+	NetworkImageView m_agencyImageExpanded;
+
+	@InjectView(R.id.AGENCYDETAIL_summary)
+	TextView m_summary;
+
 	private int m_agencyId;
 	private Agency       m_agency;
 	private AgencyDetail m_agencyDetail;
+
+	private Animator m_currentAnimator;
+	private int      m_shortAnimationDuration;
 
 	private AgencyDetailUpdateReceiver m_updateReceiver;
 
@@ -76,6 +100,9 @@ public class AgencyDetailFragment extends DialogFragment
 	{
 		super.onCreate( savedInstanceState );
 
+		m_shortAnimationDuration =
+				getResources().getInteger( android.R.integer.config_shortAnimTime );
+
 		Bundle args = getArguments();
 		if( args != null )
 		{
@@ -88,6 +115,9 @@ public class AgencyDetailFragment extends DialogFragment
 	{
 		View rootView = inflater.inflate( R.layout.fragment_agency_detail, container, false );
 		ButterKnife.inject( this, rootView );
+
+		m_agencyImage.setDefaultImageResId( R.drawable.launch_detail_no_rocket_image );
+		m_agencyImage.setEnabled( false );
 
 		return rootView;
 	}
@@ -130,7 +160,25 @@ public class AgencyDetailFragment extends DialogFragment
 			{
 				requestAgencyDetails();
 			}
+			else
+			{
+				if( m_agencyDetail.imageUrl != null && m_agencyDetail.imageUrl.length() > 0 )
+				{
+					ImageLoader imageLoader = new ImageLoader( TMinusApplication
+							                                           .getRequestQueue(),
+					                                           TMinusApplication.getBitmapCache() );
+
+					m_agencyImage.setImageUrl( m_agencyDetail.imageUrl, imageLoader );
+					m_agencyImage.setEnabled( true );
+
+					m_agencyImageExpanded.setImageUrl( m_agencyDetail.imageUrl, imageLoader );
+				}
+
+				m_summary.setText( Html.fromHtml( m_agencyDetail.summary ) );
+			}
+
 			m_name.setText( m_agency.name );
+			m_abbreviation.setText( m_agency.abbrev );
 		}
 	}
 
@@ -210,10 +258,11 @@ public class AgencyDetailFragment extends DialogFragment
 					{
 						Log.i( TAG, "Agency Detail fetch completely successfully for rocket id: " + agencyId );
 
-
 						activity.setProgressBarIndeterminateVisibility( false );
 						Crouton.makeText( activity, R.string.TOAST_agency_detail_update_complete, Style.CONFIRM )
 						       .show();
+
+						reloadData();
 					}
 				}
 				else if( AgencyDetailUpdateTask.ACTION_AGENCY_DETAILS_UPDATE_FAILED.equals( intent.getAction() ) )
@@ -226,12 +275,34 @@ public class AgencyDetailFragment extends DialogFragment
 						Log.w( TAG, "Agency Detail fetch completely failed for agency id: " + agencyId );
 					}
 
-					//m_rocketSummary.setText( R.string.AGENCYDETAIL_no_summary );
+					m_summary.setText( R.string.AGENCYDETAIL_no_summary );
 
 					Crouton.makeText( activity, R.string.TOAST_agency_detail_update_failed, Style.ALERT ).show();
 					activity.setProgressBarIndeterminateVisibility( false );
 				}
 			}
 		}
+	}
+
+	public void zoomAgencyImage()
+	{
+		// If we don't have rocket info yet, don't bother zooming
+		if( m_agencyDetail != null && m_agencyDetail.imageUrl != null )
+		{
+			Utilities.zoomImage( m_agencyImage, m_agencyImageExpanded, m_containerView, this,
+			                     m_shortAnimationDuration );
+		}
+	}
+
+	@Override
+	public void setCurrentAnimator( final Animator animator )
+	{
+		m_currentAnimator = animator;
+	}
+
+	@Override
+	public Animator getCurrentAnimator()
+	{
+		return m_currentAnimator;
 	}
 }

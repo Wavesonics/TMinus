@@ -1,14 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:id="@+id/AGENCYDETAIL_container"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Large Text"
-        android:id="@+id/AGENCYDETAIL_name"/>
-</LinearLayout>
+    <LinearLayout
+        android:divider="?android:attr/dividerVertical"
+        android:showDividers="middle"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/rocket_detail_padding">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/textAppearanceLargeAccent"
+                android:id="@+id/AGENCYDETAIL_name"
+                tools:text="Agency Name"
+                android:layout_gravity="center"
+                android:layout_alignTop="@+id/AGENCYDETAIL_agency_image"
+                android:layout_toRightOf="@+id/AGENCYDETAIL_agency_image"/>
+
+            <com.android.volley.toolbox.NetworkImageView
+                android:layout_width="106dp"
+                android:layout_height="144dp"
+                android:id="@+id/AGENCYDETAIL_agency_image"
+                android:layout_gravity="left|center_vertical"
+                android:layout_margin="@dimen/default_padding"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"
+                android:onClick="agencyImageClicked"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                tools:text="abrev"
+                android:id="@+id/AGENCYDETAIL_abbreviation"
+                android:textColor="@color/secondary_text"
+                android:layout_below="@+id/AGENCYDETAIL_name"
+                android:layout_toRightOf="@+id/AGENCYDETAIL_agency_image"/>
+        </RelativeLayout>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/scrollView"
+            android:padding="@dimen/default_padding"
+            android:scrollbarStyle="outsideOverlay">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/AGENCYDETAIL_loading_summary"
+                android:textIsSelectable="true"
+                android:id="@+id/AGENCYDETAIL_summary"
+                android:singleLine="false"/>
+        </ScrollView>
+    </LinearLayout>
+
+    <com.android.volley.toolbox.NetworkImageView
+        android:id="@+id/AGENCYDETAIL_expanded_agency_image"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:contentDescription="@string/LAUNCHDETAIL_description_zoom_touch_close"/>
+</FrameLayout>

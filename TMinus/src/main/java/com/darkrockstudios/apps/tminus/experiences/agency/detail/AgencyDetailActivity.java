@@ -3,6 +3,7 @@ package com.darkrockstudios.apps.tminus.experiences.agency.detail;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.Window;
 
 import com.darkrockstudios.apps.tminus.R;
@@ -79,5 +80,16 @@ public class AgencyDetailActivity extends DatabaseActivity
 		}
 
 		return agencyId;
+	}
+
+	public void agencyImageClicked( final View view )
+	{
+		AgencyDetailFragment fragment =
+				(AgencyDetailFragment) getSupportFragmentManager()
+						                       .findFragmentByTag( FRAGMENT_TAG );
+		if( fragment != null )
+		{
+			fragment.zoomAgencyImage();
+		}
 	}
 }
