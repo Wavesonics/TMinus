@@ -71,12 +71,16 @@
     <string name="ROCKETDETAIL_no_summary">No summary available.</string>
     <string name="ROCKETDETAIL_launch_vehicle_title">Launch Vehicle</string>
 
+    <string name="AGENCYDETAIL_no_summary">No summary available.</string>
+
     <string name="LOCATIONDETAIL_title">Location Detail</string>
 
     <string name="TOAST_launch_list_refresh_complete">Launch List updated</string>
     <string name="TOAST_launch_list_refresh_failed">Launch List update failed</string>
     <string name="TOAST_rocket_detail_update_complete">Rocket details updated</string>
     <string name="TOAST_rocket_detail_update_failed">Rocket details update failed</string>
+    <string name="TOAST_agency_detail_update_complete">Agency details updated</string>
+    <string name="TOAST_agency_detail_update_failed">Agency details update failed</string>
     <string name="TOAST_rocket_list_update_complete">Rocket list updated</string>
     <string name="TOAST_rocket_list_update_failed">Rocket list update failed</string>
     <string name="TOAST_agency_list_update_complete">Agency list updated</string>

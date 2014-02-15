@@ -1,18 +1,10 @@
 package com.darkrockstudios.apps.tminus.dataupdate.wikipedia;
 
-import android.content.Context;
 import android.util.Log;
-
-import com.darkrockstudios.apps.tminus.database.DatabaseHelper;
-import com.darkrockstudios.apps.tminus.database.tables.RocketDetail;
-import com.darkrockstudios.apps.tminus.launchlibrary.Rocket;
-import com.j256.ormlite.android.apptools.OpenHelperManager;
-import com.j256.ormlite.dao.Dao;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.sql.SQLException;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -43,9 +35,9 @@ public class WikiArticleHandler
 	private static final Pattern BOLD_PATTERN         = Pattern.compile( "'''(.+?)'''" );
 	private static final Pattern ITALICS_PATTERN      = Pattern.compile( "''(.+?)''" );
 
-	public static boolean processWikiArticle( final JSONObject response, int rocketId, Context context )
+	public static String processWikiArticle( final JSONObject response )
 	{
-		boolean success = false;
+		String articleText;
 
 		Log.d( TAG, "Received wiki ARTICLE data, parsing..." );
 		try
@@ -53,68 +45,23 @@ public class WikiArticleHandler
 			JSONObject parse = response.getJSONObject( "parse" );
 			JSONObject text = parse.getJSONObject( "wikitext" );
 
-			String articleText = text.getString( "*" );
-			articleText = cleanUpWikiText( articleText );
-
-			if( saveToDatabase( articleText, rocketId, context ) )
-			{
-				success = true;
-			}
-			else
-			{
-				success = false;
-			}
+			String rawArticleText = text.getString( "*" );
+			articleText = cleanUpWikiText( rawArticleText );
 		}
 		catch( final JSONException e )
 		{
 			e.printStackTrace();
-			success = false;
+			articleText = null;
 		}
 
-		return success;
-	}
-
-	private static boolean saveToDatabase( final String articleText, int rocketId, Context context )
-	{
-		boolean success = false;
-
-		final DatabaseHelper databaseHelper = OpenHelperManager.getHelper( context, DatabaseHelper.class );
-		if( databaseHelper != null )
-		{
-			try
-			{
-				Dao<RocketDetail, Integer> rocketDetailDao = databaseHelper.getDao( RocketDetail.class );
-				RocketDetail rocketDetail = rocketDetailDao.queryForId( rocketId );
-				if( rocketDetail == null )
-				{
-					rocketDetail = new RocketDetail();
-					rocketDetail.rocketId = rocketId;
-					rocketDetail.summary = articleText;
-					rocketDetailDao.create( rocketDetail );
-					success = true;
-				}
-				else
-				{
-					rocketDetail.summary = articleText;
-					rocketDetailDao.update( rocketDetail );
-					success = true;
-				}
-			}
-			catch( final SQLException e )
-			{
-				e.printStackTrace();
-			}
-
-			OpenHelperManager.releaseHelper();
-		}
-
-		return success;
+		return articleText;
 	}
 
 	private static String cleanUpWikiText( final String wikiText )
 	{
 		// Unescape the wikitext
 		String articleText = wikiText.replace( "\\\"", "\"" );
+
 		articleText = articleText.replace( "\\/", "/" );
 
 		articleText = removeInfoBox( articleText );
@@ -166,16 +113,19 @@ public class WikiArticleHandler
 		final String openBracket = "{{";
 		final String closeBracket = "}}";
 		final Locale locale = Locale.ENGLISH;
-		int curPos = articleText.toLowerCase( locale ).indexOf( infoBox.toLowerCase( locale ) );
+
+		final String lowerCaseArticleText = articleText.toLowerCase( locale );
+
+		int curPos = lowerCaseArticleText.indexOf( infoBox.toLowerCase( locale ) );
 		if( curPos > -1 )
 		{
 			curPos += infoBox.length();
 			int openBrackets = 1;
 			while( openBrackets > 0 )
 			{
-				int nextOpen = articleText.indexOf( openBracket, curPos );
-				int nextClose = articleText.indexOf( closeBracket, curPos );
-				if( nextOpen < nextClose )
+				int nextOpen = lowerCaseArticleText.indexOf( openBracket, curPos );
+				int nextClose = lowerCaseArticleText.indexOf( closeBracket, curPos );
+				if( nextOpen > -1 && nextOpen < nextClose )
 				{
 					curPos = nextOpen + openBracket.length();
 					++openBrackets;
@@ -198,12 +148,12 @@ public class WikiArticleHandler
 		return cleanedArticle;
 	}
 
-	public static String extractArticleTitle( final Rocket rocket )
+	public static String extractArticleTitle( final String wikiUrl )
 	{
 		final String articleTitle;
-		if( rocket != null && rocket.wikiURL != null && !rocket.wikiURL.isEmpty() )
+		if( wikiUrl != null && !wikiUrl.isEmpty() )
 		{
-			Matcher matcher = WIKI_ARTICLE_PATTERN.matcher( rocket.wikiURL );
+			Matcher matcher = WIKI_ARTICLE_PATTERN.matcher( wikiUrl );
 			if( matcher.matches() && matcher.groupCount() == 1 )
 			{
 				articleTitle = matcher.group( 1 );

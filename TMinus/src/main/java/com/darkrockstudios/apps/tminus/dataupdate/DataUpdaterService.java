@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.util.Log;
 
 import com.darkrockstudios.apps.tminus.experiences.agency.browse.dataupdate.AgencyUpdateTask;
+import com.darkrockstudios.apps.tminus.experiences.agency.detail.dataupdate.AgencyDetailUpdateTask;
 import com.darkrockstudios.apps.tminus.experiences.location.browse.dataupdate.LocationUpdateTask;
 import com.darkrockstudios.apps.tminus.experiences.rocket.browse.dataupdate.RocketUpdateTask;
 import com.darkrockstudios.apps.tminus.experiences.rocket.detail.dataupdate.RocketDetailUpdateTask;
@@ -45,6 +46,10 @@ public class DataUpdaterService extends IntentService
 			else if( updateType.equals( AgencyUpdateTask.UPDATE_TYPE ) )
 			{
 				updateTask = new AgencyUpdateTask( this );
+			}
+			else if( updateType.equals( AgencyDetailUpdateTask.UPDATE_TYPE ) )
+			{
+				updateTask = new AgencyDetailUpdateTask( this, intent.getData() );
 			}
 			else
 			{

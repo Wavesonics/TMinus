@@ -6,7 +6,7 @@ import com.j256.ormlite.table.DatabaseTable;
 /**
  * Created by Adam on 2/15/14.
  */
-@DatabaseTable(tableName = AgencyPad.TABLE_NAME)
+@DatabaseTable(tableName = AgencyType.TABLE_NAME)
 public class AgencyType
 {
 	public static final String TABLE_NAME = "AgencyType";
