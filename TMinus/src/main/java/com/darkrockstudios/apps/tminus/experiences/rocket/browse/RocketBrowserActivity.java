@@ -27,7 +27,7 @@ public class RocketBrowserActivity extends NavigationDatabaseActivity implements
 	private boolean m_twoPane;
 
 	@Override
-	protected void onCreate( Bundle savedInstanceState )
+	protected void onCreate( final Bundle savedInstanceState )
 	{
 		super.onCreate( savedInstanceState );
 		requestWindowFeature( Window.FEATURE_INDETERMINATE_PROGRESS );
@@ -65,7 +65,7 @@ public class RocketBrowserActivity extends NavigationDatabaseActivity implements
 	}
 
 	@Override
-	public boolean onCreateOptionsMenu( Menu menu )
+	public boolean onCreateOptionsMenu( final Menu menu )
 	{
 		final MenuInflater inflater = getMenuInflater();
 		inflater.inflate( R.menu.settings, menu );
@@ -107,7 +107,7 @@ public class RocketBrowserActivity extends NavigationDatabaseActivity implements
 		fragment.refresh();
 	}
 
-	public void rocketImageClicked( View v )
+	public void rocketImageClicked( final View v )
 	{
 		RocketDetailFragment fragment = (RocketDetailFragment) getSupportFragmentManager()
 				                                                       .findFragmentById( R.id.COMMON_detail_fragment_container );
@@ -119,7 +119,7 @@ public class RocketBrowserActivity extends NavigationDatabaseActivity implements
 	}
 
 	@Override
-	public void onItemSelected( Rocket rocket )
+	public void onItemSelected( final Rocket rocket )
 	{
 		if( m_twoPane )
 		{

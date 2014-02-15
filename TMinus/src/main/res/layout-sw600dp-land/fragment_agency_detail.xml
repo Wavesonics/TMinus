@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:id="@+id/AGENCYDETAIL_container"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.android.volley.toolbox.NetworkImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:id="@+id/AGENCYDETAIL_agency_image"
+            android:layout_gravity="left|center_vertical"
+            android:layout_margin="@dimen/default_padding"
+            android:onClick="agencyImageClicked"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:padding="@dimen/default_padding">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/textAppearanceLargeAccent"
+                android:id="@+id/AGENCYDETAIL_abbreviation"
+                tools:text="NASA"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                tools:text="Full long name"
+                android:id="@+id/AGENCYDETAIL_name"
+                android:textColor="@color/secondary_text"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                tools:text="USA"
+                android:id="@+id/AGENCYDETAIL_country"
+                android:textColor="@color/secondary_text"
+                android:drawableLeft="@drawable/flag_unknown"
+                android:gravity="center_vertical"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                tools:text="Governmental"
+                android:id="@+id/AGENCYDETAIL_type"
+                android:textColor="@color/secondary_text"/>
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/scrollView"
+                android:padding="@dimen/default_padding"
+                android:scrollbarStyle="outsideOverlay">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="@string/AGENCYDETAIL_loading_summary"
+                    android:textIsSelectable="true"
+                    android:id="@+id/AGENCYDETAIL_summary"
+                    android:singleLine="false"/>
+            </ScrollView>
+        </LinearLayout>
+    </LinearLayout>
+
+    <com.android.volley.toolbox.NetworkImageView
+        android:id="@+id/AGENCYDETAIL_expanded_agency_image"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:contentDescription="@string/LAUNCHDETAIL_description_zoom_touch_close"/>
+</FrameLayout>
