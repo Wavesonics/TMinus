@@ -21,6 +21,7 @@ import com.darkrockstudios.apps.tminus.R;
 import com.darkrockstudios.apps.tminus.TMinusApplication;
 import com.darkrockstudios.apps.tminus.database.DatabaseHelper;
 import com.darkrockstudios.apps.tminus.database.tables.AgencyDetail;
+import com.darkrockstudios.apps.tminus.database.tables.AgencyType;
 import com.darkrockstudios.apps.tminus.dataupdate.DataUpdaterService;
 import com.darkrockstudios.apps.tminus.experiences.agency.detail.dataupdate.AgencyDetailUpdateTask;
 import com.darkrockstudios.apps.tminus.launchlibrary.Agency;
@@ -52,6 +53,12 @@ public class AgencyDetailFragment extends DialogFragment implements Utilities.Zo
 	@InjectView(R.id.AGENCYDETAIL_abbreviation)
 	TextView m_abbreviation;
 
+	@InjectView(R.id.AGENCYDETAIL_country)
+	TextView m_country;
+
+	@InjectView(R.id.AGENCYDETAIL_type)
+	TextView m_type;
+
 	@InjectView(R.id.AGENCYDETAIL_agency_image)
 	NetworkImageView m_agencyImage;
 
@@ -61,8 +68,9 @@ public class AgencyDetailFragment extends DialogFragment implements Utilities.Zo
 	@InjectView(R.id.AGENCYDETAIL_summary)
 	TextView m_summary;
 
-	private int m_agencyId;
+	private int          m_agencyId;
 	private Agency       m_agency;
+	private AgencyType   m_agencyType;
 	private AgencyDetail m_agencyDetail;
 
 	private Animator m_currentAnimator;
@@ -179,6 +187,21 @@ public class AgencyDetailFragment extends DialogFragment implements Utilities.Zo
 
 			m_name.setText( m_agency.name );
 			m_abbreviation.setText( m_agency.abbrev );
+
+			m_country.setText( m_agency.countryCode );
+
+			int flagResourceId = Utilities.getFlagResource( m_agency.countryCode );
+			m_country.setCompoundDrawablesWithIntrinsicBounds( flagResourceId, 0, 0, 0 );
+
+			m_agencyType = getAgencyType();
+			if( m_agencyType != null )
+			{
+				m_type.setText( m_agencyType.name );
+			}
+			else
+			{
+				m_type.setText( R.string.AGENCYDETAIL_no_type );
+			}
 		}
 	}
 
@@ -195,6 +218,28 @@ public class AgencyDetailFragment extends DialogFragment implements Utilities.Zo
 
 			activity.startService( intent );
 		}
+	}
+
+	private AgencyType getAgencyType()
+	{
+		AgencyType agencyType = null;
+
+		Activity activity = getActivity();
+		if( m_agency != null && activity != null && isAdded() )
+		{
+			DatabaseHelper databaseHelper = new DatabaseHelper( activity );
+			try
+			{
+				Dao<AgencyType, Integer> agencyDao = databaseHelper.getDao( AgencyType.class );
+				agencyType = agencyDao.queryForId( m_agency.type );
+			}
+			catch( final SQLException e )
+			{
+				e.printStackTrace();
+			}
+		}
+
+		return agencyType;
 	}
 
 	private Agency getAgency()

@@ -23,8 +23,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="@style/textAppearanceLargeAccent"
-                android:id="@+id/AGENCYDETAIL_name"
-                tools:text="Agency Name"
+                android:id="@+id/AGENCYDETAIL_abbreviation"
+                tools:text="NASA"
                 android:layout_gravity="center"
                 android:layout_alignTop="@+id/AGENCYDETAIL_agency_image"
                 android:layout_toRightOf="@+id/AGENCYDETAIL_agency_image"/>
@@ -43,10 +43,32 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                tools:text="abrev"
-                android:id="@+id/AGENCYDETAIL_abbreviation"
+                tools:text="Full long name"
+                android:id="@+id/AGENCYDETAIL_name"
+                android:textColor="@color/secondary_text"
+                android:layout_below="@+id/AGENCYDETAIL_abbreviation"
+                android:layout_toRightOf="@+id/AGENCYDETAIL_agency_image"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                tools:text="USA"
+                android:id="@+id/AGENCYDETAIL_country"
                 android:textColor="@color/secondary_text"
                 android:layout_below="@+id/AGENCYDETAIL_name"
+                android:layout_toRightOf="@+id/AGENCYDETAIL_agency_image"
+                android:drawableLeft="@drawable/flag_unknown"
+                android:gravity="center_vertical"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                tools:text="Governmental"
+                android:id="@+id/AGENCYDETAIL_type"
+                android:textColor="@color/secondary_text"
+                android:layout_below="@+id/AGENCYDETAIL_country"
                 android:layout_toRightOf="@+id/AGENCYDETAIL_agency_image"/>
         </RelativeLayout>
 
