@@ -61,6 +61,7 @@ public class RocketDetailActivity extends DatabaseActivity
 	@Override
 	public boolean onCreateOptionsMenu( final Menu menu )
 	{
+		getMenuInflater().inflate( R.menu.refresh, menu );
 		getMenuInflater().inflate( R.menu.settings, menu );
 		return true;
 	}
@@ -78,6 +79,10 @@ public class RocketDetailActivity extends DatabaseActivity
 					UpNavUtil.standardUp( this );
 					handled = true;
 					break;
+				case R.id.action_refresh:
+					refresh();
+					handled = true;
+					break;
 				default:
 					handled = super.onOptionsItemSelected( item );
 					break;
@@ -89,6 +94,17 @@ public class RocketDetailActivity extends DatabaseActivity
 		}
 
 		return handled;
+	}
+
+	private void refresh()
+	{
+		RocketDetailFragment fragment =
+				(RocketDetailFragment) getSupportFragmentManager()
+						                       .findFragmentByTag( FRAGMENT_TAG );
+		if( fragment != null )
+		{
+			fragment.refresh();
+		}
 	}
 
 	public void rocketImageClicked( final View v )

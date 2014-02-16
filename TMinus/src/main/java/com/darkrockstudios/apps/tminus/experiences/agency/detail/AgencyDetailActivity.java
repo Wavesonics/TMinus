@@ -47,6 +47,7 @@ public class AgencyDetailActivity extends DatabaseActivity
 	@Override
 	public boolean onCreateOptionsMenu( final Menu menu )
 	{
+		getMenuInflater().inflate( R.menu.refresh, menu );
 		getMenuInflater().inflate( R.menu.settings, menu );
 		return true;
 	}
@@ -62,6 +63,10 @@ public class AgencyDetailActivity extends DatabaseActivity
 			{
 				case android.R.id.home:
 					UpNavUtil.standardUp( this );
+					handled = true;
+					break;
+				case R.id.action_refresh:
+					refresh();
 					handled = true;
 					break;
 				default:
@@ -88,6 +93,17 @@ public class AgencyDetailActivity extends DatabaseActivity
 		}
 
 		return agencyId;
+	}
+
+	private void refresh()
+	{
+		AgencyDetailFragment fragment =
+				(AgencyDetailFragment) getSupportFragmentManager()
+						                       .findFragmentByTag( FRAGMENT_TAG );
+		if( fragment != null )
+		{
+			fragment.refresh();
+		}
 	}
 
 	public void agencyImageClicked( final View view )

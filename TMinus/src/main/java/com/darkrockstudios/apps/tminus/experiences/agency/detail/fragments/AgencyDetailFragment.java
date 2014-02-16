@@ -220,6 +220,11 @@ public class AgencyDetailFragment extends DialogFragment implements Utilities.Zo
 		}
 	}
 
+	public void refresh()
+	{
+		requestAgencyDetails();
+	}
+
 	private AgencyType getAgencyType()
 	{
 		AgencyType agencyType = null;

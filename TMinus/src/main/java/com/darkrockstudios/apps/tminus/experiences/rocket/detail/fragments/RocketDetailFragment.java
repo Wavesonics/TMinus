@@ -314,6 +314,11 @@ public class RocketDetailFragment extends DialogFragment implements Listener, Ro
 		}
 	}
 
+	public void refresh()
+	{
+		requestRocketDetails();
+	}
+
 	public void zoomRocketImage()
 	{
 		// If we don't have rocket info yet, don't bother zooming
