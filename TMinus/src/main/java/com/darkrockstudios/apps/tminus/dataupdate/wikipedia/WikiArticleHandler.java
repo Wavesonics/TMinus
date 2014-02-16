@@ -27,6 +27,8 @@ public class WikiArticleHandler
 	private static final Pattern COMMENT_PATTERN      = Pattern.compile( "\\<\\!--(.*?)--\\>" );
 	private static final Pattern GENERAL_LINK_PATTERN = Pattern.compile( "\\[?\\[((?:.*?))[\\|](?:(.*?))?\\]\\]?" );
 	private static final Pattern SIMPLE_LINK_PATTERN  = Pattern.compile( "\\[?\\[([^|]*?)\\]\\]?" );
+	private static final Pattern SIMPLE_REF_PATTERN =
+			Pattern.compile( "<\\s*ref\\s*>.*?<\\s*/\\s*ref\\s*>", Pattern.CASE_INSENSITIVE );
 	private static final Pattern REF_PATTERN          =
 			Pattern.compile( "<\\s*ref(?:[^<]*?)[^/]>.*?<\\s*/\\s*ref\\s*>", Pattern.CASE_INSENSITIVE );
 	private static final Pattern REF_TAG_PATTERN      =
@@ -76,6 +78,9 @@ public class WikiArticleHandler
 		Matcher matcher;
 
 		matcher = COMMENT_PATTERN.matcher( articleText );
+		articleText = matcher.replaceAll( "" );
+
+		matcher = SIMPLE_REF_PATTERN.matcher( articleText );
 		articleText = matcher.replaceAll( "" );
 
 		matcher = REF_PATTERN.matcher( articleText );
