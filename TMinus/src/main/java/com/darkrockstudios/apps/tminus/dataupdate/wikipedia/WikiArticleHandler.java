@@ -25,10 +25,12 @@ public class WikiArticleHandler
 
 
 	private static final Pattern COMMENT_PATTERN      = Pattern.compile( "\\<\\!--(.*?)--\\>" );
-	private static final Pattern GENERAL_LINK_PATTERN = Pattern.compile( "\\[\\[(.*?:)?(.*?)(\\|.*?)?\\]\\]" );
-	private static final Pattern SIMPLE_LINK_PATTERN  = Pattern.compile( "\\[\\[([^|]*?)\\]\\]" );
-	private static final Pattern ASSET_PATTERN        = Pattern.compile( "\\[\\[(.*?)(?::|\\|)(.*?)\\]\\]" );
-	private static final Pattern REF_PATTERN          = Pattern.compile( "(<ref>.*?</ref>)", Pattern.CASE_INSENSITIVE );
+	private static final Pattern GENERAL_LINK_PATTERN = Pattern.compile( "\\[?\\[((?:.*?))[\\|](?:(.*?))?\\]\\]?" );
+	private static final Pattern SIMPLE_LINK_PATTERN  = Pattern.compile( "\\[?\\[([^|]*?)\\]\\]?" );
+	private static final Pattern REF_PATTERN          =
+			Pattern.compile( "<\\s*ref(?:[^<]*?)[^/]>.*?<\\s*/\\s*ref\\s*>", Pattern.CASE_INSENSITIVE );
+	private static final Pattern REF_TAG_PATTERN      =
+			Pattern.compile( "<\\s*ref(?:.*?)/>", Pattern.CASE_INSENSITIVE );
 
 	private static final Pattern LANG_PATTERN    =
 			Pattern.compile( "\\{\\{lang(?:-|\\|)[a-z]+[|](.*?)\\}\\}", Pattern.CASE_INSENSITIVE );
@@ -79,20 +81,22 @@ public class WikiArticleHandler
 		matcher = REF_PATTERN.matcher( articleText );
 		articleText = matcher.replaceAll( "" );
 
-		matcher = ASSET_PATTERN.matcher( articleText );
-		articleText = matcher.replaceAll( "$2" );
+		matcher = REF_TAG_PATTERN.matcher( articleText );
+		articleText = matcher.replaceAll( "" );
+
+		articleText = removeWikiAssetElement( "File", articleText );
 
 		matcher = SIMPLE_LINK_PATTERN.matcher( articleText );
 		articleText = matcher.replaceAll( "$1" );
+
+		matcher = GENERAL_LINK_PATTERN.matcher( articleText );
+		articleText = matcher.replaceAll( "$2" );
 
 		matcher = LANG_PATTERN.matcher( articleText );
 		articleText = matcher.replaceAll( "$1" );
 
 		matcher = CONVERT_PATTERN.matcher( articleText );
 		articleText = matcher.replaceAll( "$1 $2" );
-
-		matcher = GENERAL_LINK_PATTERN.matcher( articleText );
-		articleText = matcher.replaceAll( "$2" );
 
 		matcher = BOLD_PATTERN.matcher( articleText );
 		articleText = matcher.replaceAll( "<strong>$1</strong>" );
@@ -110,13 +114,21 @@ public class WikiArticleHandler
 		return articleText;
 	}
 
+	private static String removeWikiAssetElement( final String tag, final String articleText )
+	{
+		return removeWikiElement( tag, articleText, "[[", "]]" );
+	}
+
 	private static String removeWikiElement( final String tag, final String articleText )
+	{
+		return removeWikiElement( tag, articleText, "{{", "}}" );
+	}
+
+	private static String removeWikiElement( final String tag, final String articleText, final String openBracket, final String closeBracket )
 	{
 		String cleanedArticle = articleText;
 
-		final String tagStart = "{{" + tag;
-		final String openBracket = "{{";
-		final String closeBracket = "}}";
+		final String tagStart = openBracket + tag;
 		final Locale locale = Locale.ENGLISH;
 
 		String lowerCaseArticleText = articleText.toLowerCase( locale );
