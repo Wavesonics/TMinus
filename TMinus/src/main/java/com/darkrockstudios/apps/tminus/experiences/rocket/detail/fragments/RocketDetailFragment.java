@@ -282,7 +282,7 @@ public class RocketDetailFragment extends DialogFragment implements Listener, Ro
 		final Activity activity = getActivity();
 		if( activity != null && m_rocket != null )
 		{
-			startRocketDetailsUpdate();
+			requestRocketDetails();
 		}
 	}
 
@@ -299,11 +299,13 @@ public class RocketDetailFragment extends DialogFragment implements Listener, Ro
 		return displayImage;
 	}
 
-	private void startRocketDetailsUpdate()
+	private void requestRocketDetails()
 	{
 		Activity activity = getActivity();
 		if( m_rocket != null && activity != null && isAdded() )
 		{
+			activity.setProgressBarIndeterminateVisibility( true );
+
 			Intent intent = new Intent( activity, DataUpdaterService.class );
 			intent.setData( TminusUri.buildRocketUri( m_rocket.id ) );
 			intent.putExtra( DataUpdaterService.EXTRA_UPDATE_TYPE, RocketDetailUpdateTask.UPDATE_TYPE );

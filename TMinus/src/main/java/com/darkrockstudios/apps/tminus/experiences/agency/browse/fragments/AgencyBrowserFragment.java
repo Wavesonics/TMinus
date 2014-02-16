@@ -136,7 +136,8 @@ public class AgencyBrowserFragment extends BaseBrowserFragment implements Adapte
 			try
 			{
 				Dao<Agency, Integer> agencyDao = databaseHelper.getDao( Agency.class );
-				List<Agency> agencies = agencyDao.queryForAll();
+				List<Agency> agencies = agencyDao.query( agencyDao.queryBuilder().orderBy( "name", true ).prepare() );
+
 				m_adapter.addAll( agencies );
 				m_adapter.notifyDataSetChanged();
 				dataLoaded = true;

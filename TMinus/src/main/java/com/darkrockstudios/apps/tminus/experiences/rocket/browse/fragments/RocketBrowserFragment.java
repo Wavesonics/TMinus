@@ -26,7 +26,6 @@ import com.darkrockstudios.apps.tminus.launchlibrary.Rocket;
 import com.darkrockstudios.apps.tminus.misc.Preferences;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.Dao;
-import com.j256.ormlite.stmt.QueryBuilder;
 
 import org.joda.time.DateTime;
 
@@ -178,10 +177,8 @@ public class RocketBrowserFragment extends BaseBrowserFragment
 				try
 				{
 					Dao<Rocket, Integer> rocketDao = databaseHelper.getDao( Rocket.class );
-					QueryBuilder<Rocket, Integer> queryBuilder = rocketDao.queryBuilder();
-					//PreparedQuery<Rocket> query = queryBuilder.orderBy( "family_id", true ).prepare();
 
-					List<Rocket> results = rocketDao.queryForAll();
+					List<Rocket> results = rocketDao.query( rocketDao.queryBuilder().orderBy( "name", true ).prepare() );
 
 					for( final Rocket rocket : results )
 					{

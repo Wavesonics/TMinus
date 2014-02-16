@@ -27,8 +27,8 @@ public class WikiArticleHandler
 	private static final Pattern COMMENT_PATTERN      = Pattern.compile( "\\<\\!--(.*?)--\\>" );
 	private static final Pattern GENERAL_LINK_PATTERN = Pattern.compile( "\\[\\[(.*?:)?(.*?)(\\|.*?)?\\]\\]" );
 	private static final Pattern SIMPLE_LINK_PATTERN  = Pattern.compile( "\\[\\[([^|]*?)\\]\\]" );
-	private static final Pattern ASSET_PATTERN = Pattern.compile( "\\[\\[(.*?)(?::|\\|)(.*?)\\]\\]" );
-	private static final Pattern REF_PATTERN   = Pattern.compile( "(<ref>.*?</ref>)", Pattern.CASE_INSENSITIVE );
+	private static final Pattern ASSET_PATTERN        = Pattern.compile( "\\[\\[(.*?)(?::|\\|)(.*?)\\]\\]" );
+	private static final Pattern REF_PATTERN          = Pattern.compile( "(<ref>.*?</ref>)", Pattern.CASE_INSENSITIVE );
 
 	private static final Pattern LANG_PATTERN    =
 			Pattern.compile( "\\{\\{lang(?:-|\\|)[a-z]+[|](.*?)\\}\\}", Pattern.CASE_INSENSITIVE );
@@ -66,13 +66,13 @@ public class WikiArticleHandler
 
 		articleText = articleText.replace( "\\/", "/" );
 
+		// This thing is often huge, lets remove it first to cut down the size of the text
 		articleText = removeWikiElement( "Infobox", articleText );
 
 		// Use our regex patterns to clean out the wiki syntax and replace it with mostly plain text
 		// or simple HTML for formatting
 		Matcher matcher;
 
-		// This first set of rules cleans up
 		matcher = COMMENT_PATTERN.matcher( articleText );
 		articleText = matcher.replaceAll( "" );
 
