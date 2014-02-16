@@ -23,21 +23,19 @@ public class WikiArticleHandler
 	private static final Pattern WIKI_ARTICLE_PATTERN =
 			Pattern.compile( "^http[s]?://[a-z]{2}.wikipedia.org/wiki/([a-zA-Z0-9-_\\(\\)]+)/?(?:\\?.*)?$" );
 
+
 	private static final Pattern COMMENT_PATTERN      = Pattern.compile( "\\<\\!--(.*?)--\\>" );
 	private static final Pattern GENERAL_LINK_PATTERN = Pattern.compile( "\\[\\[(.*?:)?(.*?)(\\|.*?)?\\]\\]" );
 	private static final Pattern SIMPLE_LINK_PATTERN  = Pattern.compile( "\\[\\[([^|]*?)\\]\\]" );
-	private static final Pattern ASSET_PATTERN        = Pattern.compile( "\\[\\[[a-zA-Z]+:(.*?)\\]\\]" );
-	private static final Pattern REF_PATTERN          = Pattern.compile( "<ref>.*?</ref>", Pattern.CASE_INSENSITIVE );
-	private static final Pattern CITE_PATTERN         =
-			Pattern.compile( "\\{\\{cite.*?\\}\\}", Pattern.CASE_INSENSITIVE );
-	private static final Pattern LANG_PATTERN         =
-			Pattern.compile( "\\{\\{lang-[a-z]+[|](.*?)\\}\\}", Pattern.CASE_INSENSITIVE );
-	private static final Pattern COORD_PATTERN        =
-			Pattern.compile( "\\{\\{coord.*?\\}\\}", Pattern.CASE_INSENSITIVE );
-	private static final Pattern CONVERT_PATTERN      =
+	private static final Pattern ASSET_PATTERN = Pattern.compile( "\\[\\[(.*?)(?::|\\|)(.*?)\\]\\]" );
+	private static final Pattern REF_PATTERN   = Pattern.compile( "(<ref>.*?</ref>)", Pattern.CASE_INSENSITIVE );
+
+	private static final Pattern LANG_PATTERN    =
+			Pattern.compile( "\\{\\{lang(?:-|\\|)[a-z]+[|](.*?)\\}\\}", Pattern.CASE_INSENSITIVE );
+	private static final Pattern CONVERT_PATTERN =
 			Pattern.compile( "\\{\\{convert\\|([0-9]+)\\|([a-zA-Z]+)\\}\\}", Pattern.CASE_INSENSITIVE );
-	private static final Pattern BOLD_PATTERN         = Pattern.compile( "'''(.+?)'''" );
-	private static final Pattern ITALICS_PATTERN      = Pattern.compile( "''(.+?)''" );
+	private static final Pattern BOLD_PATTERN    = Pattern.compile( "'''(.+?)'''" );
+	private static final Pattern ITALICS_PATTERN = Pattern.compile( "''(.+?)''" );
 
 	public static String processWikiArticle( final JSONObject response )
 	{
@@ -68,35 +66,30 @@ public class WikiArticleHandler
 
 		articleText = articleText.replace( "\\/", "/" );
 
-		articleText = removeInfoBox( articleText );
+		articleText = removeWikiElement( "Infobox", articleText );
 
 		// Use our regex patterns to clean out the wiki syntax and replace it with mostly plain text
 		// or simple HTML for formatting
 		Matcher matcher;
 
+		// This first set of rules cleans up
 		matcher = COMMENT_PATTERN.matcher( articleText );
 		articleText = matcher.replaceAll( "" );
 
 		matcher = REF_PATTERN.matcher( articleText );
 		articleText = matcher.replaceAll( "" );
 
-		matcher = CITE_PATTERN.matcher( articleText );
-		articleText = matcher.replaceAll( "" );
+		matcher = ASSET_PATTERN.matcher( articleText );
+		articleText = matcher.replaceAll( "$2" );
+
+		matcher = SIMPLE_LINK_PATTERN.matcher( articleText );
+		articleText = matcher.replaceAll( "$1" );
 
 		matcher = LANG_PATTERN.matcher( articleText );
 		articleText = matcher.replaceAll( "$1" );
 
-		matcher = COORD_PATTERN.matcher( articleText );
-		articleText = matcher.replaceAll( "" );
-
 		matcher = CONVERT_PATTERN.matcher( articleText );
 		articleText = matcher.replaceAll( "$1 $2" );
-
-		matcher = ASSET_PATTERN.matcher( articleText );
-		articleText = matcher.replaceAll( "" );
-
-		matcher = SIMPLE_LINK_PATTERN.matcher( articleText );
-		articleText = matcher.replaceAll( "$1" );
 
 		matcher = GENERAL_LINK_PATTERN.matcher( articleText );
 		articleText = matcher.replaceAll( "$2" );
@@ -107,6 +100,9 @@ public class WikiArticleHandler
 		matcher = ITALICS_PATTERN.matcher( articleText );
 		articleText = matcher.replaceAll( "<em>$1</em>" );
 
+		// Remove any remaining Wiki elements
+		articleText = removeWikiElement( "", articleText );
+
 		// Lastly trim any whitespace, and then space things out
 		articleText = articleText.trim();
 		articleText = articleText.replace( "\n", "<br/>" );
@@ -114,45 +110,47 @@ public class WikiArticleHandler
 		return articleText;
 	}
 
-	private static String removeInfoBox( final String articleText )
+	private static String removeWikiElement( final String tag, final String articleText )
 	{
-		final String cleanedArticle;
+		String cleanedArticle = articleText;
 
-		// Find the end of the Infobox
-		final String infoBox = "{{Infobox";
+		final String tagStart = "{{" + tag;
 		final String openBracket = "{{";
 		final String closeBracket = "}}";
 		final Locale locale = Locale.ENGLISH;
 
-		final String lowerCaseArticleText = articleText.toLowerCase( locale );
+		String lowerCaseArticleText = articleText.toLowerCase( locale );
 
-		int curPos = lowerCaseArticleText.indexOf( infoBox.toLowerCase( locale ) );
-		if( curPos > -1 )
+		int startPos = -1;
+		while( (startPos = lowerCaseArticleText.indexOf( tagStart.toLowerCase( locale ) )) > -1 )
 		{
-			curPos += infoBox.length();
+			int endPos = startPos + tagStart.length();
 			int openBrackets = 1;
 			while( openBrackets > 0 )
 			{
-				int nextOpen = lowerCaseArticleText.indexOf( openBracket, curPos );
-				int nextClose = lowerCaseArticleText.indexOf( closeBracket, curPos );
+				int nextOpen = lowerCaseArticleText.indexOf( openBracket, endPos );
+				int nextClose = lowerCaseArticleText.indexOf( closeBracket, endPos );
 				if( nextOpen > -1 && nextOpen < nextClose )
 				{
-					curPos = nextOpen + openBracket.length();
+					endPos = nextOpen + openBracket.length();
 					++openBrackets;
+				}
+				else if( nextClose > -1 )
+				{
+					endPos = nextClose + closeBracket.length();
+					--openBrackets;
 				}
 				else
 				{
-					curPos = nextClose + closeBracket.length();
-					--openBrackets;
+					Log.d( TAG, "Broken WIki tag" );
+					break;
 				}
 			}
 
-			// Grab everything immediately after the Infobox
-			cleanedArticle = articleText.substring( curPos, articleText.length() );
-		}
-		else
-		{
-			cleanedArticle = articleText;
+			cleanedArticle =
+					cleanedArticle.substring( 0, startPos ) + cleanedArticle.substring( endPos, cleanedArticle.length() );
+			lowerCaseArticleText = lowerCaseArticleText.substring( 0, startPos ) +
+			                       lowerCaseArticleText.substring( endPos, lowerCaseArticleText.length() );
 		}
 
 		return cleanedArticle;
