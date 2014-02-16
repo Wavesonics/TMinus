@@ -3,6 +3,7 @@ package com.darkrockstudios.apps.tminus.experiences.agency.browse.dataupdate;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.text.Html;
 import android.util.Log;
 
 import com.darkrockstudios.apps.tminus.database.DatabaseHelper;
@@ -103,6 +104,8 @@ public class AgencyUpdateTask extends UpdateTask
 			for( int ii = 0; ii < n; ++ii )
 			{
 				final Agency agency = gson.fromJson( agencies.get( ii ).toString(), Agency.class );
+				// Gotta clean this entry
+				agency.name = Html.fromHtml( agency.name ).toString();
 				agencyDao.createOrUpdate( agency );
 			}
 
