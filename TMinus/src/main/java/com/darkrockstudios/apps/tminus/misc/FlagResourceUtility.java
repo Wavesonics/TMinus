@@ -275,7 +275,11 @@ public final class FlagResourceUtility
 
 		if( countryCode != null && countryCode.trim().length() > 0 )
 		{
-			resourceId = s_codeToFlag.get( countryCode );
+			CountryCode cc = CountryCode.getByCode( countryCode, false );
+			if( cc != null )
+			{
+				resourceId = s_codeToFlag.get( cc.getAlpha3() );
+			}
 		}
 
 		return resourceId;
