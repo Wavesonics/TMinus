@@ -39,6 +39,7 @@ import com.darkrockstudios.apps.tminus.launchlibrary.Pad;
 import com.darkrockstudios.apps.tminus.loaders.LaunchLoader;
 import com.darkrockstudios.apps.tminus.loaders.LaunchLoader.Listener;
 import com.darkrockstudios.apps.tminus.loaders.RocketDetailLoader;
+import com.darkrockstudios.apps.tminus.misc.FlagResourceUtility;
 import com.darkrockstudios.apps.tminus.misc.Preferences;
 import com.darkrockstudios.apps.tminus.misc.TminusUri;
 import com.darkrockstudios.apps.tminus.misc.Utilities;
@@ -324,7 +325,7 @@ public class LaunchDetailFragment extends Fragment implements Listener, RocketDe
 			final TextView location =
 					(TextView) rootView.findViewById( R.id.LAUNCHDETAIL_location );
 			location.setText( pad.name );
-			int flagResourceId = Utilities
+			int flagResourceId = FlagResourceUtility
 					                     .getFlagResource( pad.location.countryCode );
 			location.setCompoundDrawablesWithIntrinsicBounds( 0, 0, flagResourceId, 0 );
 

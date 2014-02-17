@@ -20,7 +20,7 @@ import com.darkrockstudios.apps.tminus.R;
 import com.darkrockstudios.apps.tminus.database.DatabaseHelper;
 import com.darkrockstudios.apps.tminus.launchlibrary.Location;
 import com.darkrockstudios.apps.tminus.launchlibrary.Pad;
-import com.darkrockstudios.apps.tminus.misc.Utilities;
+import com.darkrockstudios.apps.tminus.misc.FlagResourceUtility;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.maps.CameraUpdate;
@@ -261,7 +261,7 @@ public class LocationDetailFragment extends DialogFragment implements AdapterVie
 			{
 				m_locationName.setText( m_location.name );
 
-				int flagResourceId = Utilities
+				int flagResourceId = FlagResourceUtility
 						                     .getFlagResource( m_location.countryCode );
 				m_locationName.setCompoundDrawablesWithIntrinsicBounds( flagResourceId, 0, 0, 0 );
 			}

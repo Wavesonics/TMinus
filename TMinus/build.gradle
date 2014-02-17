@@ -28,6 +28,7 @@ dependencies {
     compile 'com.nhaarman.listviewanimations:library:2.5.2'
     compile 'com.jakewharton:butterknife:4.0.1'
     compile 'joda-time:joda-time:2.3'
+    compile 'com.neovisionaries:nv-i18n:1.11'
 
     compile 'com.j256.ormlite:ormlite-core:4.48'
     compile 'com.j256.ormlite:ormlite-android:4.48'

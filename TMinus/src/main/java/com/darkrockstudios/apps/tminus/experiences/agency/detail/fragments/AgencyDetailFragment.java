@@ -25,6 +25,7 @@ import com.darkrockstudios.apps.tminus.database.tables.AgencyType;
 import com.darkrockstudios.apps.tminus.dataupdate.DataUpdaterService;
 import com.darkrockstudios.apps.tminus.experiences.agency.detail.dataupdate.AgencyDetailUpdateTask;
 import com.darkrockstudios.apps.tminus.launchlibrary.Agency;
+import com.darkrockstudios.apps.tminus.misc.FlagResourceUtility;
 import com.darkrockstudios.apps.tminus.misc.TminusUri;
 import com.darkrockstudios.apps.tminus.misc.Utilities;
 import com.j256.ormlite.dao.Dao;
@@ -190,7 +191,7 @@ public class AgencyDetailFragment extends DialogFragment implements Utilities.Zo
 
 			m_country.setText( m_agency.countryCode );
 
-			int flagResourceId = Utilities.getFlagResource( m_agency.countryCode );
+			int flagResourceId = FlagResourceUtility.getFlagResource( m_agency.countryCode );
 			m_country.setCompoundDrawablesWithIntrinsicBounds( flagResourceId, 0, 0, 0 );
 
 			m_agencyType = getAgencyType();
