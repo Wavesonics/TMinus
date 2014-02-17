@@ -17,6 +17,7 @@ import com.darkrockstudios.apps.tminus.experiences.rocket.detail.RocketDetailAct
 import com.darkrockstudios.apps.tminus.launchlibrary.Pad;
 import com.darkrockstudios.apps.tminus.launchlibrary.Rocket;
 import com.darkrockstudios.apps.tminus.misc.CommonMenuHandler;
+import com.darkrockstudios.apps.tminus.misc.UpNavUtil;
 
 public class LaunchDetailActivity extends DatabaseActivity
 {
@@ -59,7 +60,16 @@ public class LaunchDetailActivity extends DatabaseActivity
 
 		if( !CommonMenuHandler.onOptionsItemSelected( item, this ) )
 		{
-			handled = super.onOptionsItemSelected( item );
+			switch( item.getItemId() )
+			{
+				case android.R.id.home:
+					UpNavUtil.standardUp( this );
+					handled = true;
+					break;
+				default:
+					handled = super.onOptionsItemSelected( item );
+					break;
+			}
 		}
 		else
 		{
