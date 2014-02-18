@@ -61,6 +61,9 @@ public class AgencyDetailFragment extends DialogFragment implements Utilities.Zo
 	@InjectView(R.id.AGENCYDETAIL_type)
 	TextView m_type;
 
+	@InjectView(R.id.AGENCYDETAIL_info_url)
+	TextView m_infoUrl;
+
 	@InjectView(R.id.AGENCYDETAIL_agency_image)
 	NetworkImageView m_agencyImage;
 
@@ -203,6 +206,16 @@ public class AgencyDetailFragment extends DialogFragment implements Utilities.Zo
 			else
 			{
 				m_type.setText( R.string.AGENCYDETAIL_no_type );
+			}
+
+			if( m_agency.infoURL != null )
+			{
+				m_infoUrl.setVisibility( View.VISIBLE );
+				m_infoUrl.setText( m_agency.infoURL );
+			}
+			else
+			{
+				m_infoUrl.setVisibility( View.GONE );
 			}
 		}
 	}

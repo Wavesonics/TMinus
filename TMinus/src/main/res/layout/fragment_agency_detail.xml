@@ -72,6 +72,19 @@
                 android:textColor="@color/secondary_text"
                 android:layout_below="@+id/AGENCYDETAIL_country"
                 android:layout_toRightOf="@+id/AGENCYDETAIL_agency_image"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                tools:text="www.spacex.com"
+                android:autoLink="web"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:id="@+id/AGENCYDETAIL_info_url"
+                android:textColor="@color/secondary_text"
+                android:layout_below="@+id/AGENCYDETAIL_type"
+                android:layout_toRightOf="@+id/AGENCYDETAIL_agency_image"/>
         </RelativeLayout>
 
         <ScrollView

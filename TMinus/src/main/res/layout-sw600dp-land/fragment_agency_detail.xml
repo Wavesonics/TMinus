@@ -60,6 +60,17 @@
                 android:id="@+id/AGENCYDETAIL_type"
                 android:textColor="@color/secondary_text"/>
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                tools:text="www.spacex.com"
+                android:autoLink="web"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:id="@+id/AGENCYDETAIL_info_url"
+                android:textColor="@color/secondary_text"/>
+
             <ScrollView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
