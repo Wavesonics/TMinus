@@ -1,6 +1,7 @@
 package com.darkrockstudios.apps.tminus.misc;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 
 import com.darkrockstudios.apps.tminus.R;
@@ -15,9 +16,6 @@ import java.util.concurrent.ConcurrentHashMap;
 public final class FlagResourceUtility
 {
 	private static Map<String, Integer> s_codeToFlag = new ConcurrentHashMap<>();
-
-	private static final int TRANSITION_DURATION_MS = 1000;
-	private static final int TRANSITION_PAUSE_MS    = 3000;
 
 	static
 	{
@@ -278,6 +276,8 @@ public final class FlagResourceUtility
 	{
 		final Drawable flagDrawable;
 
+		Resources resources = context.getResources();
+
 		if( cslCountryCodes.contains( "," ) )
 		{
 			String[] countryCodes = cslCountryCodes.split( "," );
@@ -286,24 +286,27 @@ public final class FlagResourceUtility
 				Drawable[] flagResources = new Drawable[ countryCodes.length ];
 				for( int ii = 0; ii < countryCodes.length; ++ii )
 				{
-					flagResources[ ii ] = context.getResources().getDrawable( getFlagResource( countryCodes[ ii ] ) );
+					flagResources[ ii ] = resources.getDrawable( getFlagResource( countryCodes[ ii ] ) );
 				}
 
 				CyclicTransitionDrawable transitionDrawable = new CyclicTransitionDrawable( flagResources );
-				transitionDrawable.startTransition( TRANSITION_DURATION_MS, TRANSITION_PAUSE_MS );
+
+				final int transitionDuration = resources.getInteger( R.integer.transition_duration_ms );
+				final int transitionPause = resources.getInteger( R.integer.transition_pause_ms );
+				transitionDrawable.startTransition( transitionDuration, transitionPause );
 
 				flagDrawable = transitionDrawable;
 			}
 			else
 			{
 				int flagResource = getFlagResource( cslCountryCodes );
-				flagDrawable = context.getResources().getDrawable( flagResource );
+				flagDrawable = resources.getDrawable( flagResource );
 			}
 		}
 		else
 		{
 			int flagResource = getFlagResource( cslCountryCodes );
-			flagDrawable = context.getResources().getDrawable( flagResource );
+			flagDrawable = resources.getDrawable( flagResource );
 		}
 
 		return flagDrawable;

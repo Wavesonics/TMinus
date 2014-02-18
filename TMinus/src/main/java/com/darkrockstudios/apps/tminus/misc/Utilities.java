@@ -5,8 +5,10 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Point;
 import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
@@ -16,7 +18,9 @@ import com.darkrockstudios.apps.tminus.launchlibrary.Launch;
 import com.darkrockstudios.apps.tminus.launchlibrary.Mission;
 
 import java.text.SimpleDateFormat;
+import java.util.Collection;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -78,19 +82,45 @@ public class Utilities
 		return formatter.format( date );
 	}
 
-	public static int getLaunchTypeResource( final Mission mission )
+	public static Drawable getLaunchTypeDrawable( final Collection<Mission> missions, final Context context )
 	{
-		final int type;
-		if( mission != null )
+		final Drawable type;
+
+		Resources resources = context.getResources();
+
+		if( missions != null && missions.size() > 0 )
 		{
-			type = mission.type;
+			if( missions.size() > 1 )
+			{
+				Drawable[] types = new Drawable[ missions.size() ];
+
+				Iterator<Mission> it = missions.iterator();
+				for( int ii = 0; ii < missions.size(); ++ii )
+				{
+					Mission mission = it.next();
+					types[ ii ] = resources.getDrawable( getLaunchTypeResource( mission.type ) );
+				}
+
+				CyclicTransitionDrawable transitionDrawable = new CyclicTransitionDrawable( types );
+
+				final int transitionDuration = resources.getInteger( R.integer.transition_duration_ms );
+				final int transitionPause = resources.getInteger( R.integer.transition_pause_ms );
+				transitionDrawable.startTransition( transitionDuration, transitionPause );
+
+				type = transitionDrawable;
+			}
+			else
+			{
+				Mission mission = missions.iterator().next();
+				type = resources.getDrawable( getLaunchTypeResource( mission.type ) );
+			}
 		}
 		else
 		{
-			type = 9;
+			type = resources.getDrawable( R.drawable.ic_launch_type_unknown );
 		}
 
-		return getLaunchTypeResource( type );
+		return type;
 	}
 
 	public static int getLaunchTypeResource( final int type )

@@ -333,16 +333,18 @@ public class LaunchListFragment extends BaseBrowserFragment
 
 				final TextView descriptionView = (TextView) view.findViewById( R.id.launch_list_item_description );
 
-				if( launch.missions != null && launch.missions.size() > 0 )
+				final int numMissions = launch.missions.size();
+				if( launch.missions != null && numMissions > 0 )
 				{
-					if( launch.missions.size() == 1 )
+					if( numMissions == 1 )
 					{
 						Mission mission = launch.missions.iterator().next();
 						descriptionView.setText( mission.description );
 					}
 					else
 					{
-						descriptionView.setText( R.string.LAUNCHLIST_multiple_mission_details );
+						descriptionView
+								.setText( getContext().getString( R.string.LAUNCHLIST_multiple_mission_details, numMissions ) );
 					}
 				}
 				else
@@ -363,11 +365,9 @@ public class LaunchListFragment extends BaseBrowserFragment
 				netView3.setText( time.format( launch.net ) );
 
 				final ImageView typeIcon = (ImageView) view.findViewById( R.id.LAUNCHLIST_type_icon );
-				// TODO handle multiple missions
-				if( launch.missions != null && launch.missions.size() > 0 )
+				if( launch.missions != null )
 				{
-					Mission mission = launch.missions.iterator().next();
-					typeIcon.setImageResource( Utilities.getLaunchTypeResource( mission ) );
+					typeIcon.setImageDrawable( Utilities.getLaunchTypeDrawable( launch.missions, getContext() ) );
 				}
 				else
 				{
