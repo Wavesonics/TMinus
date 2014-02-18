@@ -13,13 +13,15 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         tools:text="Rocket Name"
         android:id="@+id/ROCKETLISTITEM_rocket_name"
-        android:layout_gravity="left|center_vertical"/>
+        android:layout_gravity="left|center_vertical"
+        android:gravity="center_vertical"
+        android:drawableLeft="@drawable/flag_unknown"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceListItemSmall"
-        tools:text="Configuration"
+        tools:text="@string/ROCKETLIST_item_configuration"
         android:id="@+id/ROCKETLISTITEM_rocket_configuration"
         android:layout_gravity="left|center_vertical"/>
 
@@ -27,7 +29,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceListItemSmall"
-        tools:text="Agencies"
+        tools:text="@string/ROCKETLIST_item_agencies"
         android:id="@+id/ROCKETLISTITEM_rocket_agencies"
         android:layout_gravity="left|center_vertical"/>
 </LinearLayout>

@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -23,6 +24,7 @@ import com.darkrockstudios.apps.tminus.dataupdate.DataUpdaterService;
 import com.darkrockstudios.apps.tminus.experiences.rocket.browse.dataupdate.RocketUpdateTask;
 import com.darkrockstudios.apps.tminus.launchlibrary.Agency;
 import com.darkrockstudios.apps.tminus.launchlibrary.Rocket;
+import com.darkrockstudios.apps.tminus.misc.FlagResourceUtility;
 import com.darkrockstudios.apps.tminus.misc.Preferences;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.Dao;
@@ -250,6 +252,8 @@ public class RocketBrowserFragment extends BaseBrowserFragment
 		@Override
 		public View getView( final int pos, final View convertView, final ViewGroup parent )
 		{
+			final Context context = getContext();
+
 			final View view;
 			if( convertView != null )
 			{
@@ -270,24 +274,53 @@ public class RocketBrowserFragment extends BaseBrowserFragment
 
 			viewHolder.rocketNameView.setText( rocket.name );
 
-			String agencies = "";
 			if( rocket.family != null && rocket.family.agencies != null )
 			{
+				StringBuilder sb = new StringBuilder();
+				Iterator<Agency> it = rocket.family.agencies.iterator();
+				while( it.hasNext() )
+				{
+					Agency agency = it.next();
+					sb.append( agency.countryCode );
+
+					if( it.hasNext() )
+					{
+						sb.append( ',' );
+					}
+				}
+
+				Drawable flagDrawable = FlagResourceUtility.getFlagDrawable( sb.toString(), getContext() );
+				viewHolder.rocketNameView.setCompoundDrawablesWithIntrinsicBounds( flagDrawable, null, null, null );
+			}
+			else
+			{
+				viewHolder.rocketNameView.setCompoundDrawablesWithIntrinsicBounds( R.drawable.flag_unknown, 0, 0, 0 );
+			}
+
+			final String agencies;
+			if( rocket.family != null && rocket.family.agencies != null )
+			{
+				StringBuilder agenciesSb = new StringBuilder();
 				for( Iterator<Agency> it = rocket.family.agencies.iterator(); it.hasNext(); )
 				{
 					Agency agency = it.next();
 					if( agency.abbrev != null )
 					{
-						agencies += agency.abbrev;
+						agenciesSb.append( agency.abbrev );
 						if( it.hasNext() )
 						{
-							agencies += ", ";
+							agenciesSb.append( ", " );
 						}
 					}
 				}
+				agencies = agenciesSb.toString();
+			}
+			else
+			{
+				agencies = context.getString( R.string.ROCKETLIST_item_no_agencies );
 			}
 
-			viewHolder.rocketAgenciesView.setText( agencies );
+			viewHolder.rocketAgenciesView.setText( context.getString( R.string.ROCKETLIST_item_agencies, agencies ) );
 
 			final String configuration;
 			if( rocket.configuration != null && rocket.configuration.trim().length() > 0 )
@@ -299,7 +332,8 @@ public class RocketBrowserFragment extends BaseBrowserFragment
 				configuration = getContext().getString( R.string.ROCKETLIST_item_no_configuration );
 			}
 
-			viewHolder.rocketConfigurationView.setText( configuration );
+			viewHolder.rocketConfigurationView
+					.setText( context.getString( R.string.ROCKETLIST_item_configuration, configuration ) );
 
 			return view;
 		}

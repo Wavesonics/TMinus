@@ -45,7 +45,10 @@
         <item>Previous</item>
     </string-array>
 
-    <string name="ROCKETLIST_item_no_configuration">No configuration specified</string>
+    <string name="ROCKETLIST_item_configuration">Configuration: %1$s</string>
+    <string name="ROCKETLIST_item_no_configuration">None specified</string>
+    <string name="ROCKETLIST_item_agencies">Agencies: %1$s</string>
+    <string name="ROCKETLIST_item_no_agencies">None specified</string>
 
     <string name="LAUNCHDETAIL_status">Status:</string>
     <string name="LAUNCHDETAIL_launch_window">Launch:</string>

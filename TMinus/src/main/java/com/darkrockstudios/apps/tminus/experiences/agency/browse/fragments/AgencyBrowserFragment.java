@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -23,6 +24,7 @@ import com.darkrockstudios.apps.tminus.database.DatabaseHelper;
 import com.darkrockstudios.apps.tminus.dataupdate.DataUpdaterService;
 import com.darkrockstudios.apps.tminus.experiences.agency.browse.dataupdate.AgencyUpdateTask;
 import com.darkrockstudios.apps.tminus.launchlibrary.Agency;
+import com.darkrockstudios.apps.tminus.misc.FlagResourceUtility;
 import com.darkrockstudios.apps.tminus.misc.Preferences;
 import com.j256.ormlite.dao.Dao;
 
@@ -202,6 +204,9 @@ public class AgencyBrowserFragment extends BaseBrowserFragment implements Adapte
 
 	static class ViewHolder
 	{
+		@InjectView(R.id.AGENCYLIST_abbreviation)
+		TextView m_abbreviation;
+
 		@InjectView(R.id.AGENCYLIST_name)
 		TextView m_name;
 
@@ -239,6 +244,10 @@ public class AgencyBrowserFragment extends BaseBrowserFragment implements Adapte
 
 			Agency agency = getItem( pos );
 			viewHolder.m_name.setText( agency.name );
+			viewHolder.m_abbreviation.setText( agency.abbrev );
+
+			Drawable flagDrawable = FlagResourceUtility.getFlagDrawable( agency.countryCode, getContext() );
+			viewHolder.m_abbreviation.setCompoundDrawablesWithIntrinsicBounds( flagDrawable, null, null, null );
 
 			return view;
 		}

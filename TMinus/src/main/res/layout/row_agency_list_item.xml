@@ -11,6 +11,17 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textStyle="bold"
+        android:gravity="center_vertical"
+        tools:text="Large Text"
+        android:id="@+id/AGENCYLIST_abbreviation"
+        android:drawableLeft="@drawable/flag_unknown"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceListItemSmall"
         tools:text="Large Text"
         android:id="@+id/AGENCYLIST_name"/>
+
 </LinearLayout>
