@@ -35,6 +35,7 @@ import com.darkrockstudios.apps.tminus.experiences.location.detail.fragments.Loc
 import com.darkrockstudios.apps.tminus.experiences.rocket.detail.dataupdate.RocketDetailUpdateTask;
 import com.darkrockstudios.apps.tminus.experiences.rocket.detail.fragments.RocketDetailFragment;
 import com.darkrockstudios.apps.tminus.launchlibrary.Launch;
+import com.darkrockstudios.apps.tminus.launchlibrary.Mission;
 import com.darkrockstudios.apps.tminus.launchlibrary.Pad;
 import com.darkrockstudios.apps.tminus.loaders.LaunchLoader;
 import com.darkrockstudios.apps.tminus.loaders.LaunchLoader.Listener;
@@ -308,9 +309,12 @@ public class LaunchDetailFragment extends Fragment implements Listener, RocketDe
 
 			final TextView description =
 					(TextView) rootView.findViewById( R.id.LAUNCHDETAIL_mission_description );
-			if( m_launchItem.mission != null )
+
+			// TODO handle multiple missions
+			if( m_launchItem.missions != null && m_launchItem.missions.size() > 0 )
 			{
-				description.setText( m_launchItem.mission.description );
+				Mission mission = m_launchItem.missions.iterator().next();
+				description.setText( mission.description );
 			}
 			else
 			{
@@ -461,9 +465,11 @@ public class LaunchDetailFragment extends Fragment implements Listener, RocketDe
 		if( m_launchItem != null && isAdded() )
 		{
 			final String missionDescription;
-			if( m_launchItem.mission != null )
+			// TODO handle multiple missions
+			if( m_launchItem.missions != null && m_launchItem.missions.size() > 0 )
 			{
-				missionDescription = m_launchItem.mission.description;
+				Mission mission = m_launchItem.missions.iterator().next();
+				missionDescription = mission.description;
 			}
 			else
 			{

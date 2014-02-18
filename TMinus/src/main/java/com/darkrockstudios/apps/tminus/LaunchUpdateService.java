@@ -28,7 +28,6 @@ import com.darkrockstudios.apps.tminus.launchlibrary.RocketFamily;
 import com.darkrockstudios.apps.tminus.misc.Preferences;
 import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
-import com.google.gson.JsonSyntaxException;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.misc.TransactionManager;
@@ -94,7 +93,7 @@ public class LaunchUpdateService extends Service
 	}
 
 	@Override
-	public int onStartCommand( Intent intent, int flags, int startId )
+	public int onStartCommand( final Intent intent, final int flags, final int startId )
 	{
 		Log.d( TAG, "LaunchUpdateService started." );
 
@@ -114,12 +113,12 @@ public class LaunchUpdateService extends Service
 	}
 
 	@Override
-	public IBinder onBind( Intent intent )
+	public IBinder onBind( final Intent intent )
 	{
 		return null;
 	}
 
-	private void requestLaunches( boolean previousLaunches )
+	private void requestLaunches( final boolean previousLaunches )
 	{
 		Log.d( TAG, "Requesting Launches..." );
 		if( !m_wakeLock.isHeld() )
@@ -173,13 +172,13 @@ public class LaunchUpdateService extends Service
 	{
 		private final boolean m_previousLaunches;
 
-		public LaunchListResponseListener( boolean previousLaunches )
+		public LaunchListResponseListener( final boolean previousLaunches )
 		{
 			m_previousLaunches = previousLaunches;
 		}
 
 		@Override
-		public void onResponse( JSONObject response )
+		public void onResponse( final JSONObject response )
 		{
 			Log.i( TAG, "Launches successfully retrieved from sever." );
 			LaunchListSaver loader = new LaunchListSaver( m_previousLaunches );
@@ -187,7 +186,7 @@ public class LaunchUpdateService extends Service
 		}
 
 		@Override
-		public void onErrorResponse( VolleyError error )
+		public void onErrorResponse( final VolleyError error )
 		{
 			Log.i( TAG, "Failed to retrieve Launches from sever." );
 			String errorMessage = error.getMessage();
@@ -205,7 +204,7 @@ public class LaunchUpdateService extends Service
 	{
 		private final boolean m_previousLaunches;
 
-		public LaunchListSaver( boolean previousLaunches )
+		public LaunchListSaver( final boolean previousLaunches )
 		{
 			super();
 
@@ -213,7 +212,7 @@ public class LaunchUpdateService extends Service
 		}
 
 		@Override
-		protected Long doInBackground( JSONObject... response )
+		protected Long doInBackground( final JSONObject... response )
 		{
 			Log.d( TAG, "Beginning background processing of new Launches..." );
 
@@ -274,7 +273,7 @@ public class LaunchUpdateService extends Service
 
 											                                      if( launch.rocket.family.agencies != null )
 											                                      {
-												                                      for( Agency agency : launch.rocket.family.agencies )
+												                                      for( final Agency agency : launch.rocket.family.agencies )
 												                                      {
 													                                      agencyDao.createOrUpdate( agency );
 
@@ -289,13 +288,13 @@ public class LaunchUpdateService extends Service
 
 											                                      locationDao.createOrUpdate( launch.location );
 
-											                                      for( Pad pad : launch.location.pads )
+											                                      for( final Pad pad : launch.location.pads )
 											                                      {
 												                                      padDao.createOrUpdate( pad );
 
 												                                      if( pad.agencies != null )
 												                                      {
-													                                      for( Agency agency : pad.agencies )
+													                                      for( final Agency agency : pad.agencies )
 													                                      {
 														                                      agencyDao
 																                                      .createOrUpdate( agency );
@@ -309,10 +308,12 @@ public class LaunchUpdateService extends Service
 												                                      }
 											                                      }
 
-											                                      if( launch.mission != null )
+											                                      if( launch.missions != null )
 											                                      {
-												                                      missionDao
-														                                      .createOrUpdate( launch.mission );
+												                                      for( final Mission mission : launch.missions )
+												                                      {
+													                                      missionDao.createOrUpdate( mission );
+												                                      }
 											                                      }
 
 											                                      // This must be run after all the others are created so the IDs of the child objects can be set
@@ -324,17 +325,13 @@ public class LaunchUpdateService extends Service
 
 									++numUpdated;
 								}
-								catch( SQLException e )
+								catch( final SQLException e )
 								{
 									Log.w( TAG, e.getMessage() );
 								}
 							}
 						}
-						catch( JsonSyntaxException e )
-						{
-							e.printStackTrace();
-						}
-						catch( JsonParseException e )
+						catch( final JsonParseException e )
 						{
 							e.printStackTrace();
 						}
@@ -358,11 +355,7 @@ public class LaunchUpdateService extends Service
 
 					numLaunches = launchDao.countOf();
 				}
-				catch( SQLException e )
-				{
-					e.printStackTrace();
-				}
-				catch( JSONException e )
+				catch( final SQLException | JSONException e )
 				{
 					e.printStackTrace();
 				}
@@ -377,12 +370,21 @@ public class LaunchUpdateService extends Service
 			return numLaunches;
 		}
 
-		private Launch parseLaunch( JSONObject launchObj, Gson gson ) throws JSONException
+		private Launch parseLaunch( final JSONObject launchObj, final Gson gson ) throws JSONException
 		{
 			final Launch launch = gson.fromJson( launchObj.toString(), Launch.class );
 
 			// We need to hook up the parent child relationship for the database
-			for( Pad pad : launch.location.pads )
+			if( launch.missions != null && launch.missions.size() > 0 )
+			{
+				for( final Mission mission : launch.missions )
+				{
+					mission.launch = launch;
+				}
+			}
+
+			// We need to hook up the parent child relationship for the database
+			for( final Pad pad : launch.location.pads )
 			{
 				pad.location = launch.location;
 			}
@@ -391,7 +393,7 @@ public class LaunchUpdateService extends Service
 		}
 
 		@Override
-		protected void onPostExecute( Long result )
+		protected void onPostExecute( final Long result )
 		{
 			Log.d( TAG, "Background update complete." );
 			sendSuccessBroadcast();
@@ -423,7 +425,7 @@ public class LaunchUpdateService extends Service
 
 					launchDao.delete( builder.prepare() );
 				}
-				catch( SQLException e )
+				catch( final SQLException e )
 				{
 					e.printStackTrace();
 				}

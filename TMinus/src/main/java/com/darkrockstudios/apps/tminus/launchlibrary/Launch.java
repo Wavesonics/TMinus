@@ -1,9 +1,11 @@
 package com.darkrockstudios.apps.tminus.launchlibrary;
 
 import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.Date;
 
 /**
@@ -39,8 +41,8 @@ public class Launch implements Serializable
 	@DatabaseField
 	public Date net;
 
-	@DatabaseField(canBeNull = true, foreign = true, foreignAutoCreate = true, foreignAutoRefresh = true)
-	public Mission mission;
+	@ForeignCollectionField(eager = true)
+	public Collection<Mission> missions;
 
 	@DatabaseField(foreign = true, foreignAutoCreate = true, foreignAutoRefresh = true)
 	public Rocket rocket;

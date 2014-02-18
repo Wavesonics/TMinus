@@ -38,6 +38,7 @@
 
     <string name="LAUNCHLIST_item_hours">HOURS</string>
     <string name="LAUNCHLIST_no_mission_details">No mission details available</string>
+    <string name="LAUNCHLIST_multiple_mission_details">%1$d missions on-board</string>
 
     <string-array name="LAUNCHLIST_navigation_options">
         <item>Upcoming</item>

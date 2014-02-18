@@ -19,8 +19,10 @@ public class Mission implements Serializable
 	@DatabaseField(id = true)
 	public int id;
 
-	@DatabaseField
 	public int launchID;
+
+	@DatabaseField(foreign = true)
+	public Launch launch;
 
 	@DatabaseField
 	public int type;

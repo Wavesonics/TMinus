@@ -22,6 +22,7 @@ import com.darkrockstudios.apps.tminus.base.fragments.BaseBrowserFragment;
 import com.darkrockstudios.apps.tminus.database.DatabaseHelper;
 import com.darkrockstudios.apps.tminus.experiences.launch.detail.fragments.LaunchDetailFragment;
 import com.darkrockstudios.apps.tminus.launchlibrary.Launch;
+import com.darkrockstudios.apps.tminus.launchlibrary.Mission;
 import com.darkrockstudios.apps.tminus.misc.Utilities;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.Dao;
@@ -331,9 +332,18 @@ public class LaunchListFragment extends BaseBrowserFragment
 				titleView.setText( launch.name );
 
 				final TextView descriptionView = (TextView) view.findViewById( R.id.launch_list_item_description );
-				if( launch.mission != null )
+				// TODO handle multiple missions
+				if( launch.missions != null && launch.missions.size() > 0 )
 				{
-					descriptionView.setText( launch.mission.description );
+					if( launch.missions.size() == 1 )
+					{
+						Mission mission = launch.missions.iterator().next();
+						descriptionView.setText( mission.description );
+					}
+					else
+					{
+						descriptionView.setText( R.string.LAUNCHLIST_multiple_mission_details );
+					}
 				}
 				else
 				{
@@ -353,7 +363,16 @@ public class LaunchListFragment extends BaseBrowserFragment
 				netView3.setText( time.format( launch.net ) );
 
 				final ImageView typeIcon = (ImageView) view.findViewById( R.id.LAUNCHLIST_type_icon );
-				typeIcon.setImageResource( Utilities.getLaunchTypeResource( launch.mission ) );
+				// TODO handle multiple missions
+				if( launch.missions != null && launch.missions.size() > 0 )
+				{
+					Mission mission = launch.missions.iterator().next();
+					typeIcon.setImageResource( Utilities.getLaunchTypeResource( mission ) );
+				}
+				else
+				{
+					typeIcon.setImageResource( R.drawable.ic_launch_type_unknown );
+				}
 			}
 			else
 			{

@@ -27,9 +27,6 @@ public class Rocket implements Serializable
 	public int id;
 
 	@DatabaseField
-	public int familyID;
-
-	@DatabaseField
 	public String name;
 
 	@DatabaseField
