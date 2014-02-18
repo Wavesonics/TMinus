@@ -332,7 +332,7 @@ public class LaunchListFragment extends BaseBrowserFragment
 				titleView.setText( launch.name );
 
 				final TextView descriptionView = (TextView) view.findViewById( R.id.launch_list_item_description );
-				// TODO handle multiple missions
+
 				if( launch.missions != null && launch.missions.size() > 0 )
 				{
 					if( launch.missions.size() == 1 )

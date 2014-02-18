@@ -6,6 +6,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.text.Html;
@@ -191,8 +192,8 @@ public class AgencyDetailFragment extends DialogFragment implements Utilities.Zo
 
 			m_country.setText( m_agency.countryCode );
 
-			int flagResourceId = FlagResourceUtility.getFlagResource( m_agency.countryCode );
-			m_country.setCompoundDrawablesWithIntrinsicBounds( flagResourceId, 0, 0, 0 );
+			Drawable flagDrawable = FlagResourceUtility.getFlagDrawable( m_agency.countryCode, getActivity() );
+			m_country.setCompoundDrawablesWithIntrinsicBounds( flagDrawable, null, null, null );
 
 			m_agencyType = getAgencyType();
 			if( m_agencyType != null )

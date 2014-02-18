@@ -3,6 +3,7 @@ package com.darkrockstudios.apps.tminus.experiences.location.detail.fragments;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -261,9 +262,8 @@ public class LocationDetailFragment extends DialogFragment implements AdapterVie
 			{
 				m_locationName.setText( m_location.name );
 
-				int flagResourceId = FlagResourceUtility
-						                     .getFlagResource( m_location.countryCode );
-				m_locationName.setCompoundDrawablesWithIntrinsicBounds( flagResourceId, 0, 0, 0 );
+				Drawable flagDrawable = FlagResourceUtility.getFlagDrawable( m_location.countryCode, getActivity() );
+				m_locationName.setCompoundDrawablesWithIntrinsicBounds( flagDrawable, null, null, null );
 			}
 
 			if( m_pads != null )

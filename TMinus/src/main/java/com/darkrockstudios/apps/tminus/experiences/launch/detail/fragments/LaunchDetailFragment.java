@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.CalendarContract;
@@ -329,9 +330,9 @@ public class LaunchDetailFragment extends Fragment implements Listener, RocketDe
 			final TextView location =
 					(TextView) rootView.findViewById( R.id.LAUNCHDETAIL_location );
 			location.setText( pad.name );
-			int flagResourceId = FlagResourceUtility
-					                     .getFlagResource( pad.location.countryCode );
-			location.setCompoundDrawablesWithIntrinsicBounds( 0, 0, flagResourceId, 0 );
+
+			Drawable flagDrawable = FlagResourceUtility.getFlagDrawable( pad.location.countryCode, getActivity() );
+			location.setCompoundDrawablesWithIntrinsicBounds( null, null, flagDrawable, null );
 
 			final TextView windowLabel =
 					(TextView) rootView.findViewById( R.id.LAUNCHDETAIL_window_length );

@@ -1,5 +1,8 @@
 package com.darkrockstudios.apps.tminus.misc;
 
+import android.content.Context;
+import android.graphics.drawable.Drawable;
+
 import com.darkrockstudios.apps.tminus.R;
 import com.neovisionaries.i18n.CountryCode;
 
@@ -12,6 +15,9 @@ import java.util.concurrent.ConcurrentHashMap;
 public final class FlagResourceUtility
 {
 	private static Map<String, Integer> s_codeToFlag = new ConcurrentHashMap<>();
+
+	private static final int TRANSITION_DURATION_MS = 1000;
+	private static final int TRANSITION_PAUSE_MS    = 3000;
 
 	static
 	{
@@ -266,6 +272,41 @@ public final class FlagResourceUtility
 		s_codeToFlag.put( CountryCode.getByCode( "za", false ).getAlpha3(), R.drawable.flag_za );
 		s_codeToFlag.put( CountryCode.getByCode( "zm", false ).getAlpha3(), R.drawable.flag_zm );
 		s_codeToFlag.put( CountryCode.getByCode( "zw", false ).getAlpha3(), R.drawable.flag_zw );
+	}
+
+	public static Drawable getFlagDrawable( final String cslCountryCodes, final Context context )
+	{
+		final Drawable flagDrawable;
+
+		if( cslCountryCodes.contains( "," ) )
+		{
+			String[] countryCodes = cslCountryCodes.split( "," );
+			if( countryCodes != null && countryCodes.length > 0 )
+			{
+				Drawable[] flagResources = new Drawable[ countryCodes.length ];
+				for( int ii = 0; ii < countryCodes.length; ++ii )
+				{
+					flagResources[ ii ] = context.getResources().getDrawable( getFlagResource( countryCodes[ ii ] ) );
+				}
+
+				CyclicTransitionDrawable transitionDrawable = new CyclicTransitionDrawable( flagResources );
+				transitionDrawable.startTransition( TRANSITION_DURATION_MS, TRANSITION_PAUSE_MS );
+
+				flagDrawable = transitionDrawable;
+			}
+			else
+			{
+				int flagResource = getFlagResource( cslCountryCodes );
+				flagDrawable = context.getResources().getDrawable( flagResource );
+			}
+		}
+		else
+		{
+			int flagResource = getFlagResource( cslCountryCodes );
+			flagDrawable = context.getResources().getDrawable( flagResource );
+		}
+
+		return flagDrawable;
 	}
 
 	// Takes in the ISO 3166-1 alpha-3 country code

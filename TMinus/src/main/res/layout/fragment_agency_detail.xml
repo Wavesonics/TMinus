@@ -59,7 +59,9 @@
                 android:layout_below="@+id/AGENCYDETAIL_name"
                 android:layout_toRightOf="@+id/AGENCYDETAIL_agency_image"
                 android:drawableLeft="@drawable/flag_unknown"
-                android:gravity="center_vertical"/>
+                android:gravity="center_vertical"
+                android:maxLines="1"
+                android:ellipsize="end"/>
 
             <TextView
                 android:layout_width="wrap_content"
