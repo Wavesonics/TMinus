@@ -32,7 +32,8 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical">
 
                 <TextView
                     android:layout_width="0dp"
@@ -45,8 +46,11 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/default_padding"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     tools:text="USA"
+                    android:singleLine="true"
+                    android:ellipsize="end"
                     android:id="@+id/AGENCYDETAIL_country"
                     android:textColor="@color/secondary_text"
                     android:drawableLeft="@drawable/flag_unknown"
@@ -63,11 +67,13 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:gravity="right">
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     tools:text="Governmental"
                     android:id="@+id/AGENCYDETAIL_type"
@@ -77,20 +83,18 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:layout_marginLeft="@dimen/default_padding"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     tools:text="www.spacex.com"
                     android:autoLink="web"
-                    android:maxLines="1"
-                    android:ellipsize="end"
+                    android:singleLine="true"
                     android:id="@+id/AGENCYDETAIL_info_url"
-                    android:textColor="@color/secondary_text"
-                    android:gravity="right"/>
+                    android:textColor="@color/secondary_text"/>
             </LinearLayout>
 
             <ScrollView
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
+                android:layout_height="match_parent"
                 android:id="@+id/scrollView"
                 android:padding="@dimen/default_padding"
                 android:scrollbarStyle="outsideOverlay">

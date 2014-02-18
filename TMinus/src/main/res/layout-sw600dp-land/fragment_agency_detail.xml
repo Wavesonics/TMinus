@@ -67,8 +67,7 @@
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 tools:text="www.spacex.com"
                 android:autoLink="web"
-                android:maxLines="1"
-                android:ellipsize="end"
+                android:singleLine="true"
                 android:id="@+id/AGENCYDETAIL_info_url"
                 android:textColor="@color/secondary_text"/>
 

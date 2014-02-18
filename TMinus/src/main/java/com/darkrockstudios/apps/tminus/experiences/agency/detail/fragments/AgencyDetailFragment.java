@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.URLUtil;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.ImageLoader;
@@ -208,7 +209,7 @@ public class AgencyDetailFragment extends DialogFragment implements Utilities.Zo
 				m_type.setText( R.string.AGENCYDETAIL_no_type );
 			}
 
-			if( m_agency.infoURL != null )
+			if( m_agency.infoURL != null && URLUtil.isValidUrl( m_agency.infoURL ) )
 			{
 				m_infoUrl.setVisibility( View.VISIBLE );
 				m_infoUrl.setText( m_agency.infoURL );
