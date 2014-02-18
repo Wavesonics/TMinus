@@ -67,7 +67,8 @@ public abstract class NavigationDatabaseActivity extends DatabaseActivity
 			final Intent intent;
 
 			NavigationItem item = (NavigationItem) parent.getItemAtPosition( position );
-			if( item != null )
+			// Don't launch a new Activity if is the same as the current one
+			if( (item != null) && (item.m_activityClass != NavigationDatabaseActivity.this.getClass()) )
 			{
 				intent = new Intent( NavigationDatabaseActivity.this, item.m_activityClass );
 				intent.setFlags( Intent.FLAG_ACTIVITY_CLEAR_TOP );
@@ -81,6 +82,11 @@ public abstract class NavigationDatabaseActivity extends DatabaseActivity
 			{
 				startActivity( intent );
 				finish();
+			}
+			// If we aren't moving to a new Activity, close the drawer
+			else
+			{
+				m_drawerLayout.closeDrawers();
 			}
 		}
 	}

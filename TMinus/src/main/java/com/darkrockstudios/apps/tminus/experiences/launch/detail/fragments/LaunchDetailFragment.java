@@ -13,6 +13,7 @@ import android.preference.PreferenceManager;
 import android.provider.CalendarContract;
 import android.provider.CalendarContract.Events;
 import android.support.v4.app.Fragment;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -48,6 +49,7 @@ import com.darkrockstudios.apps.tminus.misc.Utilities;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.concurrent.TimeUnit;
 
 import butterknife.ButterKnife;
@@ -314,8 +316,26 @@ public class LaunchDetailFragment extends Fragment implements Listener, RocketDe
 			// TODO handle multiple missions
 			if( m_launchItem.missions != null && m_launchItem.missions.size() > 0 )
 			{
-				Mission mission = m_launchItem.missions.iterator().next();
-				description.setText( mission.description );
+				StringBuilder sb = new StringBuilder();
+
+				Iterator<Mission> it = m_launchItem.missions.iterator();
+				while( it.hasNext() )
+				{
+					Mission mission = it.next();
+					sb.append( "<strong>" );
+					sb.append( mission.name );
+					sb.append( ':' );
+					sb.append( "</strong>" );
+					sb.append( "<br />" );
+					sb.append( mission.description );
+
+					if( it.hasNext() )
+					{
+						sb.append( "<br /><br />" );
+					}
+				}
+
+				description.setText( Html.fromHtml( sb.toString() ) );
 			}
 			else
 			{

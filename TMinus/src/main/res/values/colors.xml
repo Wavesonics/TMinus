@@ -22,4 +22,6 @@
     <color name="count_down_actionbar">#66d18b46</color>
     <color name="count_down_alert_text">#ffec330b</color>
     <color name="count_down_alert_background">#44666666</color>
+
+    <color name="agency_image_background">#ddffffff</color>
 </resources>

@@ -142,5 +142,4 @@
     <string name="about_body_github_android"><a href="http://github.com/Wavesonics/TMinus">TMinus</a></string>
     <string name="about_body_feedback"><i>Found a bug? Feature request?</i>\n<a href="https://github.com/Wavesonics/TMinus/issues/new">Log it here!</a></string>
 
-
 </resources>
