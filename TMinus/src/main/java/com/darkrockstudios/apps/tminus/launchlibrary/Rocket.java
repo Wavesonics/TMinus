@@ -38,7 +38,7 @@ public class Rocket implements Serializable
 	@DatabaseField
 	public String configuration;
 
-	@DatabaseField(foreign = true, foreignAutoRefresh = true, maxForeignAutoRefreshLevel = 3)
+	@DatabaseField(foreign = true, foreignAutoCreate = true, foreignAutoRefresh = true)
 	public RocketFamily family;
 
 	public void refreshFamily( final DatabaseHelper databaseHelper )
@@ -51,10 +51,10 @@ public class Rocket implements Serializable
 			{
 				Dao<AgencyRocket, Integer> agencyRocketDao = databaseHelper.getDao( AgencyRocket.class );
 				QueryBuilder<AgencyRocket, Integer> builder = agencyRocketDao.queryBuilder();
-				builder.where().eq( "rocketFamily_id", family.id );
+				builder.where().eq( "RocketFamily_id", family.id );
 
 				List<AgencyRocket> agencyProperties = builder.query();
-				for( AgencyRocket agencyRocket : agencyProperties )
+				for( final AgencyRocket agencyRocket : agencyProperties )
 				{
 					family.agencies.add( agencyRocket.agency );
 				}

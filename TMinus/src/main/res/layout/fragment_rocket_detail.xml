@@ -43,11 +43,24 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="configuration"
+                tools:text="configuration"
                 android:id="@+id/ROCKETDETAIL_configuration"
                 android:textColor="@color/secondary_text"
                 android:layout_below="@+id/ROCKETDETAIL_name"
                 android:layout_toRightOf="@+id/ROCKETDETAIL_rocket_image"/>
+
+            <TextView
+                tools:ignore="HardcodedText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                tools:text="NASA, ESA"
+                android:id="@+id/ROCKETDETAIL_agencies"
+                android:textColor="@color/secondary_text"
+                android:layout_below="@+id/ROCKETDETAIL_configuration"
+                android:layout_toRightOf="@+id/ROCKETDETAIL_rocket_image"
+                android:singleLine="true"
+                android:ellipsize="end"/>
         </RelativeLayout>
 
         <ScrollView

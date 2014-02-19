@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -14,17 +13,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.darkrockstudios.apps.tminus.R;
 import com.darkrockstudios.apps.tminus.base.fragments.BaseBrowserFragment;
 import com.darkrockstudios.apps.tminus.database.DatabaseHelper;
 import com.darkrockstudios.apps.tminus.dataupdate.DataUpdaterService;
+import com.darkrockstudios.apps.tminus.experiences.agency.browse.adapters.AgencyListAdapter;
 import com.darkrockstudios.apps.tminus.experiences.agency.browse.dataupdate.AgencyUpdateTask;
 import com.darkrockstudios.apps.tminus.launchlibrary.Agency;
-import com.darkrockstudios.apps.tminus.misc.FlagResourceUtility;
 import com.darkrockstudios.apps.tminus.misc.Preferences;
 import com.j256.ormlite.dao.Dao;
 
@@ -34,8 +31,6 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import butterknife.ButterKnife;
-import butterknife.InjectView;
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 import de.keyboardsurfer.android.widget.crouton.Style;
 
@@ -199,57 +194,6 @@ public class AgencyBrowserFragment extends BaseBrowserFragment implements Adapte
 		{
 			Agency agency = m_adapter.getItem( position );
 			m_callbacks.onItemSelected( agency );
-		}
-	}
-
-	static class ViewHolder
-	{
-		@InjectView(R.id.AGENCYLIST_abbreviation)
-		TextView m_abbreviation;
-
-		@InjectView(R.id.AGENCYLIST_name)
-		TextView m_name;
-
-		public ViewHolder( final View view )
-		{
-			ButterKnife.inject( this, view );
-		}
-	}
-
-	private static class AgencyListAdapter extends ArrayAdapter<Agency>
-	{
-		public AgencyListAdapter( final Context context )
-		{
-			super( context, 0 );
-		}
-
-		@Override
-		public View getView( final int pos, final View convertView, final ViewGroup parent )
-		{
-			final View view;
-			if( convertView != null )
-			{
-				view = convertView;
-			}
-			else
-			{
-				LayoutInflater inflater = LayoutInflater.from( getContext() );
-				view = inflater.inflate( R.layout.row_agency_list_item, parent, false );
-
-				ViewHolder viewHolder = new ViewHolder( view );
-				view.setTag( viewHolder );
-			}
-
-			ViewHolder viewHolder = (ViewHolder) view.getTag();
-
-			Agency agency = getItem( pos );
-			viewHolder.m_name.setText( agency.name );
-			viewHolder.m_abbreviation.setText( agency.abbrev );
-
-			Drawable flagDrawable = FlagResourceUtility.getFlagDrawable( agency.countryCode, getContext() );
-			viewHolder.m_abbreviation.setCompoundDrawablesWithIntrinsicBounds( flagDrawable, null, null, null );
-
-			return view;
 		}
 	}
 

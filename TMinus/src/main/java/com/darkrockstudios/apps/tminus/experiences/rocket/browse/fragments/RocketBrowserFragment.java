@@ -181,7 +181,6 @@ public class RocketBrowserFragment extends BaseBrowserFragment
 					Dao<Rocket, Integer> rocketDao = databaseHelper.getDao( Rocket.class );
 
 					List<Rocket> results = rocketDao.query( rocketDao.queryBuilder().orderBy( "name", true ).prepare() );
-
 					for( final Rocket rocket : results )
 					{
 						rocket.refreshFamily( databaseHelper );
@@ -276,20 +275,20 @@ public class RocketBrowserFragment extends BaseBrowserFragment
 
 			if( rocket.family != null && rocket.family.agencies != null )
 			{
-				StringBuilder sb = new StringBuilder();
+				StringBuilder countrySb = new StringBuilder();
 				Iterator<Agency> it = rocket.family.agencies.iterator();
 				while( it.hasNext() )
 				{
 					Agency agency = it.next();
-					sb.append( agency.countryCode );
+					countrySb.append( agency.countryCode );
 
 					if( it.hasNext() )
 					{
-						sb.append( ',' );
+						countrySb.append( ',' );
 					}
 				}
 
-				Drawable flagDrawable = FlagResourceUtility.getFlagDrawable( sb.toString(), getContext() );
+				Drawable flagDrawable = FlagResourceUtility.getFlagDrawable( countrySb.toString(), getContext() );
 				viewHolder.rocketNameView.setCompoundDrawablesWithIntrinsicBounds( flagDrawable, null, null, null );
 			}
 			else

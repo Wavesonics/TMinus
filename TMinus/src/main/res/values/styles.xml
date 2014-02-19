@@ -27,6 +27,7 @@
         <item name="android:buttonStyle">@style/AppTheme.ButtonStyle</item>
         <item name="android:cacheColorHint">@color/scroll_hint</item>
         <item name="android:listViewStyle">@style/AppTheme.ListView</item>
+        <item name="android:dialogTheme">@style/AppTheme.Dialog</item>
     </style>
 
     <style name="AppTheme.ActionBar" parent="@android:style/Widget.Holo.ActionBar">
@@ -41,6 +42,10 @@
 
     <style name="AppTheme.ListView" parent="@android:style/Widget.ListView">
         <item name="android:listSelector">@drawable/list_item_selector</item>
+    </style>
+
+    <style name="AppTheme.Dialog" parent="@android:style/Theme.Holo.Dialog">
+
     </style>
 
     <style name="textAppearanceLargeAccent" parent="@android:style/TextAppearance">

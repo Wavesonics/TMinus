@@ -14,6 +14,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.darkrockstudios.apps.tminus.database.DatabaseHelper;
+import com.darkrockstudios.apps.tminus.database.DatabaseUtilities;
 import com.darkrockstudios.apps.tminus.database.tables.AgencyPad;
 import com.darkrockstudios.apps.tminus.database.tables.AgencyRocket;
 import com.darkrockstudios.apps.tminus.launchlibrary.Agency;
@@ -267,24 +268,9 @@ public class LaunchUpdateService extends Service
 														                                                              LaunchUpdateService.this );
 											                                      }
 
-											                                      rocketFamilyDao
-													                                      .createOrUpdate( launch.rocket.family );
-											                                      rocketDao.createOrUpdate( launch.rocket );
-
-											                                      if( launch.rocket.family.agencies != null )
-											                                      {
-												                                      for( final Agency agency : launch.rocket.family.agencies )
-												                                      {
-													                                      agencyDao.createOrUpdate( agency );
-
-													                                      AgencyRocket
-															                                      agencyRocket =
-															                                      new AgencyRocket( agency,
-															                                                        launch.rocket.family );
-													                                      agencyRocketDao
-															                                      .createOrUpdate( agencyRocket );
-												                                      }
-											                                      }
+											                                      DatabaseUtilities
+													                                      .saveRocket( launch.rocket,
+													                                                   databaseHelper );
 
 											                                      locationDao.createOrUpdate( launch.location );
 

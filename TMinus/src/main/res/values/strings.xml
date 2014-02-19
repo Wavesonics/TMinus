@@ -50,6 +50,8 @@
     <string name="ROCKETLIST_item_agencies">Agencies: %1$s</string>
     <string name="ROCKETLIST_item_no_agencies">None specified</string>
 
+    <string name="AGENCYLISTDIALOG_title">Agencies</string>
+
     <string name="LAUNCHDETAIL_status">Status:</string>
     <string name="LAUNCHDETAIL_launch_window">Launch:</string>
     <string name="LAUNCHDETAIL_launch_window_length">Window:</string>

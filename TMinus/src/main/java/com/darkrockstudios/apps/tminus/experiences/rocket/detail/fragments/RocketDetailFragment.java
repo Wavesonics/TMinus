@@ -26,6 +26,7 @@ import com.darkrockstudios.apps.tminus.database.tables.RocketDetail;
 import com.darkrockstudios.apps.tminus.dataupdate.DataUpdaterService;
 import com.darkrockstudios.apps.tminus.experiences.launch.detail.fragments.LaunchDetailFragment;
 import com.darkrockstudios.apps.tminus.experiences.rocket.detail.dataupdate.RocketDetailUpdateTask;
+import com.darkrockstudios.apps.tminus.launchlibrary.Agency;
 import com.darkrockstudios.apps.tminus.launchlibrary.Rocket;
 import com.darkrockstudios.apps.tminus.loaders.RocketDetailLoader;
 import com.darkrockstudios.apps.tminus.loaders.RocketDetailLoader.Listener;
@@ -35,9 +36,11 @@ import com.darkrockstudios.apps.tminus.misc.TminusUri;
 import com.darkrockstudios.apps.tminus.misc.Utilities;
 
 import java.io.File;
+import java.util.Iterator;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import butterknife.OnClick;
 import butterknife.Optional;
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 import de.keyboardsurfer.android.widget.crouton.Style;
@@ -52,6 +55,8 @@ public class RocketDetailFragment extends DialogFragment implements Listener, Ro
 	public static final String TAG          = LaunchDetailFragment.class.getSimpleName();
 	public static final String ARG_ITEM_ID  = "item_id";
 	public static final String ARG_NO_IMAGE = "no_image";
+
+	public static final String FRAGMENT_TAG_AGENCY_LIST_DIALOG = "AgencyListDialog";
 
 	private File         m_dataDirectory;
 	private Rocket       m_rocket;
@@ -74,6 +79,9 @@ public class RocketDetailFragment extends DialogFragment implements Listener, Ro
 
 	@InjectView(R.id.ROCKETDETAIL_configuration)
 	TextView m_rocketConfiguration;
+
+	@InjectView(R.id.ROCKETDETAIL_agencies)
+	TextView m_rocketAgencies;
 
 	@InjectView(R.id.ROCKETDETAIL_details)
 	TextView m_rocketSummary;
@@ -215,6 +223,24 @@ public class RocketDetailFragment extends DialogFragment implements Listener, Ro
 					}
 				}
 
+				if( m_rocket.family != null && m_rocket.family.agencies != null && m_rocket.family.agencies.size() > 0 )
+				{
+					StringBuilder sb = new StringBuilder();
+					Iterator<Agency> it = m_rocket.family.agencies.iterator();
+					while( it.hasNext() )
+					{
+						Agency agency = it.next();
+						sb.append( agency.abbrev );
+
+						if( it.hasNext() )
+						{
+							sb.append( ", " );
+						}
+					}
+
+					m_rocketAgencies.setText( sb.toString() );
+				}
+
 				if( m_rocketDetail.summary != null )
 				{
 					m_rocketSummary.setText( Html.fromHtml( m_rocketDetail.summary ) );
@@ -339,6 +365,13 @@ public class RocketDetailFragment extends DialogFragment implements Listener, Ro
 	public Animator getCurrentAnimator()
 	{
 		return m_currentAnimator;
+	}
+
+	@OnClick(R.id.ROCKETDETAIL_agencies)
+	public void agenciesClicked()
+	{
+		AgencyListDialog dialog = AgencyListDialog.newInstance( m_rocket.family.agencies );
+		dialog.show( getFragmentManager(), FRAGMENT_TAG_AGENCY_LIST_DIALOG );
 	}
 
 	private class RocketDetailUpdateReceiver extends BroadcastReceiver

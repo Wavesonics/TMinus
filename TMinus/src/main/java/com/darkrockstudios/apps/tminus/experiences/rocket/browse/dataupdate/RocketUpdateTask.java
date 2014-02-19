@@ -3,9 +3,9 @@ package com.darkrockstudios.apps.tminus.experiences.rocket.browse.dataupdate;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
 import com.darkrockstudios.apps.tminus.database.DatabaseHelper;
+import com.darkrockstudios.apps.tminus.database.DatabaseUtilities;
 import com.darkrockstudios.apps.tminus.dataupdate.UpdateTask;
 import com.darkrockstudios.apps.tminus.launchlibrary.LaunchLibraryGson;
 import com.darkrockstudios.apps.tminus.launchlibrary.LaunchLibraryUrls;
@@ -13,7 +13,6 @@ import com.darkrockstudios.apps.tminus.launchlibrary.Rocket;
 import com.darkrockstudios.apps.tminus.misc.Preferences;
 import com.google.gson.Gson;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
-import com.j256.ormlite.dao.Dao;
 
 import org.joda.time.DateTime;
 import org.json.JSONArray;
@@ -53,8 +52,6 @@ public class RocketUpdateTask extends UpdateTask
 			{
 				try
 				{
-					final Dao<Rocket, Integer> rocketDao = databaseHelper.getDao( Rocket.class );
-
 					JSONArray rockets = response.getJSONArray( "rockets" );
 					if( rockets != null && rockets.length() > 0 )
 					{
@@ -64,14 +61,13 @@ public class RocketUpdateTask extends UpdateTask
 						for( int ii = 0; ii < n; ++ii )
 						{
 							final Rocket rocket = gson.fromJson( rockets.get( ii ).toString(), Rocket.class );
-							rocketDao.createOrUpdate( rocket );
+
+							DatabaseUtilities.saveRocket( rocket, databaseHelper );
 						}
 
 						final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences( getContext() );
 						preferences.edit().putLong( Preferences.KEY_LAST_ROCKET_LIST_UPDATE, DateTime.now().getMillis() )
 						           .commit();
-
-						Log.i( TAG, "Rockets after update: " + rocketDao.countOf() );
 
 						success = true;
 					}
