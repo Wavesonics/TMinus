@@ -28,6 +28,17 @@
         android:id="@+id/ROCKETDETAIL_configuration"
         android:textColor="@color/secondary_text"/>
 
+    <TextView
+        tools:ignore="HardcodedText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        tools:text="NASA, ESA"
+        android:id="@+id/ROCKETDETAIL_agencies"
+        android:textColor="@color/secondary_text"
+        android:singleLine="true"
+        android:ellipsize="end"/>
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"

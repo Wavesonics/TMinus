@@ -22,7 +22,7 @@ public abstract class UpdateTask implements Response.Listener<JSONObject>, Respo
 	private Context m_context;
 	private Request m_request;
 
-	public UpdateTask( Context context )
+	public UpdateTask( final Context context )
 	{
 		m_context = context;
 	}
@@ -48,7 +48,7 @@ public abstract class UpdateTask implements Response.Listener<JSONObject>, Respo
 	}
 
 	@Override
-	public void onResponse( JSONObject response )
+	public void onResponse( final JSONObject response )
 	{
 		Log.i( TAG, "Response successfully retrieved from sever." );
 
@@ -57,10 +57,13 @@ public abstract class UpdateTask implements Response.Listener<JSONObject>, Respo
 	}
 
 	@Override
-	public void onErrorResponse( VolleyError error )
+	public void onErrorResponse( final VolleyError error )
 	{
 		Log.i( TAG, "Failed to retrieve data from sever." );
-		Log.i( TAG, error.getMessage() );
+		if( error != null && error.getMessage() != null )
+		{
+			Log.i( TAG, error.getMessage() );
+		}
 
 		sendFailureBroadcast();
 
@@ -85,7 +88,7 @@ public abstract class UpdateTask implements Response.Listener<JSONObject>, Respo
 	{
 		private JSONObject m_response;
 
-		public HandleResponseThread( JSONObject response )
+		public HandleResponseThread( final JSONObject response )
 		{
 			m_response = response;
 		}

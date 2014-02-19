@@ -9,8 +9,12 @@ import android.view.Window;
 
 import com.darkrockstudios.apps.tminus.R;
 import com.darkrockstudios.apps.tminus.base.activities.DatabaseActivity;
+import com.darkrockstudios.apps.tminus.experiences.agency.detail.AgencyDetailActivity;
+import com.darkrockstudios.apps.tminus.experiences.rocket.detail.fragments.AgencyListDialog;
 import com.darkrockstudios.apps.tminus.experiences.rocket.detail.fragments.RocketDetailFragment;
+import com.darkrockstudios.apps.tminus.launchlibrary.Agency;
 import com.darkrockstudios.apps.tminus.misc.CommonMenuHandler;
+import com.darkrockstudios.apps.tminus.misc.TminusUri;
 import com.darkrockstudios.apps.tminus.misc.UpNavUtil;
 
 /**
@@ -18,7 +22,7 @@ import com.darkrockstudios.apps.tminus.misc.UpNavUtil;
  * Dark Rock Studios
  * darkrockstudios.com
  */
-public class RocketDetailActivity extends DatabaseActivity
+public class RocketDetailActivity extends DatabaseActivity implements AgencyListDialog.AgencyListDialogClickListener
 {
 	private static final String FRAGMENT_TAG = "RocketDetailFragment";
 	public static final  String ARG_ITEM_ID  = "item_id";
@@ -116,5 +120,13 @@ public class RocketDetailActivity extends DatabaseActivity
 		{
 			fragment.zoomRocketImage();
 		}
+	}
+
+	@Override
+	public void onAgencyListDialogClick( final Agency agency )
+	{
+		Intent intent = new Intent( this, AgencyDetailActivity.class );
+		intent.setData( TminusUri.buildAgencyUri( agency.id ) );
+		startActivity( intent );
 	}
 }

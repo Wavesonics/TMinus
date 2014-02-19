@@ -36,6 +36,7 @@ import java.sql.SQLException;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import butterknife.OnClick;
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 import de.keyboardsurfer.android.widget.crouton.Style;
 
@@ -45,6 +46,7 @@ import de.keyboardsurfer.android.widget.crouton.Style;
 public class AgencyDetailFragment extends DialogFragment implements Utilities.ZoomAnimationHandler
 {
 	private static final String TAG         = AgencyDetailFragment.class.getSimpleName();
+	private static final String FRAGMENT_TAG_COUNTRY_LIST_DIALOG = "CountryListDialog";
 	public static final  String ARG_ITEM_ID = "item_id";
 
 	@InjectView(R.id.AGENCYDETAIL_container)
@@ -370,5 +372,12 @@ public class AgencyDetailFragment extends DialogFragment implements Utilities.Zo
 	public Animator getCurrentAnimator()
 	{
 		return m_currentAnimator;
+	}
+
+	@OnClick(R.id.AGENCYDETAIL_country)
+	public void onCountriesClicked()
+	{
+		CountryListDialog dialog = CountryListDialog.newInstance( m_agency.countryCode );
+		dialog.show( getFragmentManager(), FRAGMENT_TAG_COUNTRY_LIST_DIALOG );
 	}
 }

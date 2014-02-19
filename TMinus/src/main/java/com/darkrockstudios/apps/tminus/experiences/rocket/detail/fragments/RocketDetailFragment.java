@@ -203,6 +203,24 @@ public class RocketDetailFragment extends DialogFragment implements Listener, Ro
 			m_rocketName.setText( m_rocket.name );
 			m_rocketConfiguration.setText( m_rocket.configuration );
 
+			if( m_rocket.family != null && m_rocket.family.agencies != null && m_rocket.family.agencies.size() > 0 )
+			{
+				StringBuilder sb = new StringBuilder();
+				Iterator<Agency> it = m_rocket.family.agencies.iterator();
+				while( it.hasNext() )
+				{
+					Agency agency = it.next();
+					sb.append( agency.abbrev );
+
+					if( it.hasNext() )
+					{
+						sb.append( ", " );
+					}
+				}
+
+				m_rocketAgencies.setText( sb.toString() );
+			}
+
 			if( m_rocketDetail != null )
 			{
 				if( m_rocketImage != null )
@@ -221,24 +239,6 @@ public class RocketDetailFragment extends DialogFragment implements Listener, Ro
 					{
 						m_rocketImage.setEnabled( false );
 					}
-				}
-
-				if( m_rocket.family != null && m_rocket.family.agencies != null && m_rocket.family.agencies.size() > 0 )
-				{
-					StringBuilder sb = new StringBuilder();
-					Iterator<Agency> it = m_rocket.family.agencies.iterator();
-					while( it.hasNext() )
-					{
-						Agency agency = it.next();
-						sb.append( agency.abbrev );
-
-						if( it.hasNext() )
-						{
-							sb.append( ", " );
-						}
-					}
-
-					m_rocketAgencies.setText( sb.toString() );
 				}
 
 				if( m_rocketDetail.summary != null )
@@ -368,7 +368,7 @@ public class RocketDetailFragment extends DialogFragment implements Listener, Ro
 	}
 
 	@OnClick(R.id.ROCKETDETAIL_agencies)
-	public void agenciesClicked()
+	public void onAgenciesClicked()
 	{
 		AgencyListDialog dialog = AgencyListDialog.newInstance( m_rocket.family.agencies );
 		dialog.show( getFragmentManager(), FRAGMENT_TAG_AGENCY_LIST_DIALOG );

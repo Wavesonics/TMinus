@@ -51,6 +51,7 @@
     <string name="ROCKETLIST_item_no_agencies">None specified</string>
 
     <string name="AGENCYLISTDIALOG_title">Agencies</string>
+    <string name="COUNTRYLISTDIALOG_title">Countries</string>
 
     <string name="LAUNCHDETAIL_status">Status:</string>
     <string name="LAUNCHDETAIL_launch_window">Launch:</string>
