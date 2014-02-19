@@ -38,7 +38,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper
 {
 	private static final String TAG              = DatabaseHelper.class.getSimpleName();
 	private static final String DATABASE_NAME    = "TMinus.db";
-	private static final int DATABASE_VERSION = 10;
+	private static final int    DATABASE_VERSION = 11;
 
 	public DatabaseHelper( final Context context )
 	{
