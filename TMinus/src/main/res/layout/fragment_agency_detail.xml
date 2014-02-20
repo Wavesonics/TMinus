@@ -51,16 +51,17 @@
                 android:layout_toRightOf="@+id/AGENCYDETAIL_agency_image"/>
 
             <TextView
+                android:layout_toRightOf="@+id/AGENCYDETAIL_agency_image"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_below="@+id/AGENCYDETAIL_name"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 tools:text="USA"
                 android:id="@+id/AGENCYDETAIL_country"
                 android:textColor="@color/secondary_text"
                 android:drawableRight="@drawable/ic_expand"
                 android:drawablePadding="@dimen/compound_drawable_padding"
-                android:layout_below="@+id/AGENCYDETAIL_name"
-                android:layout_toRightOf="@+id/AGENCYDETAIL_agency_image"
+                android:layout_marginRight="@dimen/default_padding"
                 android:drawableLeft="@drawable/flag_unknown"
                 android:gravity="center_vertical"
                 android:singleLine="true"
