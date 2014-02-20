@@ -3,18 +3,16 @@ package com.darkrockstudios.apps.tminus.experiences.location.browse.dataupdate;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
 import com.darkrockstudios.apps.tminus.database.DatabaseHelper;
+import com.darkrockstudios.apps.tminus.database.DatabaseUtilities;
 import com.darkrockstudios.apps.tminus.dataupdate.UpdateTask;
 import com.darkrockstudios.apps.tminus.launchlibrary.LaunchLibraryGson;
 import com.darkrockstudios.apps.tminus.launchlibrary.LaunchLibraryUrls;
 import com.darkrockstudios.apps.tminus.launchlibrary.Location;
-import com.darkrockstudios.apps.tminus.launchlibrary.Pad;
 import com.darkrockstudios.apps.tminus.misc.Preferences;
 import com.google.gson.Gson;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
-import com.j256.ormlite.dao.Dao;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -37,13 +35,13 @@ public class LocationUpdateTask extends UpdateTask
 	public static final String ACTION_LOCATION_LIST_UPDATE_FAILED =
 			LocationUpdateTask.class.getPackage() + ".ACTION_LOCATION_LIST_UPDATE_FAILED";
 
-	public LocationUpdateTask( Context context )
+	public LocationUpdateTask( final Context context )
 	{
 		super( context );
 	}
 
 	@Override
-	public boolean handleData( JSONObject response )
+	public boolean handleData( final JSONObject response )
 	{
 		boolean success = false;
 
@@ -54,9 +52,6 @@ public class LocationUpdateTask extends UpdateTask
 			{
 				try
 				{
-					final Dao<Location, Integer> locInfoDao = databaseHelper.getDao( Location.class );
-					final Dao<Pad, Integer> locationDao = databaseHelper.getDao( Pad.class );
-
 					JSONArray locations = response.getJSONArray( "locations" );
 					if( locations != null && locations.length() > 0 )
 					{
@@ -68,38 +63,20 @@ public class LocationUpdateTask extends UpdateTask
 							JSONObject locationObj = locations.getJSONObject( ii );
 
 							final Location location = gson.fromJson( locationObj.toString(), Location.class );
-							Dao.CreateOrUpdateStatus status = locInfoDao.createOrUpdate( location );
-
-							if( status.isCreated() || status.isUpdated() )
-							{
-								JSONArray pads = locationObj.getJSONArray( "pads" );
-
-								if( pads != null )
-								{
-									for( int xx = 0; xx < pads.length(); ++xx )
-									{
-										final Pad pad =
-												gson.fromJson( pads.getJSONObject( xx ).toString(), Pad.class );
-										pad.location = location; // Set it's parent
-										locationDao.createOrUpdate( pad );
-									}
-								}
-							}
+							DatabaseUtilities.saveLocation( location, databaseHelper );
 						}
 
 						final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences( getContext() );
 						preferences.edit().putLong( Preferences.KEY_LAST_LOCATION_LIST_UPDATE, new Date().getTime() ).commit();
 
-						Log.i( TAG, "Locations after update: " + locationDao.countOf() );
-
 						success = true;
 					}
 				}
-				catch( JSONException e )
+				catch( final JSONException e )
 				{
 					e.printStackTrace();
 				}
-				catch( SQLException e )
+				catch( final SQLException e )
 				{
 					e.printStackTrace();
 				}

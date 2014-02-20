@@ -15,17 +15,12 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.darkrockstudios.apps.tminus.database.DatabaseHelper;
 import com.darkrockstudios.apps.tminus.database.DatabaseUtilities;
-import com.darkrockstudios.apps.tminus.database.tables.AgencyPad;
-import com.darkrockstudios.apps.tminus.database.tables.AgencyRocket;
 import com.darkrockstudios.apps.tminus.launchlibrary.Agency;
 import com.darkrockstudios.apps.tminus.launchlibrary.Launch;
 import com.darkrockstudios.apps.tminus.launchlibrary.LaunchLibraryGson;
 import com.darkrockstudios.apps.tminus.launchlibrary.LaunchLibraryUrls;
-import com.darkrockstudios.apps.tminus.launchlibrary.Location;
 import com.darkrockstudios.apps.tminus.launchlibrary.Mission;
 import com.darkrockstudios.apps.tminus.launchlibrary.Pad;
-import com.darkrockstudios.apps.tminus.launchlibrary.Rocket;
-import com.darkrockstudios.apps.tminus.launchlibrary.RocketFamily;
 import com.darkrockstudios.apps.tminus.misc.Preferences;
 import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
@@ -231,16 +226,8 @@ public class LaunchUpdateService extends Service
 				{
 					final Dao<Launch, Integer> launchDao = databaseHelper.getDao( Launch.class );
 
-					final Dao<Location, Integer> locationDao = databaseHelper.getDao( Location.class );
-					final Dao<Pad, Integer> padDao = databaseHelper.getDao( Pad.class );
 					final Dao<Mission, Integer> missionDao = databaseHelper.getDao( Mission.class );
-					final Dao<Rocket, Integer> rocketDao = databaseHelper.getDao( Rocket.class );
-					final Dao<RocketFamily, Integer> rocketFamilyDao = databaseHelper.getDao( RocketFamily.class );
 					final Dao<Agency, Integer> agencyDao = databaseHelper.getDao( Agency.class );
-					final Dao<AgencyRocket, Integer> agencyRocketDao = databaseHelper.getDao( AgencyRocket.class );
-					final Dao<AgencyPad, Integer> agencyPadDao = databaseHelper.getDao( AgencyPad.class );
-
-					int numUpdated = 0;
 
 					final JSONArray launchListArray = launchListObj.getJSONArray( "launches" );
 					for( int ii = 0; ii < launchListArray.length(); ++ii )
@@ -272,27 +259,9 @@ public class LaunchUpdateService extends Service
 													                                      .saveRocket( launch.rocket,
 													                                                   databaseHelper );
 
-											                                      locationDao.createOrUpdate( launch.location );
-
-											                                      for( final Pad pad : launch.location.pads )
-											                                      {
-												                                      padDao.createOrUpdate( pad );
-
-												                                      if( pad.agencies != null )
-												                                      {
-													                                      for( final Agency agency : pad.agencies )
-													                                      {
-														                                      agencyDao
-																                                      .createOrUpdate( agency );
-
-														                                      AgencyPad agencyProperty =
-																                                      new AgencyPad( agency,
-																                                                     pad );
-														                                      agencyPadDao
-																                                      .createOrUpdate( agencyProperty );
-													                                      }
-												                                      }
-											                                      }
+											                                      DatabaseUtilities
+													                                      .saveLocation( launch.location,
+													                                                     databaseHelper );
 
 											                                      if( launch.missions != null )
 											                                      {
@@ -308,8 +277,6 @@ public class LaunchUpdateService extends Service
 											                                      return null;
 										                                      }
 									                                      } );
-
-									++numUpdated;
 								}
 								catch( final SQLException e )
 								{
