@@ -268,7 +268,7 @@ public class CountDownActivity extends Activity implements LaunchLoader.Listener
 	{
 		m_launch = launch;
 
-		m_endTime = m_launch.windowstart.getTime();
+		m_endTime = m_launch.net.getTime();
 		updateStatus();
 		updateTimer();
 

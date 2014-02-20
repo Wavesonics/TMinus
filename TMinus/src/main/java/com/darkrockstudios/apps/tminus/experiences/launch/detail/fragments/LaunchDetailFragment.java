@@ -416,7 +416,7 @@ public class LaunchDetailFragment extends Fragment implements Listener, RocketDe
 					(TextView) rootView.findViewById( R.id.LAUNCHDETAIL_time_remaining );
 			final Date now = new Date();
 
-			final long totalMsLeft = m_launchItem.windowstart.getTime() - now.getTime();
+			final long totalMsLeft = m_launchItem.net.getTime() - now.getTime();
 			timeRemaining.setText( Utilities.getFormattedTime( totalMsLeft ) );
 
 			handleCountDownContainer();
