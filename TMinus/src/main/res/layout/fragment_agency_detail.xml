@@ -57,6 +57,8 @@
                 tools:text="USA"
                 android:id="@+id/AGENCYDETAIL_country"
                 android:textColor="@color/secondary_text"
+                android:drawableRight="@drawable/ic_expand"
+                android:drawablePadding="@dimen/compound_drawable_padding"
                 android:layout_below="@+id/AGENCYDETAIL_name"
                 android:layout_toRightOf="@+id/AGENCYDETAIL_agency_image"
                 android:drawableLeft="@drawable/flag_unknown"

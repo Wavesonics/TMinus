@@ -16,4 +16,6 @@
     <dimen name="rocket_detail_padding">16dp</dimen>
     <dimen name="rocket_list_padding">16dp</dimen>
     <dimen name="about_fragment_spacing">16dp</dimen>
+
+    <dimen name="compound_drawable_padding">4dp</dimen>
 </resources>

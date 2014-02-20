@@ -48,6 +48,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/default_padding"
                     android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:drawableRight="@drawable/ic_expand"
+                    android:drawablePadding="@dimen/compound_drawable_padding"
                     tools:text="USA"
                     android:singleLine="true"
                     android:ellipsize="end"

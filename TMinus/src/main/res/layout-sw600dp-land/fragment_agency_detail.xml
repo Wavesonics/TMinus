@@ -48,6 +48,8 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 tools:text="USA"
+                android:drawableRight="@drawable/ic_expand"
+                android:drawablePadding="@dimen/compound_drawable_padding"
                 android:id="@+id/AGENCYDETAIL_country"
                 android:textColor="@color/secondary_text"
                 android:drawableLeft="@drawable/flag_unknown"

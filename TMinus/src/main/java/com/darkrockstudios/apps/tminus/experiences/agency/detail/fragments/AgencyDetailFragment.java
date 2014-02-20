@@ -199,7 +199,10 @@ public class AgencyDetailFragment extends DialogFragment implements Utilities.Zo
 			m_country.setText( m_agency.countryCode );
 
 			Drawable flagDrawable = FlagResourceUtility.getFlagDrawable( m_agency.countryCode, getActivity() );
-			m_country.setCompoundDrawablesWithIntrinsicBounds( flagDrawable, null, null, null );
+			m_country.setCompoundDrawablesWithIntrinsicBounds( flagDrawable,
+			                                                   null,
+			                                                   getResources().getDrawable( R.drawable.ic_expand ),
+			                                                   null );
 
 			m_agencyType = getAgencyType();
 			if( m_agencyType != null )

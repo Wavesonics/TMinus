@@ -17,22 +17,22 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:id="@+id/ROCKETDETAIL_name"
-        android:text="Rocket Name"/>
+        tools:text="Rocket Name"/>
 
     <TextView
-        tools:ignore="HardcodedText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="configuration"
+        tools:text="configuration"
         android:id="@+id/ROCKETDETAIL_configuration"
         android:textColor="@color/secondary_text"/>
 
     <TextView
-        tools:ignore="HardcodedText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
+        android:drawableRight="@drawable/ic_expand"
+        android:drawablePadding="@dimen/compound_drawable_padding"
         tools:text="NASA, ESA"
         android:id="@+id/ROCKETDETAIL_agencies"
         android:textColor="@color/secondary_text"

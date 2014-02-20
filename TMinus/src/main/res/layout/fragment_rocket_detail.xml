@@ -59,8 +59,11 @@
                 android:textColor="@color/secondary_text"
                 android:layout_below="@+id/ROCKETDETAIL_configuration"
                 android:layout_toRightOf="@+id/ROCKETDETAIL_rocket_image"
+                android:drawableRight="@drawable/ic_expand"
+                android:drawablePadding="@dimen/compound_drawable_padding"
                 android:singleLine="true"
                 android:ellipsize="end"/>
+
         </RelativeLayout>
 
         <ScrollView

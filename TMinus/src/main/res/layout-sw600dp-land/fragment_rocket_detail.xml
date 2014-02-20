@@ -50,6 +50,8 @@
                 tools:text="NASA, ESA"
                 android:id="@+id/ROCKETDETAIL_agencies"
                 android:textColor="@color/secondary_text"
+                android:drawableRight="@drawable/ic_expand"
+                android:drawablePadding="@dimen/compound_drawable_padding"
                 android:singleLine="true"
                 android:ellipsize="end"/>
 
