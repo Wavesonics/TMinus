@@ -15,7 +15,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.darkrockstudios.apps.tminus.database.DatabaseHelper;
 import com.darkrockstudios.apps.tminus.database.DatabaseUtilities;
-import com.darkrockstudios.apps.tminus.launchlibrary.Agency;
 import com.darkrockstudios.apps.tminus.launchlibrary.Launch;
 import com.darkrockstudios.apps.tminus.launchlibrary.LaunchLibraryGson;
 import com.darkrockstudios.apps.tminus.launchlibrary.LaunchLibraryUrls;
@@ -225,9 +224,7 @@ public class LaunchUpdateService extends Service
 				try
 				{
 					final Dao<Launch, Integer> launchDao = databaseHelper.getDao( Launch.class );
-
 					final Dao<Mission, Integer> missionDao = databaseHelper.getDao( Mission.class );
-					final Dao<Agency, Integer> agencyDao = databaseHelper.getDao( Agency.class );
 
 					final JSONArray launchListArray = launchListObj.getJSONArray( "launches" );
 					for( int ii = 0; ii < launchListArray.length(); ++ii )
@@ -262,6 +259,14 @@ public class LaunchUpdateService extends Service
 											                                      DatabaseUtilities
 													                                      .saveLocation( launch.location,
 													                                                     databaseHelper );
+
+											                                      missionDao.query(
+													                                                      missionDao
+															                                                      .deleteBuilder()
+															                                                      .where()
+															                                                      .eq( "launch_id",
+															                                                           launch.id )
+															                                                      .prepare() );
 
 											                                      if( launch.missions != null )
 											                                      {
