@@ -260,13 +260,12 @@ public class LaunchUpdateService extends Service
 													                                      .saveLocation( launch.location,
 													                                                     databaseHelper );
 
-											                                      missionDao.query(
-													                                                      missionDao
-															                                                      .deleteBuilder()
-															                                                      .where()
-															                                                      .eq( "launch_id",
-															                                                           launch.id )
-															                                                      .prepare() );
+											                                      DeleteBuilder<Mission, Integer>
+													                                      missionDeleteBuilder =
+													                                      missionDao.deleteBuilder();
+											                                      missionDeleteBuilder.where().eq( "launch_id",
+											                                                                       launch.id );
+											                                      missionDeleteBuilder.delete();
 
 											                                      if( launch.missions != null )
 											                                      {
