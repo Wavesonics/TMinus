@@ -14,39 +14,24 @@ import android.widget.ArrayAdapter;
 
 import com.darkrockstudios.apps.tminus.R;
 import com.darkrockstudios.apps.tminus.base.activities.NavigationDatabaseActivity;
+import com.darkrockstudios.apps.tminus.experiences.agency.browse.AgencyBrowserActivity;
 import com.darkrockstudios.apps.tminus.experiences.countdown.CountDownActivity;
 import com.darkrockstudios.apps.tminus.experiences.launch.browse.fragments.LaunchListFragment;
 import com.darkrockstudios.apps.tminus.experiences.launch.browse.fragments.LaunchListFragment.Callbacks;
 import com.darkrockstudios.apps.tminus.experiences.launch.detail.LaunchDetailActivity;
 import com.darkrockstudios.apps.tminus.experiences.launch.detail.fragments.LaunchDetailFragment;
 import com.darkrockstudios.apps.tminus.experiences.location.detail.fragments.LocationDetailFragment;
+import com.darkrockstudios.apps.tminus.experiences.rocket.detail.fragments.AgencyListDialog;
 import com.darkrockstudios.apps.tminus.experiences.rocket.detail.fragments.RocketDetailFragment;
+import com.darkrockstudios.apps.tminus.launchlibrary.Agency;
 import com.darkrockstudios.apps.tminus.launchlibrary.Launch;
 import com.darkrockstudios.apps.tminus.launchlibrary.Pad;
 import com.darkrockstudios.apps.tminus.launchlibrary.Rocket;
 import com.darkrockstudios.apps.tminus.misc.CommonMenuHandler;
+import com.darkrockstudios.apps.tminus.misc.TminusUri;
 
-import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher;
-
-
-/**
- * An activity representing a list of Launches. This activity
- * has different presentations for handset and tablet-size devices. On
- * handsets, the activity presents a list of items, which when touched,
- * lead to a {@link LaunchDetailActivity} representing
- * item details. On tablets, the activity presents the list of items and
- * item details side-by-side using two vertical panes.
- * <p/>
- * The activity makes heavy use of fragments. The list of items is a
- * {@link LaunchListFragment} and the item details
- * (if present) is a {@link LaunchDetailFragment}.
- * <p/>
- * This activity also implements the required
- * {@link LaunchListFragment.Callbacks} interface
- * to listen for item selections.
- */
 public class LaunchListActivity extends NavigationDatabaseActivity
-		implements Callbacks, ActionBar.OnNavigationListener
+		implements Callbacks, ActionBar.OnNavigationListener, AgencyListDialog.AgencyListDialogClickListener
 {
 	private static final String TAG                            = LaunchListActivity.class.getSimpleName();
 	private static final String TAG_LAUNCH_LIST                = "LaunchList";
@@ -58,7 +43,6 @@ public class LaunchListActivity extends NavigationDatabaseActivity
 	 * device.
 	 */
 	private boolean               m_twoPane;
-	private PullToRefreshAttacher m_pullToRefreshAttacher;
 
 	private boolean m_navigationSpinnerInitialized;
 
@@ -212,8 +196,8 @@ public class LaunchListActivity extends NavigationDatabaseActivity
 
 			final String[] navigationValues = getResources().getStringArray( R.array.LAUNCHLIST_navigation_options );
 
-			ArrayAdapter<String> adapter = new ArrayAdapter<String>( actionBar.getThemedContext(),
-			                                                         android.R.layout.simple_spinner_item, android.R.id.text1,
+			ArrayAdapter<String> adapter = new ArrayAdapter<>( actionBar.getThemedContext(),
+			                                                   android.R.layout.simple_spinner_item, android.R.id.text1,
 			                                                         navigationValues );
 			adapter.setDropDownViewResource( android.R.layout.simple_spinner_dropdown_item );
 
@@ -307,5 +291,13 @@ public class LaunchListActivity extends NavigationDatabaseActivity
 		}
 
 		return handled;
+	}
+
+	@Override
+	public void onAgencyListDialogClick( final Agency agency )
+	{
+		Intent intent = new Intent( this, AgencyBrowserActivity.class );
+		intent.setData( TminusUri.buildAgencyUri( agency.id ) );
+		startActivity( intent );
 	}
 }

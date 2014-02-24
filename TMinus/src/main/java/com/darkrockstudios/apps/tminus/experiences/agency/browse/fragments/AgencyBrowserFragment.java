@@ -31,6 +31,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import butterknife.ButterKnife;
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 import de.keyboardsurfer.android.widget.crouton.Style;
 
@@ -165,6 +166,13 @@ public class AgencyBrowserFragment extends BaseBrowserFragment implements Adapte
 			activity.unregisterReceiver( m_updateReceiver );
 			m_updateReceiver = null;
 		}
+	}
+
+	@Override
+	public void onDestroyView()
+	{
+		super.onDestroyView();
+		ButterKnife.reset( this );
 	}
 
 	public void refresh()

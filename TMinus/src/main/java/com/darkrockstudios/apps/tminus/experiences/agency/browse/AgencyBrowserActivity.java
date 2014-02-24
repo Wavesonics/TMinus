@@ -29,11 +29,12 @@ public class AgencyBrowserActivity extends NavigationDatabaseActivity implements
 	private boolean m_twoPane;
 
 	@Override
-	protected void onCreate( Bundle savedInstanceState )
+	protected void onCreate( final Bundle savedInstanceState )
 	{
 		super.onCreate( savedInstanceState );
 		requestWindowFeature( Window.FEATURE_INDETERMINATE_PROGRESS );
 		setContentView( R.layout.activity_common_list );
+
 
 		FragmentManager fragmentManager = getSupportFragmentManager();
 
@@ -43,6 +44,23 @@ public class AgencyBrowserActivity extends NavigationDatabaseActivity implements
 		               .commit();
 
 		initNavDrawer();
+	}
+
+	private int getAgencyDetailId()
+	{
+		final int agencyId;
+
+		Intent intent = getIntent();
+		if( intent != null && intent.getData() != null )
+		{
+			agencyId = TminusUri.extractAgencyId( intent.getData() );
+		}
+		else
+		{
+			agencyId = -1;
+		}
+
+		return agencyId;
 	}
 
 	@Override
@@ -63,6 +81,12 @@ public class AgencyBrowserActivity extends NavigationDatabaseActivity implements
 			AgencyBrowserFragment agencyBrowserFragment =
 					(AgencyBrowserFragment) getSupportFragmentManager().findFragmentByTag( FRAGMENT_TAG );
 			agencyBrowserFragment.setActivateOnItemClick( true );
+		}
+
+		final int agencyId = getAgencyDetailId();
+		if( agencyId >= 0 )
+		{
+			selectAgency( agencyId );
 		}
 	}
 
@@ -123,12 +147,17 @@ public class AgencyBrowserActivity extends NavigationDatabaseActivity implements
 	@Override
 	public void onItemSelected( final Agency agency )
 	{
+		selectAgency( agency.id );
+	}
+
+	private void selectAgency( final int agencyId )
+	{
 		if( m_twoPane )
 		{
 			// In two-pane mode, show the detail view in this activity by
 			// adding or replacing the detail fragment using a
 			// fragment transaction.
-			AgencyDetailFragment fragment = AgencyDetailFragment.newInstance( agency.id );
+			AgencyDetailFragment fragment = AgencyDetailFragment.newInstance( agencyId );
 			getSupportFragmentManager().beginTransaction()
 			                           .replace( R.id.COMMON_detail_fragment_container, fragment, DETAIL_FRAGMENT_TAG )
 			                           .commit();
@@ -138,7 +167,7 @@ public class AgencyBrowserActivity extends NavigationDatabaseActivity implements
 			// In single-pane mode, simply start the detail activity
 			// for the selected item ID.
 			Intent intent = new Intent( this, AgencyDetailActivity.class );
-			intent.setData( TminusUri.buildAgencyUri( agency.id ) );
+			intent.setData( TminusUri.buildAgencyUri( agencyId ) );
 			startActivity( intent );
 		}
 	}

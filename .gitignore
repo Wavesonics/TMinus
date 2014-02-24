@@ -16,6 +16,10 @@ gen/*
 *.zip
 *.apk
 
+# IDE files #
+#############
+.idea/*
+
 # Compiled source #
 ###################
 *.com

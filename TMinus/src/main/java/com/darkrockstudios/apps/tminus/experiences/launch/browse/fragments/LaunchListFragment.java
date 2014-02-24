@@ -61,17 +61,9 @@ public class LaunchListFragment extends BaseBrowserFragment
 		public void onItemSelected( Launch launch );
 	}
 
-	private static Callbacks s_dummyCallbacks = new Callbacks()
-	{
-		@Override
-		public void onItemSelected( final Launch launch )
-		{
-		}
-	};
-
 	private boolean              m_previousLaunches;
 	private ArrayAdapter<Launch> m_adapter;
-	private Callbacks m_callbacks = s_dummyCallbacks;
+	private Callbacks m_callbacks;
 	private LaunchUpdateReceiver m_updateReceiver;
 
 	public static LaunchListFragment newInstance( final boolean previousLaunches )
@@ -163,8 +155,7 @@ public class LaunchListFragment extends BaseBrowserFragment
 	{
 		super.onDetach();
 
-		// Reset the active callbacks interface to the dummy implementation.
-		m_callbacks = s_dummyCallbacks;
+		m_callbacks = null;
 
 		Activity activity = getActivity();
 		activity.unregisterReceiver( m_updateReceiver );
@@ -176,10 +167,13 @@ public class LaunchListFragment extends BaseBrowserFragment
 	{
 		super.onListItemClick( listView, view, position, id );
 
-		// Notify the active callbacks interface (the activity, if the
-		// fragment is attached to one) that an item has been selected.
-		Launch launch = (Launch) listView.getAdapter().getItem( position );
-		m_callbacks.onItemSelected( launch );
+		if( m_callbacks != null )
+		{
+			// Notify the active callbacks interface (the activity, if the
+			// fragment is attached to one) that an item has been selected.
+			Launch launch = (Launch) listView.getAdapter().getItem( position );
+			m_callbacks.onItemSelected( launch );
+		}
 	}
 
 	private boolean reloadData()

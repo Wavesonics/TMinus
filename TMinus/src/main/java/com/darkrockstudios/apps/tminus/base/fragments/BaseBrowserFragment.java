@@ -53,6 +53,13 @@ public abstract class BaseBrowserFragment extends ListFragment implements OnRefr
 	}
 
 	@Override
+	public void onDestroyView()
+	{
+		super.onDestroyView();
+		ButterKnife.reset( this );
+	}
+
+	@Override
 	public void setListAdapter( final ListAdapter adapter )
 	{
 		if( !(adapter instanceof BaseAdapter) )
