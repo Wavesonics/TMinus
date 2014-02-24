@@ -62,37 +62,34 @@ public class AgencyDetailUpdateTask extends WikiUpdateTask
 	{
 		boolean success = false;
 
-		if( articleText != null )
+		final DatabaseHelper databaseHelper = OpenHelperManager.getHelper( context, DatabaseHelper.class );
+		if( databaseHelper != null )
 		{
-			final DatabaseHelper databaseHelper = OpenHelperManager.getHelper( context, DatabaseHelper.class );
-			if( databaseHelper != null )
+			try
 			{
-				try
+				Dao<AgencyDetail, Integer> agencyDetailDao = databaseHelper.getDao( AgencyDetail.class );
+				AgencyDetail agencyDetail = agencyDetailDao.queryForId( id );
+				if( agencyDetail == null )
 				{
-					Dao<AgencyDetail, Integer> agencyDetailDao = databaseHelper.getDao( AgencyDetail.class );
-					AgencyDetail agencyDetail = agencyDetailDao.queryForId( id );
-					if( agencyDetail == null )
-					{
-						agencyDetail = new AgencyDetail();
-						agencyDetail.agencyId = id;
-						agencyDetail.summary = articleText;
-						agencyDetailDao.create( agencyDetail );
-						success = true;
-					}
-					else
-					{
-						agencyDetail.summary = articleText;
-						agencyDetailDao.update( agencyDetail );
-						success = true;
-					}
+					agencyDetail = new AgencyDetail();
+					agencyDetail.agencyId = id;
+					agencyDetail.summary = articleText;
+					agencyDetailDao.create( agencyDetail );
+					success = true;
 				}
-				catch( final SQLException e )
+				else
 				{
-					e.printStackTrace();
+					agencyDetail.summary = articleText;
+					agencyDetailDao.update( agencyDetail );
+					success = true;
 				}
-
-				OpenHelperManager.releaseHelper();
 			}
+			catch( final SQLException e )
+			{
+				e.printStackTrace();
+			}
+
+			OpenHelperManager.releaseHelper();
 		}
 
 		return success;

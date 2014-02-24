@@ -10,6 +10,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.text.Html;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -45,9 +46,9 @@ import de.keyboardsurfer.android.widget.crouton.Style;
  */
 public class AgencyDetailFragment extends DialogFragment implements Utilities.ZoomAnimationHandler
 {
-	private static final String TAG         = AgencyDetailFragment.class.getSimpleName();
+	private static final String TAG                              = AgencyDetailFragment.class.getSimpleName();
 	private static final String FRAGMENT_TAG_COUNTRY_LIST_DIALOG = "CountryListDialog";
-	public static final  String ARG_ITEM_ID = "item_id";
+	public static final  String ARG_ITEM_ID                      = "item_id";
 
 	@InjectView(R.id.AGENCYDETAIL_container)
 	View m_containerView;
@@ -171,12 +172,12 @@ public class AgencyDetailFragment extends DialogFragment implements Utilities.Zo
 		m_agency = getAgency();
 		if( m_agency != null )
 		{
-			m_agencyDetail = getAgencyDetail( m_agency );
-			if( m_agencyDetail == null )
+			m_agencyDetail = getAgencyDetail();
+			if( m_agencyDetail == null && !TextUtils.isEmpty( m_agency.wikiURL ) )
 			{
 				requestAgencyDetails();
 			}
-			else
+			else if( m_agencyDetail != null )
 			{
 				if( m_agencyDetail.imageUrl != null && m_agencyDetail.imageUrl.length() > 0 )
 				{
@@ -191,6 +192,10 @@ public class AgencyDetailFragment extends DialogFragment implements Utilities.Zo
 				}
 
 				m_summary.setText( Html.fromHtml( m_agencyDetail.summary ) );
+			}
+			else
+			{
+				m_summary.setText( R.string.AGENCYDETAIL_no_summary );
 			}
 
 			m_name.setText( m_agency.name );
@@ -290,7 +295,7 @@ public class AgencyDetailFragment extends DialogFragment implements Utilities.Zo
 		return agency;
 	}
 
-	private AgencyDetail getAgencyDetail( final Agency agency )
+	private AgencyDetail getAgencyDetail()
 	{
 		AgencyDetail agencyDetail = null;
 

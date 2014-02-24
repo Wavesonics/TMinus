@@ -11,6 +11,7 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.text.Html;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,7 +36,6 @@ import com.darkrockstudios.apps.tminus.loaders.RocketLoader.RocketLoadListener;
 import com.darkrockstudios.apps.tminus.misc.TminusUri;
 import com.darkrockstudios.apps.tminus.misc.Utilities;
 
-import java.io.File;
 import java.util.Iterator;
 
 import butterknife.ButterKnife;
@@ -58,7 +58,6 @@ public class RocketDetailFragment extends DialogFragment implements Listener, Ro
 
 	public static final String FRAGMENT_TAG_AGENCY_LIST_DIALOG = "AgencyListDialog";
 
-	private File         m_dataDirectory;
 	private Rocket       m_rocket;
 	private RocketDetail m_rocketDetail;
 
@@ -111,9 +110,6 @@ public class RocketDetailFragment extends DialogFragment implements Listener, Ro
 	public void onAttach( final Activity activity )
 	{
 		super.onAttach( activity );
-
-		String dataDirPath = activity.getApplicationInfo().dataDir;
-		m_dataDirectory = new File( dataDirPath );
 
 		Log.d( TAG, "registering for events" );
 
@@ -246,6 +242,10 @@ public class RocketDetailFragment extends DialogFragment implements Listener, Ro
 					m_rocketSummary.setText( Html.fromHtml( m_rocketDetail.summary ) );
 				}
 			}
+			else if( TextUtils.isEmpty( m_rocket.wikiURL ) )
+			{
+				m_rocketSummary.setText( R.string.ROCKETDETAIL_no_summary );
+			}
 		}
 	}
 
@@ -282,10 +282,13 @@ public class RocketDetailFragment extends DialogFragment implements Listener, Ro
 		final Activity activity = getActivity();
 		if( m_rocket != null && activity != null )
 		{
-			RocketDetailLoader detailLoader = new RocketDetailLoader( activity, this );
-			detailLoader.execute( m_rocket.id );
-
 			updateViews();
+
+			if( !TextUtils.isEmpty( m_rocket.wikiURL ) )
+			{
+				RocketDetailLoader detailLoader = new RocketDetailLoader( activity, this );
+				detailLoader.execute( m_rocket.id );
+			}
 		}
 	}
 
