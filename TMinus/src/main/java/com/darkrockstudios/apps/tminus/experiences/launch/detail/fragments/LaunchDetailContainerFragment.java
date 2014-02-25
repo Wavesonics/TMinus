@@ -15,6 +15,7 @@ import com.darkrockstudios.apps.tminus.database.DatabaseHelper;
 import com.darkrockstudios.apps.tminus.experiences.location.detail.fragments.LocationDetailFragment;
 import com.darkrockstudios.apps.tminus.experiences.rocket.detail.fragments.RocketDetailFragment;
 import com.darkrockstudios.apps.tminus.launchlibrary.Launch;
+import com.darkrockstudios.apps.tminus.views.slidingtabs.SlidingTabLayout;
 import com.j256.ormlite.dao.Dao;
 
 import java.sql.SQLException;
@@ -32,6 +33,9 @@ public class LaunchDetailContainerFragment extends Fragment
 	private LaunchDetailPagerAdapter m_adapter;
 
 	private Launch m_launch;
+
+	@InjectView(R.id.LAUNCHDETAIL_pager_tabs)
+	SlidingTabLayout m_tabs;
 
 	@InjectView(R.id.LAUNCHDETAIL_pager)
 	ViewPager m_pager;
@@ -97,6 +101,7 @@ public class LaunchDetailContainerFragment extends Fragment
 			ButterKnife.inject( this, view );
 
 			m_pager.setAdapter( m_adapter );
+			m_tabs.setViewPager( m_pager );
 		}
 
 		return view;
@@ -128,6 +133,30 @@ public class LaunchDetailContainerFragment extends Fragment
 		public LaunchDetailPagerAdapter( final FragmentManager fm )
 		{
 			super( fm );
+		}
+
+		@Override
+		public CharSequence getPageTitle( final int position )
+		{
+			String title = "";
+
+			switch( position )
+			{
+				case 0:
+					title = "Mission";
+					break;
+				case 1:
+					title = "Location";
+					break;
+				case 2:
+					title = "Rocket";
+					break;
+				default:
+					title = "";
+					break;
+			}
+
+			return title;
 		}
 
 		@Override

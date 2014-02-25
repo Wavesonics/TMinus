@@ -26,14 +26,14 @@ public class LaunchLoader extends AsyncTask<Integer, Void, Launch>
 	private Context               m_context;
 	private LaunchLoader.Listener m_listener;
 
-	public LaunchLoader( Context context, LaunchLoader.Listener listener )
+	public LaunchLoader( final Context context, final LaunchLoader.Listener listener )
 	{
 		m_context = context;
 		m_listener = listener;
 	}
 
 	@Override
-	protected Launch doInBackground( Integer... ids )
+	protected Launch doInBackground( final Integer... ids )
 	{
 		Launch launch = null;
 
@@ -47,7 +47,7 @@ public class LaunchLoader extends AsyncTask<Integer, Void, Launch>
 					Dao<Launch, Integer> launchDao = databaseHelper.getDao( Launch.class );
 					launch = launchDao.queryForId( ids[ 0 ] );
 				}
-				catch( SQLException e )
+				catch( final SQLException e )
 				{
 					e.printStackTrace();
 				}
@@ -60,7 +60,7 @@ public class LaunchLoader extends AsyncTask<Integer, Void, Launch>
 	}
 
 	@Override
-	protected void onPostExecute( Launch result )
+	protected void onPostExecute( final Launch result )
 	{
 		Log.d( TAG, "Launch details loaded." );
 		m_listener.launchLoaded( result );
