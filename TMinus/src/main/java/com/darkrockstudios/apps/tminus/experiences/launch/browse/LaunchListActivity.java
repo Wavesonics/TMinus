@@ -1,9 +1,9 @@
 package com.darkrockstudios.apps.tminus.experiences.launch.browse;
 
 import android.app.ActionBar;
+import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -42,7 +42,7 @@ public class LaunchListActivity extends NavigationDatabaseActivity
 	 * Whether or not the activity is in two-pane mode, i.e. running on a tablet
 	 * device.
 	 */
-	private boolean               m_twoPane;
+	private boolean m_twoPane;
 
 	private boolean m_navigationSpinnerInitialized;
 
@@ -65,7 +65,7 @@ public class LaunchListActivity extends NavigationDatabaseActivity
 
 	private void setUpcomingLaunchesFragment()
 	{
-		FragmentManager fragmentManager = getSupportFragmentManager();
+		FragmentManager fragmentManager = getFragmentManager();
 		LaunchListFragment launchListFragment = LaunchListFragment.newInstance( false );
 		fragmentManager.beginTransaction().replace( R.id.COMMON_list_fragment_container, launchListFragment,
 		                                            TAG_LAUNCH_LIST ).commit();
@@ -73,7 +73,7 @@ public class LaunchListActivity extends NavigationDatabaseActivity
 
 	private void setPreviousLaunchesFragment()
 	{
-		FragmentManager fragmentManager = getSupportFragmentManager();
+		FragmentManager fragmentManager = getFragmentManager();
 		LaunchListFragment launchListFragment = LaunchListFragment.newInstance( true );
 		fragmentManager.beginTransaction().replace( R.id.COMMON_list_fragment_container, launchListFragment,
 		                                            TAG_LAUNCH_LIST ).commit();
@@ -95,7 +95,7 @@ public class LaunchListActivity extends NavigationDatabaseActivity
 			// In two-pane mode, list items should be given the
 			// 'activated' state when touched.
 			LaunchListFragment launchListFragment =
-					(LaunchListFragment) getSupportFragmentManager().findFragmentByTag( TAG_LAUNCH_LIST );
+					(LaunchListFragment) getFragmentManager().findFragmentByTag( TAG_LAUNCH_LIST );
 			launchListFragment.setActivateOnItemClick( true );
 		}
 	}
@@ -152,9 +152,9 @@ public class LaunchListActivity extends NavigationDatabaseActivity
 			arguments.putInt( LaunchDetailFragment.ARG_ITEM_ID, launch.id );
 			LaunchDetailFragment fragment = new LaunchDetailFragment();
 			fragment.setArguments( arguments );
-			getSupportFragmentManager().beginTransaction()
-			                           .replace( R.id.COMMON_detail_fragment_container, fragment )
-			                           .commit();
+			getFragmentManager().beginTransaction()
+			                    .replace( R.id.COMMON_detail_fragment_container, fragment )
+			                    .commit();
 		}
 		else
 		{
@@ -198,7 +198,7 @@ public class LaunchListActivity extends NavigationDatabaseActivity
 
 			ArrayAdapter<String> adapter = new ArrayAdapter<>( actionBar.getThemedContext(),
 			                                                   android.R.layout.simple_spinner_item, android.R.id.text1,
-			                                                         navigationValues );
+			                                                   navigationValues );
 			adapter.setDropDownViewResource( android.R.layout.simple_spinner_dropdown_item );
 
 			actionBar.setListNavigationCallbacks( adapter, this );
@@ -211,14 +211,14 @@ public class LaunchListActivity extends NavigationDatabaseActivity
 
 	private void refreshLaunchList()
 	{
-		LaunchListFragment launchListFragment = (LaunchListFragment) getSupportFragmentManager()
+		LaunchListFragment launchListFragment = (LaunchListFragment) getFragmentManager()
 				                                                             .findFragmentById( R.id.COMMON_list_fragment_container );
 		launchListFragment.refresh();
 	}
 
 	public void countDownClicked( final View v )
 	{
-		LaunchDetailFragment launchDetailFragment = (LaunchDetailFragment) getSupportFragmentManager()
+		LaunchDetailFragment launchDetailFragment = (LaunchDetailFragment) getFragmentManager()
 				                                                                   .findFragmentById( R.id.COMMON_detail_fragment_container );
 		if( launchDetailFragment != null )
 		{
@@ -237,7 +237,7 @@ public class LaunchListActivity extends NavigationDatabaseActivity
 		Rocket rocket = (Rocket) v.getTag();
 
 		RocketDetailFragment rocketDetailFragment = RocketDetailFragment.newInstance( rocket.id, true );
-		rocketDetailFragment.show( getSupportFragmentManager(), "dialog" );
+		rocketDetailFragment.show( getFragmentManager(), "dialog" );
 	}
 
 	public void locationDetailsClicked( final View v )
@@ -246,12 +246,12 @@ public class LaunchListActivity extends NavigationDatabaseActivity
 
 		LocationDetailFragment locationDetailFragment =
 				LocationDetailFragment.newInstance( pad.location.id, pad.id, true, true );
-		locationDetailFragment.show( getSupportFragmentManager(), "dialog" );
+		locationDetailFragment.show( getFragmentManager(), "dialog" );
 	}
 
 	public void rocketImageClicked( final View v )
 	{
-		LaunchDetailFragment fragment = (LaunchDetailFragment) getSupportFragmentManager()
+		LaunchDetailFragment fragment = (LaunchDetailFragment) getFragmentManager()
 				                                                       .findFragmentById( R.id.COMMON_detail_fragment_container );
 
 		if( fragment != null )

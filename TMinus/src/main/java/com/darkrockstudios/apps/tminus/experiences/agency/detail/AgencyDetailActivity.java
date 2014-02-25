@@ -37,9 +37,9 @@ public class AgencyDetailActivity extends DatabaseActivity
 				// Create the detail fragment and add it to the activity
 				// using a fragment transaction.
 				AgencyDetailFragment rocketDetailFragment = AgencyDetailFragment.newInstance( m_agencyId );
-				getSupportFragmentManager().beginTransaction()
-				                           .add( R.id.agency_detail_container, rocketDetailFragment, FRAGMENT_TAG )
-				                           .commit();
+				getFragmentManager().beginTransaction()
+				                    .add( R.id.agency_detail_container, rocketDetailFragment, FRAGMENT_TAG )
+				                    .commit();
 			}
 		}
 	}
@@ -98,7 +98,7 @@ public class AgencyDetailActivity extends DatabaseActivity
 	private void refresh()
 	{
 		AgencyDetailFragment fragment =
-				(AgencyDetailFragment) getSupportFragmentManager()
+				(AgencyDetailFragment) getFragmentManager()
 						                       .findFragmentByTag( FRAGMENT_TAG );
 		if( fragment != null )
 		{
@@ -109,7 +109,7 @@ public class AgencyDetailActivity extends DatabaseActivity
 	public void agencyImageClicked( final View view )
 	{
 		AgencyDetailFragment fragment =
-				(AgencyDetailFragment) getSupportFragmentManager()
+				(AgencyDetailFragment) getFragmentManager()
 						                       .findFragmentByTag( FRAGMENT_TAG );
 		if( fragment != null )
 		{

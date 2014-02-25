@@ -2,6 +2,7 @@ package com.darkrockstudios.apps.tminus.experiences.launch.detail.fragments;
 
 import android.animation.Animator;
 import android.app.Activity;
+import android.app.Fragment;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -12,7 +13,6 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.CalendarContract;
 import android.provider.CalendarContract.Events;
-import android.support.v4.app.Fragment;
 import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -116,10 +116,6 @@ public class LaunchDetailFragment extends Fragment implements Listener, RocketDe
 	private Animator m_currentAnimator;
 	private int      m_shortAnimationDuration;
 
-	/**
-	 * Mandatory empty constructor for the fragment manager to instantiate the
-	 * fragment (e.g. upon screen orientation changes).
-	 */
 	public LaunchDetailFragment()
 	{
 	}
@@ -536,8 +532,8 @@ public class LaunchDetailFragment extends Fragment implements Listener, RocketDe
 						                                                              pad.id,
 						                                                              isTabletLayout,
 						                                                              true );
-				getChildFragmentManager().beginTransaction()
-				                         .add( R.id.LAUNCHDETAIL_location_container, locationDetailFragment,
+				getFragmentManager().beginTransaction()
+				                    .add( R.id.LAUNCHDETAIL_location_container, locationDetailFragment,
 				                               LOCATION_FRAGMENT_TAG )
 				                         .commit();
 			}
@@ -546,8 +542,8 @@ public class LaunchDetailFragment extends Fragment implements Listener, RocketDe
 			{
 				RocketDetailFragment rocketDetailFragment =
 						RocketDetailFragment.newInstance( m_launchItem.rocket.id, true );
-				getChildFragmentManager().beginTransaction()
-				                         .add( R.id.LAUNCHDETAIL_rocket_container, rocketDetailFragment,
+				getFragmentManager().beginTransaction()
+				                    .add( R.id.LAUNCHDETAIL_rocket_container, rocketDetailFragment,
 				                               ROCKET_FRAGMENT_TAG ).commit();
 			}
 		}

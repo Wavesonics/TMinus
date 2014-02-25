@@ -11,6 +11,7 @@ import android.view.Window;
 import com.darkrockstudios.apps.tminus.R;
 import com.darkrockstudios.apps.tminus.base.activities.DatabaseActivity;
 import com.darkrockstudios.apps.tminus.experiences.countdown.CountDownActivity;
+import com.darkrockstudios.apps.tminus.experiences.launch.detail.fragments.LaunchDetailContainerFragment;
 import com.darkrockstudios.apps.tminus.experiences.launch.detail.fragments.LaunchDetailFragment;
 import com.darkrockstudios.apps.tminus.experiences.location.detail.LocationDetailActivity;
 import com.darkrockstudios.apps.tminus.experiences.rocket.detail.RocketDetailActivity;
@@ -38,9 +39,9 @@ public class LaunchDetailActivity extends DatabaseActivity
 			{
 				// Create the detail fragment and add it to the activity
 				// using a fragment transaction.
-				LaunchDetailFragment fragment = LaunchDetailFragment.newInstance( m_launchId );
-				getSupportFragmentManager().beginTransaction()
-				                           .add( R.id.COMMON_detail_fragment_container, fragment, FRAGMENT_TAG )
+				LaunchDetailContainerFragment fragment = LaunchDetailContainerFragment.newInstance( m_launchId );
+				getFragmentManager().beginTransaction()
+				                    .add( R.id.COMMON_detail_fragment_container, fragment, FRAGMENT_TAG )
 				                           .commit();
 			}
 		}
@@ -125,8 +126,7 @@ public class LaunchDetailActivity extends DatabaseActivity
 	public void rocketImageClicked( final View v )
 	{
 		LaunchDetailFragment fragment =
-				(LaunchDetailFragment) getSupportFragmentManager()
-						                       .findFragmentByTag( FRAGMENT_TAG );
+				(LaunchDetailFragment) getFragmentManager().findFragmentByTag( FRAGMENT_TAG );
 		if( fragment != null )
 		{
 			fragment.zoomRocketImage();

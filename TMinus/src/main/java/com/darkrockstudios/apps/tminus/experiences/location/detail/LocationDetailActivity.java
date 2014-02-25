@@ -40,9 +40,9 @@ public class LocationDetailActivity extends DatabaseActivity
 				// using a fragment transaction.
 				LocationDetailFragment locationDetailFragment =
 						LocationDetailFragment.newInstance( locationId, padId, true, false );
-				getSupportFragmentManager().beginTransaction()
-				                           .add( R.id.location_detail_container, locationDetailFragment, FRAGMENT_TAG )
-				                           .commit();
+				getFragmentManager().beginTransaction()
+				                    .add( R.id.location_detail_container, locationDetailFragment, FRAGMENT_TAG )
+				                    .commit();
 			}
 		}
 	}

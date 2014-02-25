@@ -2,11 +2,11 @@ package com.darkrockstudios.apps.tminus.experiences.location.detail.fragments;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.app.DialogFragment;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,7 +28,7 @@ import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMapOptions;
-import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -73,7 +73,7 @@ public class LocationDetailFragment extends DialogFragment implements AdapterVie
 	{
 	}
 
-	public static LocationDetailFragment newInstance( int locationId, int padId, boolean mapControlsEnabled, boolean onlyDisplayMap )
+	public static LocationDetailFragment newInstance( final int locationId, final int padId, final boolean mapControlsEnabled, final boolean onlyDisplayMap )
 	{
 		LocationDetailFragment locationDetailFragment = new LocationDetailFragment();
 
@@ -96,8 +96,8 @@ public class LocationDetailFragment extends DialogFragment implements AdapterVie
 	}
 
 	@Override
-	public View onCreateView( LayoutInflater inflater, ViewGroup container,
-	                          Bundle savedInstanceState )
+	public View onCreateView( final LayoutInflater inflater, final ViewGroup container,
+	                          final Bundle savedInstanceState )
 	{
 		Dialog dialog = getDialog();
 		if( dialog != null )
@@ -123,9 +123,9 @@ public class LocationDetailFragment extends DialogFragment implements AdapterVie
 			m_locationName =
 					(TextView) rootView.findViewById( R.id.LOCATIONDETAIL_location_name );
 
-			SupportMapFragment mapFragment = createMap();
-			getChildFragmentManager().beginTransaction()
-			                         .add( R.id.LOCATIONDETAIL_map_container, mapFragment, MAP_FRAGMENT_TAG )
+			MapFragment mapFragment = createMap();
+			getFragmentManager().beginTransaction()
+			                    .add( R.id.LOCATIONDETAIL_map_container, mapFragment, MAP_FRAGMENT_TAG )
 			                         .commit();
 
 			if( !shouldOnlyDisplayMap() )
@@ -141,7 +141,7 @@ public class LocationDetailFragment extends DialogFragment implements AdapterVie
 		return rootView;
 	}
 
-	private SupportMapFragment createMap()
+	private MapFragment createMap()
 	{
 		GoogleMapOptions options = new GoogleMapOptions();
 
@@ -160,7 +160,7 @@ public class LocationDetailFragment extends DialogFragment implements AdapterVie
 		CameraPosition camPos = new CameraPosition( getLocation(), 0.0f, 30f, 0.0f );
 		options.camera( camPos );
 
-		SupportMapFragment mapFragment = SupportMapFragment.newInstance( options );
+		MapFragment mapFragment = MapFragment.newInstance( options );
 
 		return mapFragment;
 	}
@@ -169,8 +169,7 @@ public class LocationDetailFragment extends DialogFragment implements AdapterVie
 	{
 		final LatLng pos = getLocation();
 
-		SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager()
-				                                                      .findFragmentByTag( MAP_FRAGMENT_TAG );
+		MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentByTag( MAP_FRAGMENT_TAG );
 		if( mapFragment != null )
 		{
 			GoogleMap map = mapFragment.getMap();
@@ -189,7 +188,7 @@ public class LocationDetailFragment extends DialogFragment implements AdapterVie
 				// Don't add pad markers in map only map
 				if( m_pads != null && !m_pads.isEmpty() && !shouldOnlyDisplayMap() )
 				{
-					for( Pad pad : m_pads )
+					for( final Pad pad : m_pads )
 					{
 						if( pad.latitude != null && pad.longitude != null )
 						{
@@ -205,14 +204,13 @@ public class LocationDetailFragment extends DialogFragment implements AdapterVie
 		}
 	}
 
-	private void zoomToPad( Pad pad )
+	private void zoomToPad( final Pad pad )
 	{
 		if( pad != null && pad.latitude != null && pad.longitude != null )
 		{
 			LatLng pos = new LatLng( pad.latitude, pad.longitude );
 
-			SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager()
-					                                                      .findFragmentByTag( MAP_FRAGMENT_TAG );
+			MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentByTag( MAP_FRAGMENT_TAG );
 			if( mapFragment != null )
 			{
 				GoogleMap map = mapFragment.getMap();
@@ -226,7 +224,7 @@ public class LocationDetailFragment extends DialogFragment implements AdapterVie
 	}
 
 	@Override
-	public void onAttach( Activity activity )
+	public void onAttach( final Activity activity )
 	{
 		super.onAttach( activity );
 
@@ -370,7 +368,7 @@ public class LocationDetailFragment extends DialogFragment implements AdapterVie
 	}
 
 	@Override
-	public void onItemClick( AdapterView<?> parent, View view, int position, long id )
+	public void onItemClick( final AdapterView<?> parent, final View view, final int position, final long id )
 	{
 		final Activity activity = getActivity();
 		if( activity != null && isAdded() )
@@ -393,12 +391,12 @@ public class LocationDetailFragment extends DialogFragment implements AdapterVie
 
 	private class PadListAdapter extends ArrayAdapter<Pad>
 	{
-		public PadListAdapter( Context context )
+		public PadListAdapter( final Context context )
 		{
 			super( context, R.layout.row_pad_list_item );
 		}
 
-		public View getView( int position, View convertView, ViewGroup parent )
+		public View getView( final int position, final View convertView, final ViewGroup parent )
 		{
 			final View view;
 			if( convertView == null )
@@ -423,7 +421,7 @@ public class LocationDetailFragment extends DialogFragment implements AdapterVie
 	private class PadLoader extends AsyncTask<Integer, Void, List<Pad>>
 	{
 		@Override
-		protected List<Pad> doInBackground( Integer... ids )
+		protected List<Pad> doInBackground( final Integer... ids )
 		{
 			final int locationId = ids[ 0 ];
 
@@ -444,7 +442,7 @@ public class LocationDetailFragment extends DialogFragment implements AdapterVie
 
 						pads = padDao.query( queryBuilder.prepare() );
 					}
-					catch( SQLException e )
+					catch( final SQLException e )
 					{
 						e.printStackTrace();
 					}
@@ -457,7 +455,7 @@ public class LocationDetailFragment extends DialogFragment implements AdapterVie
 		}
 
 		@Override
-		protected void onPostExecute( List<Pad> result )
+		protected void onPostExecute( final List<Pad> result )
 		{
 			Log.i( TAG, "Pads loaded." );
 
@@ -490,7 +488,7 @@ public class LocationDetailFragment extends DialogFragment implements AdapterVie
 	private class LocationLoader extends AsyncTask<Integer, Void, Location>
 	{
 		@Override
-		protected Location doInBackground( Integer... ids )
+		protected Location doInBackground( final Integer... ids )
 		{
 			Location location = null;
 
@@ -506,7 +504,7 @@ public class LocationDetailFragment extends DialogFragment implements AdapterVie
 						Dao<Location, Integer> locationDao = databaseHelper.getDao( Location.class );
 						location = locationDao.queryForId( ids[ 0 ] );
 					}
-					catch( SQLException e )
+					catch( final SQLException e )
 					{
 						e.printStackTrace();
 					}
@@ -519,7 +517,7 @@ public class LocationDetailFragment extends DialogFragment implements AdapterVie
 		}
 
 		@Override
-		protected void onPostExecute( Location result )
+		protected void onPostExecute( final Location result )
 		{
 			Log.i( TAG, "Location loaded." );
 			m_location = result;

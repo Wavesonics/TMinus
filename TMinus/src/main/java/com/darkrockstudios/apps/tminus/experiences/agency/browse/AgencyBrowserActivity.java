@@ -1,8 +1,8 @@
 package com.darkrockstudios.apps.tminus.experiences.agency.browse;
 
+import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -36,7 +36,7 @@ public class AgencyBrowserActivity extends NavigationDatabaseActivity implements
 		setContentView( R.layout.activity_common_list );
 
 
-		FragmentManager fragmentManager = getSupportFragmentManager();
+		FragmentManager fragmentManager = getFragmentManager();
 
 		AgencyBrowserFragment agencyBrowserFragment = AgencyBrowserFragment.newInstance();
 		fragmentManager.beginTransaction()
@@ -79,7 +79,7 @@ public class AgencyBrowserActivity extends NavigationDatabaseActivity implements
 			// In two-pane mode, list items should be given the
 			// 'activated' state when touched.
 			AgencyBrowserFragment agencyBrowserFragment =
-					(AgencyBrowserFragment) getSupportFragmentManager().findFragmentByTag( FRAGMENT_TAG );
+					(AgencyBrowserFragment) getFragmentManager().findFragmentByTag( FRAGMENT_TAG );
 			agencyBrowserFragment.setActivateOnItemClick( true );
 		}
 
@@ -128,16 +128,14 @@ public class AgencyBrowserActivity extends NavigationDatabaseActivity implements
 
 	private void refreshAgencyList()
 	{
-		AgencyBrowserFragment fragment =
-				(AgencyBrowserFragment) getSupportFragmentManager().findFragmentByTag( FRAGMENT_TAG );
+		AgencyBrowserFragment fragment = (AgencyBrowserFragment) getFragmentManager().findFragmentByTag( FRAGMENT_TAG );
 		fragment.refresh();
 	}
 
 	public void agencyImageClicked( final View view )
 	{
 		AgencyDetailFragment fragment =
-				(AgencyDetailFragment) getSupportFragmentManager()
-						                       .findFragmentByTag( DETAIL_FRAGMENT_TAG );
+				(AgencyDetailFragment) getFragmentManager().findFragmentByTag( DETAIL_FRAGMENT_TAG );
 		if( fragment != null )
 		{
 			fragment.zoomAgencyImage();
@@ -158,9 +156,9 @@ public class AgencyBrowserActivity extends NavigationDatabaseActivity implements
 			// adding or replacing the detail fragment using a
 			// fragment transaction.
 			AgencyDetailFragment fragment = AgencyDetailFragment.newInstance( agencyId );
-			getSupportFragmentManager().beginTransaction()
-			                           .replace( R.id.COMMON_detail_fragment_container, fragment, DETAIL_FRAGMENT_TAG )
-			                           .commit();
+			getFragmentManager().beginTransaction()
+			                    .replace( R.id.COMMON_detail_fragment_container, fragment, DETAIL_FRAGMENT_TAG )
+			                    .commit();
 		}
 		else
 		{

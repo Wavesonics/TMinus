@@ -1,8 +1,8 @@
 package com.darkrockstudios.apps.tminus.experiences.rocket.browse;
 
+import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -33,7 +33,7 @@ public class RocketBrowserActivity extends NavigationDatabaseActivity implements
 		requestWindowFeature( Window.FEATURE_INDETERMINATE_PROGRESS );
 		setContentView( R.layout.activity_common_list );
 
-		FragmentManager fragmentManager = getSupportFragmentManager();
+		FragmentManager fragmentManager = getFragmentManager();
 
 		RocketBrowserFragment rocketBrowserFragment = RocketBrowserFragment.newInstance();
 		fragmentManager.beginTransaction()
@@ -59,7 +59,7 @@ public class RocketBrowserActivity extends NavigationDatabaseActivity implements
 			// In two-pane mode, list items should be given the
 			// 'activated' state when touched.
 			RocketBrowserFragment rocketBrowserFragment =
-					(RocketBrowserFragment) getSupportFragmentManager().findFragmentByTag( TAG_ROCKET_LIST );
+					(RocketBrowserFragment) getFragmentManager().findFragmentByTag( TAG_ROCKET_LIST );
 			rocketBrowserFragment.setActivateOnItemClick( true );
 		}
 	}
@@ -102,14 +102,14 @@ public class RocketBrowserActivity extends NavigationDatabaseActivity implements
 
 	private void refreshRocketList()
 	{
-		RocketBrowserFragment fragment = (RocketBrowserFragment) getSupportFragmentManager()
+		RocketBrowserFragment fragment = (RocketBrowserFragment) getFragmentManager()
 				                                                         .findFragmentById( R.id.COMMON_list_fragment_container );
 		fragment.refresh();
 	}
 
 	public void rocketImageClicked( final View v )
 	{
-		RocketDetailFragment fragment = (RocketDetailFragment) getSupportFragmentManager()
+		RocketDetailFragment fragment = (RocketDetailFragment) getFragmentManager()
 				                                                       .findFragmentById( R.id.COMMON_detail_fragment_container );
 
 		if( fragment != null )
@@ -127,9 +127,9 @@ public class RocketBrowserActivity extends NavigationDatabaseActivity implements
 			// adding or replacing the detail fragment using a
 			// fragment transaction.
 			RocketDetailFragment fragment = RocketDetailFragment.newInstance( rocket.id, false );
-			getSupportFragmentManager().beginTransaction()
-			                           .replace( R.id.COMMON_detail_fragment_container, fragment )
-			                           .commit();
+			getFragmentManager().beginTransaction()
+			                    .replace( R.id.COMMON_detail_fragment_container, fragment )
+			                    .commit();
 		}
 		else
 		{
