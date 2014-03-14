@@ -304,38 +304,15 @@ public class LaunchDetailFragment extends Fragment implements Listener, RocketDe
 
 			m_missionAdapter.clear();
 			m_missionAdapter.addAll( m_launchItem.missions );
+			m_missionAdapter.addAll( m_launchItem.missions );
+			m_missionAdapter.addAll( m_launchItem.missions );
+			m_missionAdapter.addAll( m_launchItem.missions );
+			m_missionAdapter.addAll( m_launchItem.missions );
+			m_missionAdapter.addAll( m_launchItem.missions );
+			m_missionAdapter.addAll( m_launchItem.missions );
 			/*
 			final TextView description =
 					(TextView) rootView.findViewById( R.id.LAUNCHDETAIL_mission_description );
-
-			// TODO handle multiple missions
-			if( m_launchItem.missions != null && m_launchItem.missions.size() > 0 )
-			{
-				StringBuilder sb = new StringBuilder();
-
-				Iterator<Mission> it = m_launchItem.missions.iterator();
-				while( it.hasNext() )
-				{
-					Mission mission = it.next();
-					sb.append( "<strong>" );
-					sb.append( mission.name );
-					sb.append( ':' );
-					sb.append( "</strong>" );
-					sb.append( "<br />" );
-					sb.append( mission.description );
-
-					if( it.hasNext() )
-					{
-						sb.append( "<br /><br />" );
-					}
-				}
-
-				description.setText( Html.fromHtml( sb.toString() ) );
-			}
-			else
-			{
-				description.setText( R.string.LAUNCHDETAIL_no_mission_details );
-			}
 			*/
 
 			//Drawable flagDrawable = FlagResourceUtility.getFlagDrawable( pad.location.countryCode, getActivity() );
@@ -352,7 +329,7 @@ public class LaunchDetailFragment extends Fragment implements Listener, RocketDe
 				m_windowLength.setText( "---" );
 			}
 
-			m_net.setText( m_launchItem.net.toString() );
+			m_net.setText( m_launchItem.net.getYear() + "" );
 			/*
 			final TextView netView1 = (TextView) rootView.findViewById( R.id.launch_detail_net_1 );
 			final TextView netView2 = (TextView) rootView.findViewById( R.id.launch_detail_net_2 );

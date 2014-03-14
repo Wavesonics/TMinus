@@ -73,7 +73,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="2"/>
 
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
@@ -85,8 +85,10 @@
                     android:layout_height="wrap_content"/>
 
                 <TextView
+                    android:id="@+id/temp_1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_below="@id/LAUNCHDETAIL_rocket_image"
                     android:padding="@dimen/default_padding"
                     android:gravity="center"
                     android:text="Country"/>
@@ -94,10 +96,11 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_below="@+id/temp_1"
                     android:padding="@dimen/default_padding"
                     android:gravity="center"
-                    android:text="Country"/>
-            </LinearLayout>
+                    android:text="Agency"/>
+            </RelativeLayout>
         </LinearLayout>
 
         <LinearLayout
