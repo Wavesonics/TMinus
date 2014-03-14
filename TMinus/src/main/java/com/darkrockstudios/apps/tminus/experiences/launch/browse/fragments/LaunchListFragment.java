@@ -29,9 +29,9 @@ import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.PreparedQuery;
 import com.j256.ormlite.stmt.QueryBuilder;
 
+import org.joda.time.DateTime;
+
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 import de.keyboardsurfer.android.widget.crouton.Crouton;
@@ -196,13 +196,13 @@ public class LaunchListFragment extends BaseBrowserFragment
 
 					if( !m_previousLaunches )
 					{
-						queryBuilder.where().ge( "net", new Date() );
+						queryBuilder.where().ge( "net", new DateTime() );
 						queryBuilder.orderBy( "net", true ).prepare();
 						query = queryBuilder.prepare();
 					}
 					else
 					{
-						queryBuilder.where().le( "net", new Date() );
+						queryBuilder.where().le( "net", new DateTime() );
 						queryBuilder.orderBy( "net", false ).prepare();
 						query = queryBuilder.prepare();
 					}
@@ -350,13 +350,9 @@ public class LaunchListFragment extends BaseBrowserFragment
 				final TextView netView2 = (TextView) view.findViewById( R.id.launch_list_item_net_2 );
 				final TextView netView3 = (TextView) view.findViewById( R.id.launch_list_item_net_3 );
 
-				SimpleDateFormat monthDay = new SimpleDateFormat( "MMM dd" );
-				SimpleDateFormat year = new SimpleDateFormat( "yyyy" );
-				SimpleDateFormat time = new SimpleDateFormat( "HH:mm" );
-
-				netView1.setText( monthDay.format( launch.net ) );
-				netView2.setText( year.format( launch.net ) );
-				netView3.setText( time.format( launch.net ) );
+				netView1.setText( launch.net.getMonthOfYear() + " " + launch.net.getDayOfMonth() );
+				netView2.setText( launch.net.getYear() + "" );
+				netView3.setText( launch.net.getHourOfDay() + ":" + launch.net.getMinuteOfHour() );
 
 				final ImageView typeIcon = (ImageView) view.findViewById( R.id.LAUNCHLIST_type_icon );
 				if( launch.missions != null )

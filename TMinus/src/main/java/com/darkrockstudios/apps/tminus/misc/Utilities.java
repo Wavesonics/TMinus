@@ -17,9 +17,10 @@ import com.darkrockstudios.apps.tminus.R;
 import com.darkrockstudios.apps.tminus.launchlibrary.Launch;
 import com.darkrockstudios.apps.tminus.launchlibrary.Mission;
 
+import org.joda.time.DateTime;
+
 import java.text.SimpleDateFormat;
 import java.util.Collection;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.concurrent.TimeUnit;
 
@@ -37,9 +38,9 @@ public class Utilities
 		final long day = TimeUnit.MILLISECONDS.toDays( timeMs );
 		final long hr = TimeUnit.MILLISECONDS.toHours( timeMs - TimeUnit.DAYS.toMillis( day ) );
 		final long min = TimeUnit.MILLISECONDS.toMinutes( timeMs - TimeUnit.DAYS
-		                                                                   .toMillis( day ) -
+				                                                           .toMillis( day ) -
 		                                                  TimeUnit.HOURS
-		                                                          .toMillis( hr ) );
+				                                                  .toMillis( hr ) );
 
 		String timeStr = day + "d " + hr + "h " + min + "m";
 		return timeStr;
@@ -76,10 +77,10 @@ public class Utilities
 		return status;
 	}
 
-	public static String getDateText( final Date date )
+	public static String getDateText( final DateTime date )
 	{
 		final SimpleDateFormat formatter = new SimpleDateFormat( DATE_FORMAT );
-		return formatter.format( date );
+		return formatter.format( date.getMillis() );
 	}
 
 	public static Drawable getLaunchTypeDrawable( final Collection<Mission> missions, final Context context )

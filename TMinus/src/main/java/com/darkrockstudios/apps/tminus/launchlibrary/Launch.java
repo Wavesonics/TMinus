@@ -1,12 +1,14 @@
 package com.darkrockstudios.apps.tminus.launchlibrary;
 
+import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
 
+import org.joda.time.DateTime;
+
 import java.io.Serializable;
 import java.util.Collection;
-import java.util.Date;
 
 /**
  * Created by Adam on 6/23/13.
@@ -26,11 +28,11 @@ public class Launch implements Serializable
 	@DatabaseField
 	public int status;
 
-	@DatabaseField
-	public Date windowstart;
+	@DatabaseField(dataType = DataType.DATE_TIME)
+	public DateTime windowstart;
 
-	@DatabaseField(canBeNull = true)
-	public Date windowend;
+	@DatabaseField(canBeNull = true, dataType = DataType.DATE_TIME)
+	public DateTime windowend;
 
 	@DatabaseField
 	public String name;
@@ -38,8 +40,8 @@ public class Launch implements Serializable
 	@DatabaseField
 	public boolean inhold;
 
-	@DatabaseField
-	public Date net;
+	@DatabaseField(dataType = DataType.DATE_TIME)
+	public DateTime net;
 
 	@ForeignCollectionField(eager = true)
 	public Collection<Mission> missions;

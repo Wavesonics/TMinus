@@ -1,5 +1,7 @@
 package com.darkrockstudios.apps.tminus.launchlibrary;
 
+import android.text.TextUtils;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
@@ -8,11 +10,11 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
 
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 /**
  * Created by Adam on 8/3/13.
@@ -25,44 +27,38 @@ public class LaunchLibraryGson
 	{
 		GsonBuilder builder = new GsonBuilder();
 		builder.registerTypeAdapter( Double.class, new DoubleTypeAdapter() );
-		builder.registerTypeAdapter( Date.class, new DateTypeAdapter() );
+		builder.registerTypeAdapter( DateTime.class, new DateTypeAdapter() );
 
 		return builder.create();
 	}
 
-	private static class DateTypeAdapter extends TypeAdapter<Date>
+	private static class DateTypeAdapter extends TypeAdapter<DateTime>
 	{
+		private DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormat.forPattern( Launch.DATE_FORMAT );
+
 		@Override
-		public void write( JsonWriter out, Date value )
-				throws IOException
+		public void write( JsonWriter out, DateTime value )
+		throws IOException
 		{
-			DateFormat df = new SimpleDateFormat( Launch.DATE_FORMAT );
-			out.value( df.format( value ) );
+			out.value( value.toString() );
 		}
 
 		@Override
-		public Date read( JsonReader in ) throws IOException
+		public DateTime read( JsonReader in ) throws IOException
 		{
 			if( in.peek() == JsonToken.NULL )
 			{
 				in.nextNull();
 				return null;
 			}
-			try
-			{
-				String result = in.nextString();
-				if( "".equals( result ) )
-				{
-					return null;
-				}
 
-				DateFormat df = new SimpleDateFormat( Launch.DATE_FORMAT );
-				return df.parse( result );
-			}
-			catch( ParseException e )
+			String result = in.nextString();
+			if( TextUtils.isEmpty( result ) )
 			{
-				throw new JsonSyntaxException( e );
+				return null;
 			}
+
+			return DATE_TIME_FORMATTER.parseDateTime( result );
 		}
 	}
 

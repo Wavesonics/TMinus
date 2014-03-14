@@ -21,6 +21,8 @@ import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.PreparedQuery;
 import com.j256.ormlite.stmt.QueryBuilder;
 
+import org.joda.time.DateTime;
+
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
@@ -96,12 +98,12 @@ public class UpdateAlarmsService extends WakefulIntentService
 				final QueryBuilder<Launch, Integer> queryBuilder = launchDao.queryBuilder();
 				final PreparedQuery<Launch> query = queryBuilder.orderBy( "net", true ).prepare();
 
-				final Date cutOffDate = new Date( new Date().getTime() + TimeUnit.DAYS.toMillis( 2 ) );
+				final DateTime cutOffDate = DateTime.now().plusDays( 2 );
 
 				final List<Launch> results = launchDao.query( query );
 				for( final Launch launch : results )
 				{
-					if( launch.net.before( cutOffDate ) )
+					if( launch.net.isBefore( cutOffDate ) )
 					{
 						Log.d( TAG, "Setting alarms for Launch id: " + launch.id );
 						if( showReminderNotifications )
@@ -159,11 +161,12 @@ public class UpdateAlarmsService extends WakefulIntentService
 		PendingIntent pendingIntent = PendingIntent
 				                              .getService( this, 0, serviceIntent, 0 );
 
-		final long dayBefore = launch.net.getTime() - TimeUnit.DAYS.toMillis( 1 );
+
+		final DateTime dayBefore = launch.net.minusDays( 1 );
 		// Don't set alarms for the past
-		if( new Date( dayBefore ).after( new Date() ) )
+		if( dayBefore.isAfter( DateTime.now() ) )
 		{
-			alarmManager.set( AlarmManager.RTC, dayBefore, pendingIntent );
+			alarmManager.set( AlarmManager.RTC, dayBefore.getMillis(), pendingIntent );
 		}
 		else
 		{
@@ -184,18 +187,19 @@ public class UpdateAlarmsService extends WakefulIntentService
 		PendingIntent pendingIntent = PendingIntent
 				                              .getService( this, 0, serviceIntent, 0 );
 
-		long triggerTime = launch.net.getTime() - TimeUnit.MINUTES.toMillis( 10 );
-		if( new Date( triggerTime ).after( new Date() ) )
+
+		DateTime triggerTime = launch.net.minusMinutes( 10 );
+		if( triggerTime.isAfter( DateTime.now() ) )
 		{
 			// The behavior of alarmManager.set() changed in 4.4, it is now inexact, thus for
 			// 4.4 and above we must use this new API call
 			if( OsUtil.HAS_4_4_KITKAT )
 			{
-				alarmManager.setExact( AlarmManager.RTC_WAKEUP, triggerTime, pendingIntent );
+				alarmManager.setExact( AlarmManager.RTC_WAKEUP, triggerTime.getMillis(), pendingIntent );
 			}
 			else
 			{
-				alarmManager.set( AlarmManager.RTC_WAKEUP, triggerTime, pendingIntent );
+				alarmManager.set( AlarmManager.RTC_WAKEUP, triggerTime.getMillis(), pendingIntent );
 			}
 		}
 		else

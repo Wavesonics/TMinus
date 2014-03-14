@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="primary_background">#01121C</color>
-    <color name="primary_background_end">#ff012c37</color>
+    <color name="window_background">#01121C</color>
+    <color name="window_background_end">#ff012c37</color>
 
     <color name="actionbar_background">#344149</color>
+
+    <color name="background">#01121C</color>
 
     <color name="accent">#BED015</color>
     <color name="accent_translucent">#66BED015</color>
@@ -12,6 +14,7 @@
     <color name="secondary_text">#A0A5EC</color>
     <color name="accent_text">@color/accent</color>
 
+    <color name="primary_background">#ff03639e</color>
     <color name="secondary_background">#33FFFFFF</color>
 
     <color name="tabs_background">#FFFFFFFF</color>
