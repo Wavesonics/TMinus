@@ -67,12 +67,11 @@
             android:showDividers="middle"
             android:background="@color/primary_background">
 
-            <ListView
+            <ExpandableListView
                 android:id="@+id/LAUNCHDETAIL_mission_list"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="2">
-            </ListView>
+                android:layout_weight="2"/>
 
             <LinearLayout
                 android:layout_width="0dp"

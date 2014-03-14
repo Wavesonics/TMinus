@@ -19,7 +19,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
+import android.widget.ExpandableListView;
 import android.widget.ShareActionProvider;
 import android.widget.TextView;
 
@@ -66,12 +66,13 @@ public class LaunchDetailFragment extends Fragment implements Listener, RocketDe
 	private Launch              m_launchItem;
 	private RocketDetail        m_rocketDetail;
 	private TimeReceiver        m_timeReceiver;
+	private MissionsAdapter     m_missionAdapter;
 
 	@InjectView(R.id.LAUNCHDETAIL_content_view)
 	View m_contentView;
 
 	@InjectView(R.id.LAUNCHDETAIL_mission_list)
-	ListView m_listView;
+	ExpandableListView m_listView;
 
 	@InjectView(R.id.LAUNCHDETAIL_launch_name)
 	TextView m_launchName;
@@ -121,24 +122,6 @@ public class LaunchDetailFragment extends Fragment implements Listener, RocketDe
 	}
 
 	@Override
-	public void onCreate( final Bundle savedInstanceState )
-	{
-		super.onCreate( savedInstanceState );
-
-		setHasOptionsMenu( true );
-
-		m_shortAnimationDuration = getResources().getInteger( android.R.integer.config_shortAnimTime );
-	}
-
-	@Override
-	public void onResume()
-	{
-		super.onResume();
-
-		handleCountDownContainer();
-	}
-
-	@Override
 	public void onAttach( final Activity activity )
 	{
 		super.onAttach( activity );
@@ -157,6 +140,18 @@ public class LaunchDetailFragment extends Fragment implements Listener, RocketDe
 	}
 
 	@Override
+	public void onCreate( final Bundle savedInstanceState )
+	{
+		super.onCreate( savedInstanceState );
+
+		setHasOptionsMenu( true );
+
+		m_missionAdapter = new MissionsAdapter( getActivity() );
+
+		m_shortAnimationDuration = getResources().getInteger( android.R.integer.config_shortAnimTime );
+	}
+
+	@Override
 	public View onCreateView( final LayoutInflater inflater, final ViewGroup container,
 	                          final Bundle savedInstanceState )
 	{
@@ -166,6 +161,7 @@ public class LaunchDetailFragment extends Fragment implements Listener, RocketDe
 		{
 			ButterKnife.inject( this, rootView );
 
+			m_listView.setAdapter( m_missionAdapter );
 			//m_countDownContainer.setVisibility( View.GONE );
 
 			//m_rocketImage.setLoadingImageResId( R.drawable.rocket_image_loading );
@@ -176,6 +172,14 @@ public class LaunchDetailFragment extends Fragment implements Listener, RocketDe
 		}
 
 		return rootView;
+	}
+
+	@Override
+	public void onResume()
+	{
+		super.onResume();
+
+		handleCountDownContainer();
 	}
 
 	@Override
@@ -298,7 +302,8 @@ public class LaunchDetailFragment extends Fragment implements Listener, RocketDe
 			m_launchName.setText( m_launchItem.name );
 			m_status.setText( Utilities.getStatusText( m_launchItem, rootView.getContext() ) );
 
-
+			m_missionAdapter.clear();
+			m_missionAdapter.addAll( m_launchItem.missions );
 			/*
 			final TextView description =
 					(TextView) rootView.findViewById( R.id.LAUNCHDETAIL_mission_description );
