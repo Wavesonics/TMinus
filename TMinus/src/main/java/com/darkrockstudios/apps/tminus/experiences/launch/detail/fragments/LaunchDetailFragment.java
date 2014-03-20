@@ -56,7 +56,7 @@ import butterknife.Optional;
  * in two-pane mode (on tablets) or a {@link LaunchDetailActivity}
  * on handsets.
  */
-public class LaunchDetailFragment extends Fragment implements Listener, RocketDetailLoader.Listener, Utilities.ZoomAnimationHandler
+public class LaunchDetailFragment extends Fragment implements Listener, RocketDetailLoader.Listener, Utilities.ZoomAnimationHandler, ExpandableListView.OnGroupExpandListener
 {
 	public static final  String TAG                         =
 			LaunchDetailFragment.class.getSimpleName();
@@ -67,6 +67,8 @@ public class LaunchDetailFragment extends Fragment implements Listener, RocketDe
 	private RocketDetail        m_rocketDetail;
 	private TimeReceiver        m_timeReceiver;
 	private MissionsAdapter     m_missionAdapter;
+
+	private int m_lastExpandedPosition;
 
 	@InjectView(R.id.LAUNCHDETAIL_content_view)
 	View m_contentView;
@@ -162,6 +164,8 @@ public class LaunchDetailFragment extends Fragment implements Listener, RocketDe
 			ButterKnife.inject( this, rootView );
 
 			m_listView.setAdapter( m_missionAdapter );
+			m_listView.setOnGroupExpandListener( this );
+
 			//m_countDownContainer.setVisibility( View.GONE );
 
 			//m_rocketImage.setLoadingImageResId( R.drawable.rocket_image_loading );
@@ -520,6 +524,26 @@ public class LaunchDetailFragment extends Fragment implements Listener, RocketDe
 	public Animator getCurrentAnimator()
 	{
 		return m_currentAnimator;
+	}
+
+	@Override
+	public void onGroupExpand( final int groupPosition )
+	{
+		// Only allow one group to be expanded at a time
+		if( m_lastExpandedPosition != -1 && groupPosition != m_lastExpandedPosition )
+		{
+			m_listView.collapseGroup( m_lastExpandedPosition );
+		}
+		m_lastExpandedPosition = groupPosition;
+
+		m_listView.post( new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				m_listView.smoothScrollToPosition( groupPosition );
+			}
+		} );
 	}
 
 	private class TimeReceiver extends BroadcastReceiver
