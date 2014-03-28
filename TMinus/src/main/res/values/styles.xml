@@ -54,6 +54,18 @@
         <item name="android:textSize">32sp</item>
     </style>
 
+    <style name="textAppearanceHeader" parent="@android:style/TextAppearance">
+        <item name="android:textColor">@color/header_text</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="textAppearanceLargeHeader" parent="@android:style/TextAppearance">
+        <item name="android:textColor">@color/header_text</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">28sp</item>
+    </style>
+
     <style name="textAppearanceMediumAccent" parent="@android:style/TextAppearance">
         <item name="android:textColor">@color/accent_text</item>
         <item name="android:textStyle">bold</item>

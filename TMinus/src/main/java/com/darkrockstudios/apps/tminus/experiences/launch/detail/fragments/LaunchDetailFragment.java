@@ -23,7 +23,6 @@ import android.widget.ExpandableListView;
 import android.widget.ShareActionProvider;
 import android.widget.TextView;
 
-import com.android.volley.toolbox.NetworkImageView;
 import com.darkrockstudios.apps.tminus.R;
 import com.darkrockstudios.apps.tminus.R.id;
 import com.darkrockstudios.apps.tminus.database.tables.RocketDetail;
@@ -88,15 +87,9 @@ public class LaunchDetailFragment extends Fragment implements Listener, RocketDe
 	@InjectView(R.id.LAUNCHDETAIL_window_length)
 	TextView m_windowLength;
 
+	@Optional
 	@InjectView(R.id.LAUNCHDETAIL_time_remaining)
 	TextView m_timeRemaining;
-
-	@Optional
-	@InjectView(R.id.LAUNCHDETAIL_rocket_image)
-	NetworkImageView m_rocketImage;
-
-	@InjectView(R.id.LAUNCHDETAIL_expanded_rocket_image)
-	NetworkImageView m_rocketImageExpanded;
 
 	@Optional
 	@InjectView(R.id.LAUNCHDETAIL_container_view)
@@ -167,10 +160,6 @@ public class LaunchDetailFragment extends Fragment implements Listener, RocketDe
 			m_listView.setOnGroupExpandListener( this );
 
 			//m_countDownContainer.setVisibility( View.GONE );
-
-			//m_rocketImage.setLoadingImageResId( R.drawable.rocket_image_loading );
-			m_rocketImage.setErrorImageResId( R.drawable.launch_detail_no_rocket_image );
-			m_rocketImage.setDefaultImageResId( R.drawable.launch_detail_no_rocket_image );
 
 			loadLaunch();
 		}
@@ -279,20 +268,18 @@ public class LaunchDetailFragment extends Fragment implements Listener, RocketDe
 
 	private void showContent()
 	{
-		if( m_contentView != null && m_rocketImage != null && m_progressBar != null )
+		if( m_contentView != null && m_progressBar != null )
 		{
 			m_contentView.setVisibility( View.VISIBLE );
-			m_rocketImage.setVisibility( View.VISIBLE );
 			m_progressBar.setVisibility( View.GONE );
 		}
 	}
 
 	private void showLoading()
 	{
-		if( m_contentView != null && m_rocketImage != null && m_progressBar != null )
+		if( m_contentView != null && m_progressBar != null )
 		{
 			m_contentView.setVisibility( View.GONE );
-			m_rocketImage.setVisibility( View.GONE );
 			m_progressBar.setVisibility( View.VISIBLE );
 		}
 	}
@@ -308,12 +295,8 @@ public class LaunchDetailFragment extends Fragment implements Listener, RocketDe
 
 			m_missionAdapter.clear();
 			m_missionAdapter.addAll( m_launchItem.missions );
-			m_missionAdapter.addAll( m_launchItem.missions );
-			m_missionAdapter.addAll( m_launchItem.missions );
-			m_missionAdapter.addAll( m_launchItem.missions );
-			m_missionAdapter.addAll( m_launchItem.missions );
-			m_missionAdapter.addAll( m_launchItem.missions );
-			m_missionAdapter.addAll( m_launchItem.missions );
+			m_listView.expandGroup( 0 );
+
 			/*
 			final TextView description =
 					(TextView) rootView.findViewById( R.id.LAUNCHDETAIL_mission_description );
@@ -355,11 +338,11 @@ public class LaunchDetailFragment extends Fragment implements Listener, RocketDe
 
 	public void updateTimeViews()
 	{
-		if( m_launchItem != null )
+		if( m_launchItem != null && m_timeRemaining != null )
 		{
 			final View rootView = getView();
 
-			Duration timeLeft = new Duration( m_launchItem.net, DateTime.now() );
+			Duration timeLeft = new Duration(  DateTime.now(), m_launchItem.net );
 			m_timeRemaining.setText( Utilities.getFormattedTime( timeLeft.getMillis() ) );
 
 			handleCountDownContainer();
@@ -501,16 +484,6 @@ public class LaunchDetailFragment extends Fragment implements Listener, RocketDe
 			intent.putExtra( DataUpdaterService.EXTRA_UPDATE_TYPE, RocketDetailUpdateTask.UPDATE_TYPE );
 
 			activity.startService( intent );
-		}
-	}
-
-	public void zoomRocketImage()
-	{
-		// If we don't have rocket info yet, don't bother zooming
-		if( m_rocketDetail != null && m_rocketDetail.imageUrl != null )
-		{
-			Utilities.zoomImage( m_rocketImage, m_rocketImageExpanded, m_containerView, this,
-			                     m_shortAnimationDuration );
 		}
 	}
 

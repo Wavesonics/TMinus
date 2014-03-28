@@ -7,15 +7,19 @@
 
     <color name="background">#01121C</color>
 
-    <color name="accent">#BED015</color>
+    <color name="accent">#ffd08a30</color>
     <color name="accent_translucent">#66BED015</color>
 
     <color name="primary_text">#FFFFFF</color>
     <color name="secondary_text">#A0A5EC</color>
     <color name="accent_text">@color/accent</color>
 
-    <color name="primary_background">#ff03639e</color>
+    <color name="primary_background">#fff5f5f5</color>
     <color name="secondary_background">#33FFFFFF</color>
+
+    <color name="header_background">#88344ef5</color>
+
+    <color name="header_text">#ffffffff</color>
 
     <color name="tabs_background">#FFFFFFFF</color>
 

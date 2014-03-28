@@ -254,9 +254,10 @@ public class LaunchListActivity extends NavigationDatabaseActivity
 		LaunchDetailFragment fragment = (LaunchDetailFragment) getFragmentManager()
 				                                                       .findFragmentById( R.id.COMMON_detail_fragment_container );
 
+		// TODO: deal with this since it was removed from Launch Details
 		if( fragment != null )
 		{
-			fragment.zoomRocketImage();
+			//fragment.zoomRocketImage();
 		}
 	}
 

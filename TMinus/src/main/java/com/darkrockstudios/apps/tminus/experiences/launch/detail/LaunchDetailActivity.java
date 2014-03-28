@@ -129,7 +129,8 @@ public class LaunchDetailActivity extends DatabaseActivity
 				(LaunchDetailFragment) getFragmentManager().findFragmentByTag( FRAGMENT_TAG );
 		if( fragment != null )
 		{
-			fragment.zoomRocketImage();
+			// TODO: deal with this since it was removed from Launch Details
+			//fragment.zoomRocketImage();
 		}
 	}
 }

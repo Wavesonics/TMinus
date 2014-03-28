@@ -1,5 +1,6 @@
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/LAUNCHDETAIL_container_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -16,53 +17,82 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:background="@color/primary_background"
-            android:padding="@dimen/default_padding"
+            android:textAppearance="@style/textAppearanceLargeAccent"
             android:text="Launch Name"/>
 
-        <LinearLayout
+        <TableLayout
             android:id="@+id/LAUNCHDETAIL_launch_info_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/LAUNCHDETAIL_launch_name"
-            android:padding="@dimen/default_padding"
-            android:orientation="horizontal"
-            android:showDividers="middle"
-            android:divider="@drawable/divider_horizontal_repeat"
-            android:background="@color/primary_background">
+            android:stretchColumns="*">
 
-            <TextView
-                android:id="@+id/LAUNCHDETAIL_net"
-                android:layout_width="0dp"
+            <TableRow
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="Launch NET"/>
+                android:background="@color/header_background">
+                <TextView
+                    android:width="0dp"
+                    android:padding="@dimen/default_padding_small"
+                    android:textAppearance="@style/textAppearanceHeader"
+                    android:gravity="center"
+                    android:text="NET"/>
 
-            <TextView
-                android:id="@+id/LAUNCHDETAIL_status"
-                android:layout_width="0dp"
+                <TextView
+                    android:width="0dp"
+                    android:padding="@dimen/default_padding_small"
+                    android:textAppearance="@style/textAppearanceHeader"
+                    android:gravity="center"
+                    android:text="Status"/>
+
+                <TextView
+                    android:width="0dp"
+                    android:padding="@dimen/default_padding_small"
+                    android:textAppearance="@style/textAppearanceHeader"
+                    android:gravity="center"
+                    android:text="Window"/>
+            </TableRow>
+            <TableRow
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="Status"/>
+                android:background="@color/primary_background">
+                <TextView
+                    android:id="@+id/LAUNCHDETAIL_net"
+                    android:width="0dp"
+                    android:padding="@dimen/default_padding_small"
+                    android:gravity="center"
+                    android:text="03.24.2014"/>
 
-            <TextView
-                android:id="@+id/LAUNCHDETAIL_window_length"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="Launch Window"/>
-        </LinearLayout>
+                <TextView
+                    android:id="@+id/LAUNCHDETAIL_status"
+                    android:width="0dp"
+                    android:padding="@dimen/default_padding_small"
+                    android:gravity="center"
+                    android:text="GO"/>
 
+                <TextView
+                    android:id="@+id/LAUNCHDETAIL_window_length"
+                    android:width="0dp"
+                    android:padding="@dimen/default_padding_small"
+                    android:gravity="center"
+                    tools:text="0d 5h 21m"/>
+            </TableRow>
+        </TableLayout>
+
+        <TextView
+            android:id="@+id/LAUNCHDETAIL_mission_container_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/textAppearanceHeader"
+            android:background="@color/header_background"
+            android:padding="@dimen/default_padding_small"
+            android:layout_marginTop="@dimen/default_padding"
+            android:layout_below="@id/LAUNCHDETAIL_launch_info_container"
+            android:text="Mission"/>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginTop="@dimen/default_padding"
-            android:layout_below="@id/LAUNCHDETAIL_launch_info_container"
-            android:layout_above="@+id/LAUNCHDETAIL_count_down_container"
+            android:layout_below="@id/LAUNCHDETAIL_mission_container_header"
+            android:layout_alignParentBottom="true"
             android:divider="@drawable/divider_horizontal_repeat"
             android:showDividers="middle"
             android:background="@color/primary_background">
@@ -73,51 +103,49 @@
                 android:layout_height="match_parent"
                 android:layout_weight="2"/>
 
-            <RelativeLayout
+            <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
                 android:layout_weight="1">
 
-                <com.android.volley.toolbox.NetworkImageView
-                    android:id="@+id/LAUNCHDETAIL_rocket_image"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
-
                 <TextView
-                    android:id="@+id/temp_1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/LAUNCHDETAIL_rocket_image"
                     android:padding="@dimen/default_padding"
+                    android:gravity="center"
+                    android:text="type"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/default_padding_small"
+                    android:background="@color/header_background"
+                    android:gravity="center"
+                    android:text="Agency"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/default_padding"
+                    android:gravity="center"
+                    android:text="NASA"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/default_padding_small"
+                    android:background="@color/header_background"
                     android:gravity="center"
                     android:text="Country"/>
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/temp_1"
                     android:padding="@dimen/default_padding"
                     android:gravity="center"
-                    android:text="Agency"/>
-            </RelativeLayout>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/LAUNCHDETAIL_count_down_container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/default_padding"
-            android:padding="@dimen/default_padding"
-            android:layout_alignParentBottom="true"
-            android:orientation="horizontal"
-            android:background="@color/primary_background">
-
-            <TextView
-                android:id="@+id/LAUNCHDETAIL_time_remaining"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Count DOwn"/>
+                    android:text="USA"/>
+            </LinearLayout>
         </LinearLayout>
     </RelativeLayout>
 
@@ -129,12 +157,4 @@
         android:id="@+id/progressBar"
         android:indeterminate="true"
         android:visibility="gone"/>
-
-    <com.android.volley.toolbox.NetworkImageView
-        android:id="@+id/LAUNCHDETAIL_expanded_rocket_image"
-        android:visibility="gone"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center"
-        android:contentDescription="@string/LAUNCHDETAIL_description_zoom_touch_close"/>
 </FrameLayout>
