@@ -1,9 +1,13 @@
 package com.darkrockstudios.apps.tminus.experiences.launch.browse;
 
 import android.app.ActionBar;
+import android.app.AlertDialog;
 import android.app.FragmentManager;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.text.Html;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -84,6 +88,8 @@ public class LaunchListActivity extends NavigationDatabaseActivity
 	{
 		super.onResume();
 
+		handleBetaDialog();
+
 		if( findViewById( R.id.COMMON_detail_fragment_container ) != null )
 		{
 			// The detail container view will be present only in the
@@ -98,6 +104,32 @@ public class LaunchListActivity extends NavigationDatabaseActivity
 					(LaunchListFragment) getFragmentManager().findFragmentByTag( TAG_LAUNCH_LIST );
 			launchListFragment.setActivateOnItemClick( true );
 		}
+	}
+
+	private void handleBetaDialog()
+	{
+		final String BETA_KEY = "beta_dialog_shown";
+		final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences( this );
+		if( !prefs.getBoolean( BETA_KEY, false ) )
+		{
+			displayBetaDialog();
+			prefs.edit().putBoolean( BETA_KEY, true ).apply();
+		}
+	}
+
+	private void displayBetaDialog()
+	{
+		AlertDialog.Builder builder = new AlertDialog.Builder( this );
+
+		builder.setTitle( "Beta!" );
+		builder.setMessage( Html.fromHtml( "Welcome to the TMinus Beta!<br/>" +
+		                                   "TMinus is in it's very early stages.<br/><br/>" +
+		                                   "<b>Here's a few things to note:</b><br/>" +
+		                                   "- The UI is temporary and being redesigned right now.<br/>" +
+		                                   "- The data will improve over time<br/>" +
+		                                   "<br/><br/>There are many feature we are looking to add in the future like live launch info, and chromecast support for the launch countdown, so stick with us!" ) );
+
+		builder.create().show();
 	}
 
 	@Override
