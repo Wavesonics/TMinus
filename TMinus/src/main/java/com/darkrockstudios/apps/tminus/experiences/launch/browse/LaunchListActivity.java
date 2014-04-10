@@ -123,11 +123,11 @@ public class LaunchListActivity extends NavigationDatabaseActivity
 
 		builder.setTitle( "Beta!" );
 		builder.setMessage( Html.fromHtml( "Welcome to the TMinus Beta!<br/>" +
-		                                   "TMinus is in it's very early stages.<br/><br/>" +
+		                                   "TMinus is in its very early stages.<br/><br/>" +
 		                                   "<b>Here's a few things to note:</b><br/>" +
 		                                   "- The UI is temporary and being redesigned right now.<br/>" +
 		                                   "- The data will improve over time<br/>" +
-		                                   "<br/><br/>There are many feature we are looking to add in the future like live launch info, and chromecast support for the launch countdown, so stick with us!" ) );
+		                                   "<br/><br/>There are many features we are looking to add in the future, such as live launch info, and Chromecast support for the launch countdown. So stick with us!" ) );
 
 		builder.create().show();
 	}
