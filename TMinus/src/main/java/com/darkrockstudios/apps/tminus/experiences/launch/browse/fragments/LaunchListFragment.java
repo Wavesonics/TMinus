@@ -62,8 +62,8 @@ public class LaunchListFragment extends BaseBrowserFragment
 	}
 
 	private boolean              m_previousLaunches;
-	private ArrayAdapter<Launch> m_adapter;
-	private Callbacks m_callbacks;
+	private LaunchListAdapter m_adapter;
+	private Callbacks            m_callbacks;
 	private LaunchUpdateReceiver m_updateReceiver;
 
 	public static LaunchListFragment newInstance( final boolean previousLaunches )
@@ -264,7 +264,6 @@ public class LaunchListFragment extends BaseBrowserFragment
 		public int getViewTypeCount()
 		{
 			return 2;
-
 		}
 
 		@Override
@@ -375,6 +374,24 @@ public class LaunchListFragment extends BaseBrowserFragment
 			}
 
 			return view;
+		}
+
+		@Override
+		public boolean isEnabled( int position )
+		{
+			final boolean enabled;
+
+			// Only enabled if we actually have data. Other wise we don't want to be able to click the "empty" row.
+			if( super.getCount() > 0 )
+			{
+				enabled = true;
+			}
+			else
+			{
+				enabled = false;
+			}
+
+			return enabled;
 		}
 	}
 

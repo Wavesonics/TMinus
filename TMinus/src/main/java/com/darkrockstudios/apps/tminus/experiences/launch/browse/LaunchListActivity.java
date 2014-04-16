@@ -2,6 +2,7 @@ package com.darkrockstudios.apps.tminus.experiences.launch.browse;
 
 import android.app.ActionBar;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.FragmentManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -49,6 +50,8 @@ public class LaunchListActivity extends NavigationDatabaseActivity
 	private boolean m_twoPane;
 
 	private boolean m_navigationSpinnerInitialized;
+
+	private Dialog m_betaDialog;
 
 	@Override
 	protected void onCreate( final Bundle savedInstanceState )
@@ -106,6 +109,18 @@ public class LaunchListActivity extends NavigationDatabaseActivity
 		}
 	}
 
+	@Override
+	protected void onPause()
+	{
+		super.onPause();
+
+		if( m_betaDialog != null )
+		{
+			m_betaDialog.dismiss();
+			m_betaDialog = null;
+		}
+	}
+
 	private void handleBetaDialog()
 	{
 		final String BETA_KEY = "beta_dialog_shown";
@@ -123,13 +138,14 @@ public class LaunchListActivity extends NavigationDatabaseActivity
 
 		builder.setTitle( "Beta!" );
 		builder.setMessage( Html.fromHtml( "Welcome to the TMinus Beta!<br/>" +
-		                                   "TMinus is in its very early stages.<br/><br/>" +
+		                                   "TMinus is in it's very early stages.<br/><br/>" +
 		                                   "<b>Here's a few things to note:</b><br/>" +
 		                                   "- The UI is temporary and being redesigned right now.<br/>" +
 		                                   "- The data will improve over time<br/>" +
 		                                   "<br/><br/>There are many features we are looking to add in the future, such as live launch info, and Chromecast support for the launch countdown. So stick with us!" ) );
 
-		builder.create().show();
+		m_betaDialog = builder.create();
+		m_betaDialog.show();
 	}
 
 	@Override
@@ -175,26 +191,29 @@ public class LaunchListActivity extends NavigationDatabaseActivity
 	@Override
 	public void onItemSelected( final Launch launch )
 	{
-		if( m_twoPane )
+		if( launch != null )
 		{
-			// In two-pane mode, show the detail view in this activity by
-			// adding or replacing the detail fragment using a
-			// fragment transaction.
-			Bundle arguments = new Bundle();
-			arguments.putInt( LaunchDetailFragment.ARG_ITEM_ID, launch.id );
-			LaunchDetailFragment fragment = new LaunchDetailFragment();
-			fragment.setArguments( arguments );
-			getFragmentManager().beginTransaction()
-			                    .replace( R.id.COMMON_detail_fragment_container, fragment )
-			                    .commit();
-		}
-		else
-		{
-			// In single-pane mode, simply start the detail activity
-			// for the selected item ID.
-			Intent detailIntent = new Intent( this, LaunchDetailActivity.class );
-			detailIntent.putExtra( LaunchDetailFragment.ARG_ITEM_ID, launch.id );
-			startActivity( detailIntent );
+			if( m_twoPane )
+			{
+				// In two-pane mode, show the detail view in this activity by
+				// adding or replacing the detail fragment using a
+				// fragment transaction.
+				Bundle arguments = new Bundle();
+				arguments.putInt( LaunchDetailFragment.ARG_ITEM_ID, launch.id );
+				LaunchDetailFragment fragment = new LaunchDetailFragment();
+				fragment.setArguments( arguments );
+				getFragmentManager().beginTransaction()
+				                    .replace( R.id.COMMON_detail_fragment_container, fragment )
+				                    .commit();
+			}
+			else
+			{
+				// In single-pane mode, simply start the detail activity
+				// for the selected item ID.
+				Intent detailIntent = new Intent( this, LaunchDetailActivity.class );
+				detailIntent.putExtra( LaunchDetailFragment.ARG_ITEM_ID, launch.id );
+				startActivity( detailIntent );
+			}
 		}
 	}
 
