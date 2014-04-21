@@ -28,6 +28,8 @@ import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.misc.TransactionManager;
 import com.j256.ormlite.stmt.DeleteBuilder;
 
+import org.joda.time.DateTime;
+import org.joda.time.Duration;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -35,7 +37,6 @@ import org.json.JSONObject;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.concurrent.Callable;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Created by Adam on 7/13/13.
@@ -357,14 +358,11 @@ public class LaunchUpdateService extends Service
 			stopService();
 		}
 
-		private Date getOldLaunchThreshold()
+		private DateTime getOldLaunchThreshold()
 		{
 			final long MAX_DAYS_OLD = 365;
 
-			Date now = new Date();
-			Date cutOffDate = new Date( now.getTime() - TimeUnit.DAYS.toMillis( MAX_DAYS_OLD ) );
-
-			return cutOffDate;
+			return DateTime.now().minus( Duration.standardDays( MAX_DAYS_OLD ) );
 		}
 
 		private void cleanUpOldLaunches()
