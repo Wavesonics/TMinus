@@ -372,6 +372,24 @@ public class LaunchListFragment extends BaseBrowserFragment
 
 			return view;
 		}
+
+		@Override
+		public boolean isEnabled( int position )
+		{
+			final boolean enabled;
+
+			// Only enabled if we actually have data. Other wise we don't want to be able to click the "empty" row.
+			if( super.getCount() > 0 )
+			{
+				enabled = true;
+			}
+			else
+			{
+				enabled = false;
+			}
+
+			return enabled;
+		}
 	}
 
 	private class LaunchUpdateReceiver extends BroadcastReceiver
