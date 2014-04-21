@@ -1,4 +1,4 @@
-package com.darkrockstudios.apps.tminus.experiences.launch.detail.fragments;
+package com.darkrockstudios.apps.tminus.experiences.launch.detail.viewholders;
 
 import android.view.View;
 import android.widget.TextView;
@@ -14,7 +14,7 @@ import butterknife.InjectView;
 public class MissionItemViewHolder
 {
 	@InjectView(R.id.LAUNCHDETAIL_mission_description)
-	TextView m_descriptionView;
+	public TextView m_descriptionView;
 
 	public MissionItemViewHolder( final View view )
 	{

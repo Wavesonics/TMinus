@@ -305,16 +305,15 @@ public class LaunchListFragment extends BaseBrowserFragment
 			View view = convertView;
 			if( view == null )
 			{
-				LayoutInflater inflater = (LayoutInflater) getContext()
-						                                           .getSystemService( Context.LAYOUT_INFLATER_SERVICE );
+				LayoutInflater inflater = (LayoutInflater) getContext().getSystemService( Context.LAYOUT_INFLATER_SERVICE );
 
 				if( viewType == LAUNCH_ITEM )
 				{
-					view = inflater.inflate( R.layout.row_launch_list_item, null );
+					view = inflater.inflate( R.layout.row_launch_list_item, parent, false );
 				}
 				else
 				{
-					view = inflater.inflate( android.R.layout.simple_list_item_1, null );
+					view = inflater.inflate( android.R.layout.simple_list_item_1, parent, false );
 				}
 			}
 

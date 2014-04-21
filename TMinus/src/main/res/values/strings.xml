@@ -73,6 +73,8 @@
     <string name="LAUNCHDETAIL_share_no_mission">No mission details available</string>
     <string name="LAUNCHDETAIL_share_details">%1$s\n\nLocation: %2$s\n\nExpected Launch Time: %3$s</string>
 
+    <string name="LAUNCHDETAIL_mission_type_icon_description">Mission type icon</string>
+
     <string name="ROCKETDETAIL_title">Rocket Detail</string>
     <string name="ROCKETDETAIL_loading_summary">Loading rocket summary…</string>
     <string name="ROCKETDETAIL_no_summary">No summary available.</string>
@@ -147,5 +149,15 @@
     <string name="about_body_open_source">TMinus is Open Source!</string>
     <string name="about_body_github_android"><a href="http://github.com/Wavesonics/TMinus">TMinus</a></string>
     <string name="about_body_feedback"><i>Found a bug? Feature request?</i>\n<a href="https://github.com/Wavesonics/TMinus/issues/new">Log it here!</a></string>
+
+    <string name="MISSIONTYPE_astrophysics">Astrophysics</string>
+    <string name="MISSIONTYPE_earth_science">Earth Science</string>
+    <string name="MISSIONTYPE_gov_secret">Gov/Secrete</string>
+    <string name="MISSIONTYPE_heliophysics">Heliophysics</string>
+    <string name="MISSIONTYPE_human_explore">Human Exploration</string>
+    <string name="MISSIONTYPE_planet_science">Planetary Science</string>
+    <string name="MISSIONTYPE_robotic_explore">Robotic Exploration</string>
+    <string name="MISSIONTYPE_tourism">Tourism</string>
+    <string name="MISSIONTYPE_unknown">Unknown</string>
 
 </resources>

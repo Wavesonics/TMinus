@@ -165,6 +165,47 @@ public class Utilities
 		return resourceId;
 	}
 
+	public static int getLaunchTypeStringResource( final int type )
+	{
+		final int resourceId;
+
+		switch( type )
+		{
+			case 1:
+				resourceId = R.string.MISSIONTYPE_earth_science;
+				break;
+			case 2:
+				resourceId = R.string.MISSIONTYPE_earth_science;
+				break;
+			case 3:
+				resourceId = R.string.MISSIONTYPE_astrophysics;
+				break;
+			case 4:
+				resourceId = R.string.MISSIONTYPE_heliophysics;
+				break;
+			case 5:
+				resourceId = R.string.MISSIONTYPE_human_explore;
+				break;
+			case 6:
+				resourceId = R.string.MISSIONTYPE_robotic_explore;
+				break;
+			case 7:
+				resourceId = R.string.MISSIONTYPE_gov_secret;
+				break;
+			case 8:
+				resourceId = R.string.MISSIONTYPE_tourism;
+				break;
+			case 9:
+				resourceId = R.string.MISSIONTYPE_unknown;
+				break;
+			default:
+				resourceId = R.string.MISSIONTYPE_unknown;
+				break;
+		}
+
+		return resourceId;
+	}
+
 	public static interface ZoomAnimationHandler
 	{
 		public void setCurrentAnimator( Animator animator );

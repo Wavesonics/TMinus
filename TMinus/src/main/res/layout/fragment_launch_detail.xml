@@ -17,7 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:textAppearance="@style/textAppearanceLargeAccent"
+            android:textAppearance="@style/textAppearanceMediumAccent"
             android:text="Launch Name"/>
 
         <TableLayout
@@ -30,7 +30,8 @@
             <TableRow
                 android:layout_height="wrap_content"
                 android:background="@color/header_background">
-                <TextView
+
+            <TextView
                     android:width="0dp"
                     android:padding="@dimen/default_padding_small"
                     android:textAppearance="@style/textAppearanceHeader"
@@ -51,10 +52,12 @@
                     android:gravity="center"
                     android:text="Window"/>
             </TableRow>
+
             <TableRow
                 android:layout_height="wrap_content"
                 android:background="@color/primary_background">
-                <TextView
+
+            <TextView
                     android:id="@+id/LAUNCHDETAIL_net"
                     android:width="0dp"
                     android:padding="@dimen/default_padding_small"
@@ -77,16 +80,34 @@
             </TableRow>
         </TableLayout>
 
-        <TextView
+        <LinearLayout
             android:id="@+id/LAUNCHDETAIL_mission_container_header"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAppearance="@style/textAppearanceHeader"
-            android:background="@color/header_background"
-            android:padding="@dimen/default_padding_small"
+            android:orientation="horizontal"
             android:layout_marginTop="@dimen/default_padding"
             android:layout_below="@id/LAUNCHDETAIL_launch_info_container"
-            android:text="Mission"/>
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:textAppearance="@style/textAppearanceHeader"
+                android:background="@color/header_background"
+                android:padding="@dimen/default_padding_small"
+                android:text="Missions"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:padding="@dimen/default_padding_small"
+                android:textAppearance="@style/textAppearanceHeader"
+                android:background="@color/header_background"
+                android:gravity="center"
+                android:text="Type"/>
+        </LinearLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -94,22 +115,28 @@
             android:layout_below="@id/LAUNCHDETAIL_mission_container_header"
             android:layout_alignParentBottom="true"
             android:divider="@drawable/divider_horizontal_repeat"
-            android:showDividers="middle"
-            android:background="@color/primary_background">
+            android:showDividers="middle">
 
             <ExpandableListView
                 android:id="@+id/LAUNCHDETAIL_mission_list"
+                android:background="@color/primary_background"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="2"/>
+                android:layout_weight="2"
+                android:requiresFadingEdge="vertical"
+                android:groupIndicator="@null"
+                android:indicatorLeft="0dp"
+                android:indicatorRight="0dp"/>
 
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
+                android:background="@color/primary_background"
                 android:orientation="vertical"
                 android:layout_weight="1">
 
                 <TextView
+                    android:id="@+id/LAUNCHDETAIL_mission_type_description"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="@dimen/default_padding"
@@ -120,11 +147,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="@dimen/default_padding_small"
-                    android:background="@color/header_background"
+                    android:textAppearance="@style/textAppearanceHeader"
+                    android:background="@color/list_header_background"
                     android:gravity="center"
                     android:text="Agency"/>
 
                 <TextView
+                    android:id="@+id/LAUNCHDETAIL_mission_agency"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="@dimen/default_padding"
@@ -135,16 +164,18 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="@dimen/default_padding_small"
-                    android:background="@color/header_background"
+                    android:textAppearance="@style/textAppearanceHeader"
+                    android:background="@color/list_header_background"
                     android:gravity="center"
                     android:text="Country"/>
 
-                <TextView
+                <ImageView
+                    android:id="@+id/LAUNCHDETAIL_mission_country"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="@dimen/default_padding"
-                    android:gravity="center"
-                    android:text="USA"/>
+                    android:src="@drawable/flag_us"
+                    android:gravity="center"/>
             </LinearLayout>
         </LinearLayout>
     </RelativeLayout>

@@ -18,6 +18,7 @@
     <color name="secondary_background">#33FFFFFF</color>
 
     <color name="header_background">#88344ef5</color>
+    <color name="list_header_background">#ff615df5</color>
 
     <color name="header_text">#ffffffff</color>
 

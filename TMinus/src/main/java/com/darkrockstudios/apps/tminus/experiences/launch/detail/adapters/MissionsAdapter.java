@@ -1,4 +1,4 @@
-package com.darkrockstudios.apps.tminus.experiences.launch.detail.fragments;
+package com.darkrockstudios.apps.tminus.experiences.launch.detail.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -7,7 +7,10 @@ import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 
 import com.darkrockstudios.apps.tminus.R;
+import com.darkrockstudios.apps.tminus.experiences.launch.detail.viewholders.MissionHeaderViewHolder;
+import com.darkrockstudios.apps.tminus.experiences.launch.detail.viewholders.MissionItemViewHolder;
 import com.darkrockstudios.apps.tminus.launchlibrary.Mission;
+import com.darkrockstudios.apps.tminus.misc.Utilities;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -106,6 +109,13 @@ public class MissionsAdapter extends BaseExpandableListAdapter
 
 		MissionHeaderViewHolder holder = (MissionHeaderViewHolder) view.getTag();
 		holder.m_nameView.setText( mission.name );
+
+		holder.m_typeNameView.setText( Utilities.getLaunchTypeStringResource( mission.type ) );
+
+		holder.m_indexView.setText( String.format( "%02d", groupPosition ) );
+
+		final int missionType = Utilities.getLaunchTypeResource( mission.type );
+		holder.m_typeView.setImageResource( missionType );
 
 		return view;
 	}

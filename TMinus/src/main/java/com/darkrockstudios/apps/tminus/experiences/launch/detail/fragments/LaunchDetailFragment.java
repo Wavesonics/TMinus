@@ -29,6 +29,7 @@ import com.darkrockstudios.apps.tminus.database.tables.RocketDetail;
 import com.darkrockstudios.apps.tminus.dataupdate.DataUpdaterService;
 import com.darkrockstudios.apps.tminus.experiences.launch.browse.LaunchListActivity;
 import com.darkrockstudios.apps.tminus.experiences.launch.detail.LaunchDetailActivity;
+import com.darkrockstudios.apps.tminus.experiences.launch.detail.adapters.MissionsAdapter;
 import com.darkrockstudios.apps.tminus.experiences.rocket.detail.dataupdate.RocketDetailUpdateTask;
 import com.darkrockstudios.apps.tminus.launchlibrary.Launch;
 import com.darkrockstudios.apps.tminus.launchlibrary.Mission;
@@ -342,7 +343,7 @@ public class LaunchDetailFragment extends Fragment implements Listener, RocketDe
 		{
 			final View rootView = getView();
 
-			Duration timeLeft = new Duration(  DateTime.now(), m_launchItem.net );
+			Duration timeLeft = new Duration( DateTime.now(), m_launchItem.net );
 			m_timeRemaining.setText( Utilities.getFormattedTime( timeLeft.getMillis() ) );
 
 			handleCountDownContainer();

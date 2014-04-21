@@ -1,16 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:background="@color/header_background"
-              android:padding="@dimen/default_padding_small">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/list_header_background">
 
-    <TextView
-        android:id="@+id/LAUNCHDETAIL_mission_name"
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Medium Text"/>
-</LinearLayout>
+        android:layout_centerVertical="true"
+        android:layout_alignParentLeft="true"
+        android:layout_toLeftOf="@+id/LAUNCHDETAIL_mission_index"
+        android:padding="@dimen/default_padding_small">
+
+        <TextView
+            android:id="@+id/LAUNCHDETAIL_mission_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textStyle="bold"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            tools:text="Medium Text"/>
+
+        <TextView
+            android:id="@+id/LAUNCHDETAIL_mission_type_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            tools:text="Planetary Science"/>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/LAUNCHDETAIL_mission_index"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@+id/LAUNCHDETAIL_mission_type"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:padding="@dimen/default_padding_small"
+        tools:text="01"/>
+
+    <ImageView
+        android:id="@+id/LAUNCHDETAIL_mission_type"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/default_padding_small"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        tools:src="@drawable/ic_launch_type_astrophysics"
+        android:contentDescription="@string/LAUNCHDETAIL_mission_type_icon_description"/>
+</RelativeLayout>
