@@ -3,10 +3,10 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:0.9.+'
+        classpath 'com.android.tools.build:gradle:0.12.2'
     }
 }
-apply plugin: 'android'
+apply plugin: 'com.android.application'
 
 repositories {
     mavenCentral()
@@ -14,16 +14,19 @@ repositories {
 
 dependencies {
     // Google Play Services
-    compile 'com.google.android.gms:play-services:4.2.+'
+    compile 'com.google.android.gms:play-services:5.2.08'
 
     // Support Libraries
-    compile 'com.android.support:support-v4:19.0.1'
-    compile 'com.android.support:support-v13:19.0.1'
+    compile 'com.android.support:support-v13:19.1.0'
 
     compile 'com.google.code.gson:gson:2.2.4'
-    compile 'de.keyboardsurfer.android.widget:crouton:1.8.2'
+    compile('de.keyboardsurfer.android.widget:crouton:1.8.4@aar') {
+        exclude group: 'com.google.android', module: 'support-v4'
+    }
     compile 'com.github.chrisbanes.actionbarpulltorefresh:library:0.9.3'
-    compile 'com.nhaarman.listviewanimations:library:2.5.2'
+    compile('com.nhaarman.listviewanimations:library:2.5.2@aar') {
+        exclude group: 'com.google.android', module: 'support-v4'
+    }
     compile 'com.jakewharton:butterknife:4.0.1'
     compile 'joda-time:joda-time:2.3'
     compile 'com.neovisionaries:nv-i18n:1.11'
@@ -37,7 +40,7 @@ dependencies {
 
 android {
     compileSdkVersion 19
-    buildToolsVersion "19.0.3"
+    buildToolsVersion "19.1.0"
 
     defaultConfig {
         minSdkVersion 14
